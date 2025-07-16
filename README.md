@@ -304,6 +304,13 @@ exports.SPIDER_API_TOKEN = "tu_token_aqui";
 | Activar/desactivar auto-respuesta | Admin | ❌
 | Activar/desactivar bienvenida | Admin | ❌
 | Activar/desactivar salida de grupo | Admin | ❌
+| Anti audio | Admin | ❌
+| Anti documento | Admin | ❌
+| Anti evento | Admin | ❌
+| Anti imagen | Admin | ❌
+| Anti producto | Admin | ❌
+| Anti sticker | Admin | ❌
+| Anti video | Admin | ❌
 | Anti-enlace | Admin | ❌
 | Banear miembros | Admin | ❌
 | Cambiar nombre del grupo | Admin | ❌
