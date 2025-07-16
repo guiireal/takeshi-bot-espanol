@@ -48,6 +48,11 @@ exports.SPIDER_API_TOKEN = "tu_token_aqui";
 // Reemplaza <prefijo> por el prefijo del bot (ej: /getid).
 exports.ONLY_GROUP_ID = "";
 
+// Configuración para modo de desarrollo
+// cambie el valor a ( true ) sin los paréntesis
+// si desea ver los registros de mensajes recibidos
+exports.DEVELOPER_MODE = false;
+
 // Directorio base del proyecto.
 exports.BASE_DIR = path.resolve(__dirname);
 

@@ -45,6 +45,19 @@ module.exports = {
 
     const url = canvas("jail", link);
 
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      const data = await response.json();
+
+      await sendErrorReply(
+        `¡Ocurrió un error al ejecutar una llamada remota a la API de Spider X en el comando jail!
+      
+📄 *Detalles*: ${data.message}`
+      );
+      return;
+    }
+
     await sendSuccessReact();
 
     await sendImageFromURL(url, "¡Imagen generada!");

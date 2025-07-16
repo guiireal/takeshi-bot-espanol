@@ -1,5 +1,5 @@
 /**
- * Direccionador
+ * Enrutador
  * de comandos.
  *
  * @author Dev Gui
@@ -12,7 +12,7 @@ const {
 const { findCommandImport } = require(".");
 const {
   verifyPrefix,
-  hasTypeOrCommand,
+  hasTypeAndCommand,
   isLink,
   isAdmin,
 } = require("../middlewares");
@@ -53,7 +53,7 @@ exports.dynamicCommand = async (paramsHandler, startProcess) => {
       await socket.groupParticipantsUpdate(remoteJid, [userJid], "remove");
 
       await sendReply(
-        "¡Anti-link activado! ¡Fuiste removido por enviar un enlace!"
+        "¡Anti-enlace activado! ¡Has sido eliminado por enviar un enlace!"
       );
 
       await socket.sendMessage(remoteJid, {
@@ -75,43 +75,51 @@ exports.dynamicCommand = async (paramsHandler, startProcess) => {
     return;
   }
 
-  if (
-    activeGroup &&
-    (!verifyPrefix(prefix) || !hasTypeOrCommand({ type, command }))
-  ) {
-    if (isActiveAutoResponderGroup(remoteJid)) {
-      const response = getAutoResponderResponse(fullMessage);
+  if (activeGroup) {
+    if (!verifyPrefix(prefix) || !hasTypeAndCommand({ type, command })) {
+      if (isActiveAutoResponderGroup(remoteJid)) {
+        const response = getAutoResponderResponse(fullMessage);
 
-      if (response) {
-        await sendReply(response);
+        if (response) {
+          await sendReply(response);
+        }
       }
+
+      return;
     }
 
-    return;
+    if (!(await checkPermission({ type, ...paramsHandler }))) {
+      await sendErrorReply("¡No tienes permiso para ejecutar este comando!");
+      return;
+    }
+
+    if (
+      isActiveOnlyAdmins(remoteJid) &&
+      !(await isAdmin({ remoteJid, userJid, socket }))
+    ) {
+      await sendWarningReply(
+        "¡Solo los administradores pueden ejecutar comandos!"
+      );
+      return;
+    }
   }
 
-  if (activeGroup && !(await checkPermission({ type, ...paramsHandler }))) {
-    await sendErrorReply("¡No tienes permiso para ejecutar este comando!");
-    return;
-  }
+  if (!activeGroup) {
+    if (verifyPrefix(prefix) && hasTypeAndCommand({ type, command })) {
+      if (command.name !== "on") {
+        await sendWarningReply(
+          "¡Este grupo está desactivado! ¡Pídele al dueño del grupo que active el bot!"
+        );
+        return;
+      }
 
-  if (
-    activeGroup &&
-    isActiveOnlyAdmins(remoteJid) &&
-    !(await isAdmin({ remoteJid, userJid, socket }))
-  ) {
-    await sendWarningReply(
-      "¡Solo los administradores pueden ejecutar comandos!"
-    );
-    return;
-  }
-
-  if (!activeGroup && command.name !== "on") {
-    await sendWarningReply(
-      "¡Este grupo está desactivado! ¡Pide al propietario del grupo que active el bot!"
-    );
-
-    return;
+      if (!(await checkPermission({ type, ...paramsHandler }))) {
+        await sendErrorReply("¡No tienes permiso para ejecutar este comando!");
+        return;
+      }
+    } else {
+      return;
+    }
   }
 
   try {
@@ -121,19 +129,19 @@ exports.dynamicCommand = async (paramsHandler, startProcess) => {
       startProcess,
     });
   } catch (error) {
-    if (badMacHandler.handleError(error, `command:${command.name}`)) {
+    if (badMacHandler.handleError(error, `command:${command?.name}`)) {
       await sendWarningReply(
-        "Error temporal de sincronización. Inténtalo nuevamente en unos segundos."
+        "Error temporal de sincronización. Inténtalo de nuevo en unos segundos."
       );
       return;
     }
 
     if (badMacHandler.isSessionError(error)) {
       errorLog(
-        `Error de sesión durante ejecución de comando ${command.name}: ${error.message}`
+        `Error de sesión durante la ejecución del comando ${command?.name}: ${error.message}`
       );
       await sendWarningReply(
-        "Error de comunicación. Intenta ejecutar el comando nuevamente."
+        "Error de comunicación. Intenta ejecutar el comando de nuevo."
       );
       return;
     }
@@ -144,11 +152,24 @@ exports.dynamicCommand = async (paramsHandler, startProcess) => {
       await sendWarningReply(error.message);
     } else if (error instanceof DangerError) {
       await sendErrorReply(error.message);
+    } else if (error.isAxiosError) {
+      const messageText = error.response?.data?.message || error.message;
+      const url = error.config?.url || "URL no disponible";
+
+      const isSpiderAPIError = url.includes("api.spiderx.com.br");
+
+      await sendErrorReply(
+        `Ocurrió un error al ejecutar una llamada remota a ${
+          isSpiderAPIError ? "la API de Spider X" : url
+        } en el comando ${command.name}.
+      
+📄 *Detalles*: ${messageText}`
+      );
     } else {
       errorLog("Error al ejecutar comando", error);
       await sendErrorReply(
-        `¡Ocurrió un error al ejecutar el comando ${command.name}! ¡El desarrollador fue notificado!
-     
+        `Ocurrió un error al ejecutar el comando ${command.name}.
+      
 📄 *Detalles*: ${error.message}`
       );
     }

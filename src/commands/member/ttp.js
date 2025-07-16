@@ -19,13 +19,26 @@ module.exports = {
   }) => {
     if (!args.length) {
       throw new InvalidParameterError(
-        "Necesitas introducir el texto que quieres convertir en sticker."
+        "Necesitas ingresar el texto que quieres transformar en sticker."
       );
     }
 
     await sendWaitReact();
 
     const url = await ttp(args[0].trim());
+
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      const data = await response.json();
+
+      await sendErrorReply(
+        `¡Ocurrió un error al ejecutar una llamada remota a la API de Spider X en el comando ttp!
+      
+📄 *Detalles*: ${data.message}`
+      );
+      return;
+    }
 
     await sendSuccessReact();
 
