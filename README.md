@@ -14,11 +14,43 @@
 
 <br />
 
-## Bot de WhatsApp multifunción, desarrollado en el video:
+[![Node.js](https://img.shields.io/badge/Node.js-22.14-green?logo=node.js)](https://nodejs.org/en)
+[![Axios](https://img.shields.io/badge/Axios-1.10-blue?logo=axios)](https://axios-http.com/ptbr/docs/intro)
+[![Baileys](https://img.shields.io/badge/Baileys-6.7.18-purple?logo=whatsapp)](https://github.com/WhiskeySockets/Baileys)
+[![FFMPEG](https://img.shields.io/badge/FFMPEG-Latest-orange?logo=ffmpeg)](https://ffmpeg.org/)
+[![Spider X API](https://img.shields.io/badge/Spider_X-API-green?logo=api)](https://api.spiderx.com.br)
+
+> Boters de WhatsApp multifuncionales con varios comandos listos.
+
+## Desarrollado desde cero, en el video:
 
 [CREANDO UN BOT DE WHATSAPP DESDE CERO (GUÍA DEFINITIVA) - BASE COMPLETA + 6 COMANDOS - JAVASCRIPT](https://youtu.be/6zr2NYIYIyc)
 
 ![Logger](./assets/images/logger.png)
+
+## 📋 Índice
+
+1. [Idiomas disponibles](#-accede-a-takeshi-bot-en-otros-idiomas)
+2. [Tecnologías utilizadas](#-tecnologías-involucradas)
+3. [Atención - soporte](#-atención)
+4. [Sobre el proyecto](#sobre-este-proyecto)
+5. [Instalación](#instalación)
+   - [Instalación en Termux](#instalación-en-termux)
+   - [Instalación en VPS (Debian/Ubuntu)](#instalación-en-vps-debianubuntu)
+6. [Configuración de API](#algunos-comandos-requieren-api)
+7. [Funcionalidades](#funcionalidades)
+   - [Funcionalidades generales](#funcionalidades-generales)
+   - [Funcionalidades de Envío](#funcionalidades-de-envío-ejemplos)
+8. [Auto respuesta](#auto-respuesta)
+9. [Personalización](#personalización)
+    - [Menú del Bot](#dónde-está-el-menú-del-bot)
+    - [Mensajes de bienvenida](#dónde-modifico-el-mensaje-de-bienvenida-y-cuándo-alguien-abandona-el-grupo)
+10. [Implementación técnica](#implementación-técnica-de-los-ejemplos)
+11. [Estructura de carpetas](#estructura-de-carpetas)
+12. [Errores comunes](#errores-comunes)
+13. [Canal de YouTube](#suscríbete-al-canal)
+14. [Licencia](#licencia)
+15. [Descargo de responsabilidad](#-descargo-de-responsabilidad)
 
 ## 🌐 Accede a Takeshi Bot en otros idiomas
 
