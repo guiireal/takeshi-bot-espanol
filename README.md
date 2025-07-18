@@ -31,26 +31,25 @@
 ## 📋 Índice
 
 1. [Idiomas disponibles](#-accede-a-takeshi-bot-en-otros-idiomas)
-2. [Tecnologías utilizadas](#-tecnologías-involucradas)
-3. [Atención - soporte](#-atención)
-4. [Sobre el proyecto](#sobre-este-proyecto)
-5. [Instalación](#instalación)
+2. [Atención - soporte](#-atención)
+3. [Sobre el proyecto](#sobre-este-proyecto)
+4. [Instalación](#instalación)
    - [Instalación en Termux](#instalación-en-termux)
    - [Instalación en VPS (Debian/Ubuntu)](#instalación-en-vps-debianubuntu)
-6. [Configuración de API](#algunos-comandos-requieren-api)
-7. [Funcionalidades](#funcionalidades)
+5. [Configuración de API](#algunos-comandos-requieren-api)
+6. [Funcionalidades](#funcionalidades)
    - [Funcionalidades generales](#funcionalidades-generales)
    - [Funcionalidades de Envío](#funcionalidades-de-envío-ejemplos)
-8. [Auto respuesta](#auto-respuesta)
-9. [Personalización](#personalización)
+7. [Auto respuesta](#auto-respuesta)
+8. [Personalización](#personalización)
     - [Menú del Bot](#dónde-está-el-menú-del-bot)
     - [Mensajes de bienvenida](#dónde-modifico-el-mensaje-de-bienvenida-y-cuándo-alguien-abandona-el-grupo)
-10. [Implementación técnica](#implementación-técnica-de-los-ejemplos)
-11. [Estructura de carpetas](#estructura-de-carpetas)
-12. [Errores comunes](#errores-comunes)
-13. [Canal de YouTube](#suscríbete-al-canal)
-14. [Licencia](#licencia)
-15. [Descargo de responsabilidad](#-descargo-de-responsabilidad)
+9. [Implementación técnica](#implementación-técnica-de-los-ejemplos)
+10. [Estructura de carpetas](#estructura-de-carpetas)
+11. [Errores comunes](#errores-comunes)
+12. [Canal de YouTube](#suscríbete-al-canal)
+13. [Licencia](#licencia)
+14. [Descargo de responsabilidad](#-descargo-de-responsabilidad)
 
 ## 🌐 Accede a Takeshi Bot en otros idiomas
 
@@ -68,14 +67,6 @@
     <strong>Bahasa Indonesia</strong> — <a href="https://github.com/guiireal/takeshi-bot-bahasa-indonesia">klik disini</a>
   </li>
 </ul>
-
-## 💻 Tecnologías involucradas
-
-- [Axios](https://axios-http.com/ptbr/docs/intro)
-- [Baileys 6.7.18](https://github.com/WhiskeySockets/Baileys)
-- [FFMPEG](https://ffmpeg.org/)
-- [Node.js >= 22.14.0](https://nodejs.org/en)
-- [Spider X API](https://api.spiderx.com.br)
 
 ## ⚠ Atención
 
