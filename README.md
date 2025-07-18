@@ -102,7 +102,7 @@ Carpetas más usadas:
 
 - /sdcard
 - /storage/emulated/0
-- /storage/emulated/0/Download
+- /storage/emulated/0/Download (muito comum quando você baixa o bot pelo .zip)
 
 En nuestro ejemplo, vamos a `/sdcard`
 ```sh
