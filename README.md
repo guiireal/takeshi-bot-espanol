@@ -35,11 +35,12 @@
 3. [Sobre el proyecto](#sobre-este-proyecto)
 4. [Instalación](#instalación)
    - [Instalación en Termux](#instalación-en-termux)
+   - [Instalación en las principales hosts de Brasil]($instalación-en-las-principales-hosts-de-brasil)
    - [Instalación en VPS (Debian/Ubuntu)](#instalación-en-vps-debianubuntu)
 5. [Configuración de API](#algunos-comandos-requieren-api)
 6. [Funcionalidades](#funcionalidades)
    - [Funcionalidades generales](#funcionalidades-generales)
-   - [Funcionalidades de Envío](#funcionalidades-de-envío-ejemplos)
+   - [Funcionalidades de envío](#funcionalidades-de-envío-ejemplos)
 7. [Auto respuesta](#auto-respuesta)
 8. [Personalización](#personalización)
     - [Menú del Bot](#dónde-está-el-menú-del-bot)
@@ -169,6 +170,17 @@ exports.OWNER_LID = "219999999999999@lid";
 ```sh
 npm start
 ```
+
+## Instalación en las principales hosts de Brasil
+
+Las principales hosts ya ofrecen Takeshi como **bot por defecto**, ¡no siendo necesaria ninguna instalación manual!
+
+**Hosts compatibles**:
+
+| Bronxys | Speed Cloud |
+|---------|-------------|
+| [Grupo oficial](https://chat.whatsapp.com/J5OewHvweK1Kf7RGXAwIYM) | [Grupo oficial](https://chat.whatsapp.com/HsZDn6DJrx34z5lbNbNB2M) |
+| [![Bronxys](./assets/images/bronxys.png)](https://bronxyshost.com/) | [![Speed Cloud](./assets/images/speed-cloud.png)](https://speedhosting.cloud/) |
 
 ## Instalación en VPS (Debian/Ubuntu)
 
@@ -644,36 +656,43 @@ Todos los archivos de ejemplo se almacenan en `assets/samples/`:
 
 ## Errores comunes
 
-### Operación denegada al extraer la carpeta
+### 📁 Operación denegada al extraer la carpeta
 
-El error a continuación ocurre cuando se descarga el archivo ZIP directamente en el celular en algunas versiones del apk ZArchiver y también en celulares sin root.
+El error de abajo ocurre cuando se descarga el archivo ZIP directamente en el celular en algunas versiones de la apk ZArchiver y también en celulares sin root.
 
-Para resolverlo, sigue el [tutorial de instalación vía git clone](https://www.google.com/search?q=%23instalacin-en-termux).
+Para resolver, sigue el [tutorial de instalación vía git clone](#termux-new-setup).
 
-![erro comum 1](./assets/images/erro-comum-1.jpg)
+![error común 1](./assets/images/erro-comum-1.jpg)
 
-### Eliminación de los archivos de sesión y reconexión
+### 🔄 Eliminación de los archivos de sesión y conectar nuevamente
 
-Si da un error de conexión, ingrese el siguiente comando:
+En caso de que dé algún error en la conexión, escriba el siguiente comando:
 
 ```sh
 sh reset-qr-auth.sh
 ```
 
-Luego elimine el dispositivo WhatsApp que va a la configuración de WhatsApp en "dispositivos conectados" y repita
-El procedimiento de iniciar el bot con `NPM Start`.
+Después, elimine el dispositivo de WhatsApp yendo a las configuraciones de WhatsApp en "dispositivos conectados" y repita
+el procedimiento de iniciar el bot con `npm start`.
 
-Luego, elimina el dispositivo de WhatsApp yendo a la configuración de WhatsApp en "dispositivos vinculados".
-
-Agrega un nuevo dispositivo nuevamente.
-
-### Permission denied (permiso denegado) al acceder a `cd /sdcard`
+### 🔐 Permission denied (permiso denegado) al acceder `cd /sdcard`
 
 <br/>
 
-![erro comum 2](./assets/images/erro-comum-2.png)
+![error común 2](./assets/images/erro-comum-2.png)
 
-Abre Termux, escribe `termux-setup-storage` y luego, acepta los permisos.
+Abra el termux, escriba `termux-setup-storage` y después, acepte los permisos
+
+### ⚙️ Configuras el token de la Spider API, prefijo, etc y el bot no lo reconoce
+
+Verifique si no tiene dos Takeshi's ejecutándose en su celular, muchas personas descargan el zip y siguen el tutorial, sin embargo, **el tutorial no explica por el zip, sino por el git clone**.
+
+Generalmente las personas que cometen este error, se quedan con dos bots:
+
+1. El primero dentro de `/sdcard`
+2. El segundo en la carpeta `/storage/emulated/0/Download`, que en el zip queda como `takeshi-bot-main`
+
+Debe eliminar uno de los bots y tanto configurar como ejecutar **solo uno**
 
 ## ¡Suscríbete al canal!
 
@@ -681,23 +700,23 @@ Abre Termux, escribe `termux-setup-storage` y luego, acepta los permisos.
 
 ## Licencia
 
-[GPL-3.0](https://github.com/guiireal/takeshi-bot-espanol/blob/main/LICENSE)
+[GPL-3.0](https://github.com/guiireal/takeshi-bot/blob/main/LICENSE)
 
-Este proyecto está licenciado bajo la Licencia Pública General GNU (GPL-3.0).
+Este proyecto está licenciado bajo la Licencia Pública General GNU (GPL-3.0).<br/>
 Esto significa que:
 
-  - Puedes usar este código como quieras, ya sea para proyectos personales o comerciales.
-  - Puedes modificar el código para adaptarlo a tus necesidades.
-  - Puedes compartir o vender el código, incluso modificado, pero debes:
-        - Mantener los créditos al autor original (Guilherme França - Dev Gui).
-        - Hacer que el código modificado esté disponible bajo la misma licencia GPL-3.0.
+- Puedes usar este código como quieras, sea para proyectos personales o comerciales.
+- Puedes modificar el código para adaptarlo a tus necesidades.
+- Puedes compartir o vender el código, incluso modificado, pero necesitas:
+    - Mantener los créditos al autor original (Guilherme França - Dev Gui).
+    - Hacer disponible el código modificado bajo la misma licencia GPL-3.0.
 
 Lo que no puedes hacer:
 
-  - No puedes transformar este código en algo propietario (cerrado) e impedir que otras personas lo accedan o lo usen.
+- No puedes transformar este código en algo propietario (cerrado) e impedir que otras personas lo accedan o lo usen.
 
-Esta licencia garantiza que todos tengan acceso al código fuente y puedan colaborar libremente, promoviendo el intercambio y la mejora del proyecto.
+Esta licencia garantiza que todos tengan acceso al código fuente y puedan colaborar libremente, promoviendo el intercambio y el mejoramiento del proyecto.
 
-## ⚠ Descargo de responsabilidad
+## ⚠ Disclaimer
 
-En este proyecto, tuve que alojar `node_modules` para ayudar a quienes ejecutan el bot desde el celular, ya que muchos de ellos podrían no ejecutar `npm install` correctamente a través de Termux.
+En este proyecto, necesité hospedar el node_modules, para ayudar a quien está ejecutando el bot por el celular, ya que muchos de ellos pueden no ejecutar el `npm install` por el termux correctamente.
