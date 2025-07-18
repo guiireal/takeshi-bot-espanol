@@ -35,7 +35,7 @@
 3. [Sobre el proyecto](#sobre-este-proyecto)
 4. [Instalación](#instalación)
    - [Instalación en Termux](#instalación-en-termux)
-   - [Instalación en las principales hosts de Brasil]($instalación-en-las-principales-hosts-de-brasil)
+   - [Instalación en las principales hosts de Brasil](#instalación-en-las-principales-hosts-de-brasil)
    - [Instalación en VPS (Debian/Ubuntu)](#instalación-en-vps-debianubuntu)
 5. [Configuración de API](#algunos-comandos-requieren-api)
 6. [Funcionalidades](#funcionalidades)
