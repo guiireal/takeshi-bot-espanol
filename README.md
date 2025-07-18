@@ -653,7 +653,7 @@ Todos los archivos de ejemplo se almacenan en `assets/samples/`:
 - 📝 package-lock.json ➔ _archivo de caché de dependencias del bot_
 - 📝 package.json ➔ _archivo de definición de dependencias del bot_
 - 📝 README.md ➔ _esta documentación_
-- 📝 reset-qr-auth.sh ➔ _archivo para eliminar las credenciales de Bot_
+- 📝 reset-qr-auth.sh ➔ _archivo para eliminar las credenciales de bot_
 
 ## Errores comunes
 
