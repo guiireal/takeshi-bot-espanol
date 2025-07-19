@@ -184,7 +184,7 @@ exports.findCommandImport = (commandName) => {
       const targetCommand = commands.find((cmd) => {
         if (!cmd?.commands || !Array.isArray(cmd.commands)) {
           errorLog(
-            `Error en el comando de tipo "${type}": La propiedad "commands" debe existir y ser un ["array"] con los nombres de los comandos. Archivo incorrecto: ${cmd.name}.js`
+            `Error en el comando del tipo "${type}": ¡La propiedad "commands" necesita existir y ser un ["array"] con los nombres de los comandos! Archivo erróneo: ${cmd.name}.js`
           );
 
           return false;
@@ -316,7 +316,7 @@ exports.getImageBuffer = async (url, options = {}) => {
 
     return buffer;
   } catch (error) {
-    errorLog(`Error al obtener el búfer de la imagen: ${error.message}`);
+    errorLog(`Error al obtener el buffer de la imagen: ${error.message}`);
     throw error;
   }
 };
@@ -375,14 +375,14 @@ const normalizeNumber = (number) => {
   return { with9: number, without9: number };
 };
 
-exports.compareUserJidWithOwnerNumber = ({ userJid, ownerNumber }) => {
-  if (!ownerNumber.startsWith("55")) {
-    return userJid === toUserJid(ownerNumber);
+exports.compareUserJidWithOtherNumber = ({ userJid, otherNumber }) => {
+  if (!otherNumber.startsWith("55")) {
+    return userJid === toUserJid(otherNumber);
   }
 
   const userNumber = onlyNumbers(userJid);
   const userVariations = normalizeNumber(userNumber);
-  const ownerVariations = normalizeNumber(ownerNumber);
+  const ownerVariations = normalizeNumber(otherNumber);
 
   return (
     userVariations.with9 === ownerVariations.with9 ||

@@ -8,7 +8,7 @@
 
 <div align="center">
     <a href="https://github.com/guiireal/takeshi-bot">
-        <img alt="Version" src="https://img.shields.io/badge/Vers%C3%A3o-5.5.0-blue">
+        <img alt="Version" src="https://img.shields.io/badge/Vers%C3%A3o-5.6.0-blue">
     </a>
 </div>
 
@@ -49,8 +49,9 @@
 10. [Estructura de carpetas](#estructura-de-carpetas)
 11. [Errores comunes](#errores-comunes)
 12. [Canal de YouTube](#suscríbete-al-canal)
-13. [Licencia](#licencia)
-14. [Descargo de responsabilidad](#-descargo-de-responsabilidad)
+13. [Contribuyendo al proyecto](#-contribuyendo-al-proyecto)
+14. [Licencia](#licencia)
+15. [Descargo de responsabilidad](#-descargo-de-responsabilidad)
 
 ## 🌐 Accede a Takeshi Bot en otros idiomas
 
@@ -698,6 +699,23 @@ Debe eliminar uno de los bots y tanto configurar como ejecutar **solo uno**
 ## ¡Suscríbete al canal!
 
 <a href="https://www.youtube.com/@devgui_?sub_confirmation=1" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/badge/YouTube-FF0000?style=for-the-badge&logo=youtube&logoColor=white" alt="YouTube"></a>
+
+## Contribuyendo al proyecto
+
+El Takeshi Bot es un proyecto **open source** ¡y tu contribución es muy bienvenida! 
+
+### 🚀 Cómo contribuir
+
+- 🐛 **Reportar bugs** a través de los [Issues](https://github.com/guiireal/takeshi-bot-espanol/issues)
+- ✨ **Sugerir nuevas funcionalidades** 
+- 🔧 **Contribuir con código** (nuevos comandos, correcciones, mejoras)
+- ⭐ **Dar una estrella** al repositorio
+
+### 📖 Antes de contribuir
+
+1. Lee nuestra **[Guía de Contribución](CONTRIBUTING.md)** completa
+2. Verifica los [Issues abiertos](https://github.com/guiireal/takeshi-bot-espanol/issues) 
+3. Sigue el template obligatorio para Pull Requests
 
 ## Licencia
 

@@ -1,11 +1,11 @@
 /**
- * Interceptores de validación
- * de permisos de usuario.
+ * Interceptadores de validación
+ * de permisos de usuarios.
  *
  * @author Dev Gui
  */
 const { OWNER_NUMBER, OWNER_LID } = require("../config");
-const { compareUserJidWithOwnerNumber } = require("../utils");
+const { compareUserJidWithOtherNumber } = require("../utils");
 
 exports.checkPermission = async ({ type, socket, userJid, remoteJid }) => {
   if (type === "member") {
@@ -29,7 +29,7 @@ exports.checkPermission = async ({ type, socket, userJid, remoteJid }) => {
     const isAdmin = participant.admin === "admin";
 
     const isBotOwner =
-      compareUserJidWithOwnerNumber({ userJid, ownerNumber: OWNER_NUMBER }) ||
+      compareUserJidWithOtherNumber({ userJid, otherNumber: OWNER_NUMBER }) ||
       userJid === OWNER_LID;
 
     if (type === "admin") {
