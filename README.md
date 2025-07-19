@@ -49,7 +49,7 @@
 10. [Estructura de carpetas](#estructura-de-carpetas)
 11. [Errores comunes](#errores-comunes)
 12. [Canal de YouTube](#suscríbete-al-canal)
-13. [Contribuyendo al proyecto](#-contribuyendo-al-proyecto)
+13. [Contribuyendo al proyecto](#contribuyendo-al-proyecto)
 14. [Licencia](#licencia)
 15. [Descargo de responsabilidad](#-descargo-de-responsabilidad)
 
