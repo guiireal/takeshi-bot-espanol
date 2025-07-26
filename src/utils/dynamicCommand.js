@@ -15,8 +15,9 @@ const {
   hasTypeAndCommand,
   isLink,
   isAdmin,
+  checkPermission,
+  isBotOwner,
 } = require("../middlewares");
-const { checkPermission } = require("../middlewares/checkPermission");
 const {
   isActiveGroup,
   getAutoResponderResponse,
@@ -28,18 +29,23 @@ const { errorLog } = require("../utils/logger");
 const { ONLY_GROUP_ID } = require("../config");
 const { badMacHandler } = require("./badMacHandler");
 
+/**
+ * @param {CommandHandleProps} paramsHandler
+ * @param {number} startProcess
+ */
 exports.dynamicCommand = async (paramsHandler, startProcess) => {
   const {
     commandName,
     prefix,
     sendWarningReply,
     sendErrorReply,
-    remoteJid,
     sendReply,
+    remoteJid,
     socket,
     userJid,
     fullMessage,
     webMessage,
+    isLid,
   } = paramsHandler;
 
   const activeGroup = isActiveGroup(remoteJid);
@@ -53,7 +59,7 @@ exports.dynamicCommand = async (paramsHandler, startProcess) => {
       await socket.groupParticipantsUpdate(remoteJid, [userJid], "remove");
 
       await sendReply(
-        "¡Anti-enlace activado! ¡Has sido eliminado por enviar un enlace!"
+        "¡Anti-link activado! ¡Fuiste eliminado por enviar un enlace!"
       );
 
       await socket.sendMessage(remoteJid, {
@@ -104,11 +110,11 @@ exports.dynamicCommand = async (paramsHandler, startProcess) => {
     }
   }
 
-  if (!activeGroup) {
+  if (!isBotOwner({ userJid, isLid }) && !activeGroup) {
     if (verifyPrefix(prefix) && hasTypeAndCommand({ type, command })) {
       if (command.name !== "on") {
         await sendWarningReply(
-          "¡Este grupo está desactivado! ¡Pídele al dueño del grupo que active el bot!"
+          "¡Este grupo está desactivado! ¡Pide al propietario del grupo que active el bot!"
         );
         return;
       }
@@ -141,7 +147,7 @@ exports.dynamicCommand = async (paramsHandler, startProcess) => {
         `Error de sesión durante la ejecución del comando ${command?.name}: ${error.message}`
       );
       await sendWarningReply(
-        "Error de comunicación. Intenta ejecutar el comando de nuevo."
+        "Error de comunicación. Intenta ejecutar el comando nuevamente."
       );
       return;
     }
@@ -159,16 +165,16 @@ exports.dynamicCommand = async (paramsHandler, startProcess) => {
       const isSpiderAPIError = url.includes("api.spiderx.com.br");
 
       await sendErrorReply(
-        `Ocurrió un error al ejecutar una llamada remota a ${
-          isSpiderAPIError ? "la API de Spider X" : url
-        } en el comando ${command.name}.
+        `¡Ocurrió un error al ejecutar una llamada remota a ${
+          isSpiderAPIError ? "la Spider X API" : url
+        } en el comando ${command.name}!
       
 📄 *Detalles*: ${messageText}`
       );
     } else {
       errorLog("Error al ejecutar comando", error);
       await sendErrorReply(
-        `Ocurrió un error al ejecutar el comando ${command.name}.
+        `¡Ocurrió un error al ejecutar el comando ${command.name}!
       
 📄 *Detalles*: ${error.message}`
       );

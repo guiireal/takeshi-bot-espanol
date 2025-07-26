@@ -77,7 +77,7 @@ exports.onMessagesUpsert = async ({ socket, messages, startProcess }) => {
             await commonFunctions.deleteMessage(webMessage.key);
           } catch (error) {
             errorLog(
-              `Error al eliminar mensaje de miembro silenciado, ¡probablemente el bot no es administrador del grupo! ${error.message}`
+              `Error al eliminar mensaje de miembro silenciado, ¡probablemente no soy administrador del grupo! ${error.message}`
             );
           }
 
