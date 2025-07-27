@@ -185,7 +185,9 @@ async function connect() {
     } else if (connection === "open") {
       successLog("¡Me conecté exitosamente!");
       infoLog("Versión de WhatsApp Web: " + version.join("."));
-      infoLog("¿Es la última versión?: " + (isLatest ? "Sí" : "No"));
+      infoLog(
+        "¿Es la última versión de WhatsApp Web?: " + (isLatest ? "Sí" : "No")
+      );
       badMacErrorCount = 0;
       badMacHandler.resetErrorCount();
     } else {
