@@ -6,9 +6,9 @@ const { toUserJid, onlyNumbers } = require(`${BASE_DIR}/utils`);
 
 module.exports = {
   name: "ban",
-  description: "Elimina a un miembro del grupo",
+  description: "Elimino un miembro del grupo",
   commands: ["ban", "kick"],
-  usage: `${PREFIX}ban @etiquetar_miembro 
+  usage: `${PREFIX}ban @mencionar_miembro 
   
 o 
 
@@ -25,38 +25,55 @@ ${PREFIX}ban (mencionando un mensaje)`,
     replyJid,
     sendReply,
     userJid,
+    isLid,
     sendSuccessReact,
   }) => {
     if (!args.length && !isReply) {
       throw new InvalidParameterError(
-        "¡Necesitas mencionar o etiquetar a un miembro!"
+        "¡Necesitas mencionar o marcar un miembro!"
       );
     }
 
-    const memberToRemoveJid = isReply ? replyJid : toUserJid(args[0]);
-    const memberToRemoveNumber = onlyNumbers(memberToRemoveJid);
+    let memberToRemoveId = null;
 
-    if (memberToRemoveNumber.length < 7 || memberToRemoveNumber.length > 15) {
-      throw new InvalidParameterError("¡Número inválido!");
-    }
+    if (isLid) {
+      const [result] = await socket.onWhatsApp(onlyNumbers(args[0]));
 
-    if (memberToRemoveJid === userJid) {
-      throw new DangerError("¡No puedes eliminarte a ti mismo!");
-    }
+      if (!result) {
+        throw new WarningError(
+          "¡El número proporcionado no está registrado en WhatsApp!"
+        );
+      }
 
-    if (memberToRemoveNumber === OWNER_NUMBER) {
-      throw new DangerError("¡No puedes eliminar al dueño del bot!");
-    }
+      memberToRemoveId = result.lid;
+    } else {
+      const memberToRemoveJid = isReply ? replyJid : toUserJid(args[0]);
+      const memberToRemoveNumber = onlyNumbers(memberToRemoveJid);
 
-    const botJid = toUserJid(BOT_NUMBER);
+      if (memberToRemoveNumber.length < 7 || memberToRemoveNumber.length > 15) {
+        throw new InvalidParameterError("¡Número inválido!");
+      }
 
-    if (memberToRemoveJid === botJid) {
-      throw new DangerError("¡No puedes eliminarme a mí!");
+      if (memberToRemoveJid === userJid) {
+        throw new DangerError("¡No puedes eliminarte a ti mismo!");
+      }
+
+      if (memberToRemoveNumber === OWNER_NUMBER) {
+        throw new DangerError("¡No puedes eliminar al dueño del bot!");
+      }
+
+      const botJid = toUserJid(BOT_NUMBER);
+
+      if (memberToRemoveJid === botJid) {
+        throw new DangerError("¡No puedes eliminarme!");
+      }
+
+      memberToRemoveId = memberToRemoveJid;
     }
 
     await socket.groupParticipantsUpdate(
       remoteJid,
-      [memberToRemoveJid],
+      [memberToRemoveId],
       "remove"
     );
 
