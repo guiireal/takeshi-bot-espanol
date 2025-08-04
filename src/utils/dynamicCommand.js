@@ -1,5 +1,5 @@
 /**
- * Enrutador
+ * Direccionador
  * de comandos.
  *
  * @author Dev Gui
@@ -24,9 +24,10 @@ const {
   isActiveAutoResponderGroup,
   isActiveAntiLinkGroup,
   isActiveOnlyAdmins,
+  getPrefix,
 } = require("./database");
 const { errorLog } = require("../utils/logger");
-const { ONLY_GROUP_ID } = require("../config");
+const { ONLY_GROUP_ID, PREFIX, BOT_EMOJI } = require("../config");
 const { badMacHandler } = require("./badMacHandler");
 
 /**
@@ -36,16 +37,17 @@ const { badMacHandler } = require("./badMacHandler");
 exports.dynamicCommand = async (paramsHandler, startProcess) => {
   const {
     commandName,
+    fullMessage,
+    isLid,
     prefix,
-    sendWarningReply,
-    sendErrorReply,
-    sendReply,
     remoteJid,
+    sendErrorReply,
+    sendReact,
+    sendReply,
+    sendWarningReply,
     socket,
     userJid,
-    fullMessage,
     webMessage,
-    isLid,
   } = paramsHandler;
 
   const activeGroup = isActiveGroup(remoteJid);
@@ -59,7 +61,7 @@ exports.dynamicCommand = async (paramsHandler, startProcess) => {
       await socket.groupParticipantsUpdate(remoteJid, [userJid], "remove");
 
       await sendReply(
-        "¡Anti-link activado! ¡Fuiste eliminado por enviar un enlace!"
+        "¡Anti-link activado! ¡Fuiste removido por enviar un enlace!"
       );
 
       await socket.sendMessage(remoteJid, {
@@ -82,7 +84,10 @@ exports.dynamicCommand = async (paramsHandler, startProcess) => {
   }
 
   if (activeGroup) {
-    if (!verifyPrefix(prefix) || !hasTypeAndCommand({ type, command })) {
+    if (
+      !verifyPrefix(prefix, remoteJid) ||
+      !hasTypeAndCommand({ type, command })
+    ) {
       if (isActiveAutoResponderGroup(remoteJid)) {
         const response = getAutoResponderResponse(fullMessage);
 
@@ -111,10 +116,13 @@ exports.dynamicCommand = async (paramsHandler, startProcess) => {
   }
 
   if (!isBotOwner({ userJid, isLid }) && !activeGroup) {
-    if (verifyPrefix(prefix) && hasTypeAndCommand({ type, command })) {
+    if (
+      verifyPrefix(prefix, remoteJid) &&
+      hasTypeAndCommand({ type, command })
+    ) {
       if (command.name !== "on") {
         await sendWarningReply(
-          "¡Este grupo está desactivado! ¡Pide al propietario del grupo que active el bot!"
+          "¡Este grupo está desactivado! ¡Pide al dueño del grupo que active el bot!"
         );
         return;
       }
@@ -128,7 +136,26 @@ exports.dynamicCommand = async (paramsHandler, startProcess) => {
     }
   }
 
-  if (!verifyPrefix(prefix)) {
+  if (!verifyPrefix(prefix, remoteJid)) {
+    return;
+  }
+
+  const groupPrefix = getPrefix(remoteJid);
+
+  if (fullMessage === groupPrefix) {
+    await sendReact(BOT_EMOJI);
+    await sendReply(
+      `¡Este es mi prefijo! ¡Usa ${groupPrefix}menu para ver los comandos disponibles!`
+    );
+
+    return;
+  }
+
+  if (!hasTypeAndCommand({ type, command })) {
+    await sendWarningReply(
+      `¡Comando no encontrado! ¡Usa ${groupPrefix}menu para ver los comandos disponibles!`
+    );
+
     return;
   }
 
@@ -169,8 +196,8 @@ exports.dynamicCommand = async (paramsHandler, startProcess) => {
       const isSpiderAPIError = url.includes("api.spiderx.com.br");
 
       await sendErrorReply(
-        `¡Ocurrió un error al ejecutar una llamada remota a ${
-          isSpiderAPIError ? "la Spider X API" : url
+        `Ocurrió un error al ejecutar una llamada remota a ${
+          isSpiderAPIError ? "la API de Spider X" : url
         } en el comando ${command.name}!
       
 📄 *Detalles*: ${messageText}`
@@ -178,7 +205,7 @@ exports.dynamicCommand = async (paramsHandler, startProcess) => {
     } else {
       errorLog("Error al ejecutar comando", error);
       await sendErrorReply(
-        `¡Ocurrió un error al ejecutar el comando ${command.name}!
+        `Ocurrió un error al ejecutar el comando ${command.name}!
       
 📄 *Detalles*: ${error.message}`
       );

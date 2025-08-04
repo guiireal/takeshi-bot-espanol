@@ -9,13 +9,13 @@ const fs = require("node:fs");
 const { addStickerMetadata } = require(`${BASE_DIR}/services/sticker`);
 const { InvalidParameterError } = require(`${BASE_DIR}/errors`);
 const { PREFIX, BOT_NAME, BOT_EMOJI } = require(`${BASE_DIR}/config`);
+const { exec } = require("child_process");
 
 module.exports = {
   name: "sticker",
-  description:
-    "Crea stickers a partir de imágenes, gifs o videos (máximo 10 segundos).",
-  commands: ["f", "s", "sticker", "fig"],
-  usage: `${PREFIX}sticker (etiqueta o responde una imagen/gif/video)`,
+  description: "Crea stickers de imagen, gif o video (máximo 10 segundos).",
+  commands: ["f", "s", "sticker", "fig", "adhesivo", "calcomanía"],
+  usage: `${PREFIX}sticker (marca o responde a una imagen/gif/video)`,
   handle: async ({
     isImage,
     isVideo,
@@ -30,7 +30,7 @@ module.exports = {
   }) => {
     if (!isImage && !isVideo) {
       throw new InvalidParameterError(
-        `¡Necesitas etiquetar o responder a una imagen/gif/video!`
+        `¡Necesitas marcar o responder a una imagen/gif/video!`
       );
     }
 
@@ -72,13 +72,11 @@ module.exports = {
         }
 
         await new Promise((resolve, reject) => {
-          const { exec } = require("child_process");
-
           const cmd = `ffmpeg -i "${inputPath}" -vf "scale=512:512:force_original_aspect_ratio=decrease" -f webp -quality 90 "${outputPath}"`;
 
           exec(cmd, (error, _, stderr) => {
             if (error) {
-              console.error("FFmpeg error:", stderr);
+              console.error("Error de FFmpeg:", stderr);
               reject(error);
             } else {
               resolve();
@@ -117,18 +115,16 @@ module.exports = {
             fs.unlinkSync(inputPath);
           }
           return sendErrorReply(
-            `¡El video enviado dura más de ${maxDuration} segundos! Envía un video más corto.`
+            `¡El video enviado tiene más de ${maxDuration} segundos! Envía un video más corto.`
           );
         }
 
         await new Promise((resolve, reject) => {
-          const { exec } = require("child_process");
-
-          const cmd = `ffmpeg -y -i "${inputPath}" -vcodec libwebp -fs 0.99M -filter_complex "[0:v] scale=512:512, fps=30, split [a][b]; [a] palettegen=reserve_transparent=on:transparency_color=ffffff [p]; [b][p] paletteuse" -f webp "${outputPath}"`;
+          const cmd = `ffmpeg -y -i "${inputPath}" -vcodec libwebp -fs 0.99M -filter_complex "[0:v] scale=512:512, fps=15, split [a][b]; [a] palettegen=reserve_transparent=on:transparency_color=ffffff [p]; [b][p] paletteuse" -f webp "${outputPath}"`;
 
           exec(cmd, (error, _, stderr) => {
             if (error) {
-              console.error("FFmpeg error:", stderr);
+              console.error("Error de FFmpeg:", stderr);
               reject(error);
             } else {
               resolve();
@@ -176,6 +172,7 @@ module.exports = {
       if (fs.existsSync(outputPath)) {
         fs.unlinkSync(outputPath);
       }
+
       if (fs.existsSync(stickerPath)) {
         fs.unlinkSync(stickerPath);
       }
@@ -197,13 +194,13 @@ module.exports = {
         error.message.includes("mmg.whatsapp.net")
       ) {
         throw new Error(
-          `Error de conexión al descargar multimedia de WhatsApp. Intenta de nuevo en unos segundos.`
+          `Error de conexión al descargar media de WhatsApp. Inténtalo de nuevo en unos segundos.`
         );
       }
 
       if (error.message.includes("FFmpeg")) {
         throw new Error(
-          `Error al procesar multimedia con FFmpeg. Verifica si el archivo no está corrupto.`
+          `Error al procesar media con FFmpeg. Verifica que el archivo no esté corrupto.`
         );
       }
 

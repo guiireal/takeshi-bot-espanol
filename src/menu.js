@@ -3,124 +3,131 @@
  *
  * @author Dev Gui
  */
-const { BOT_NAME, PREFIX } = require("./config");
+const { BOT_NAME } = require("./config");
 const packageInfo = require("../package.json");
 const { readMore } = require("./utils");
+const { getPrefix } = require("./utils/database");
 
-exports.menuMessage = () => {
+exports.menuMessage = (groupJid) => {
   const date = new Date();
+
+  const prefix = getPrefix(groupJid);
 
   return `╭━━⪩ ¡BIENVENIDO! ⪨━━${readMore()}
 ▢
 ▢ • ${BOT_NAME}
 ▢ • Fecha: ${date.toLocaleDateString("es-es")}
 ▢ • Hora: ${date.toLocaleTimeString("es-es")}
-▢ • Prefijo: ${PREFIX}
+▢ • Prefijo: ${prefix}
 ▢ • Versión: ${packageInfo.version}
 ▢
 ╰━━─「🪐」─━━
 
 ╭━━⪩ DUEÑO ⪨━━
 ▢
-▢ • ${PREFIX}exec
-▢ • ${PREFIX}get-id
-▢ • ${PREFIX}off
-▢ • ${PREFIX}on
-▢ • ${PREFIX}set-menu-image
+▢ • ${prefix}exec
+▢ • ${prefix}get-id
+▢ • ${prefix}off
+▢ • ${prefix}on
+▢ • ${prefix}set-menu-image
+▢ • ${prefix}set-prefix
 ▢
 ╰━━─「🌌」─━━
 
 ╭━━⪩ ADMINS ⪨━━
 ▢
-▢ • ${PREFIX}anti-audio (1/0)
-▢ • ${PREFIX}anti-document (1/0)
-▢ • ${PREFIX}anti-event (1/0)
-▢ • ${PREFIX}anti-image (1/0)
-▢ • ${PREFIX}anti-link (1/0)
-▢ • ${PREFIX}anti-product (1/0)
-▢ • ${PREFIX}anti-sticker (1/0)
-▢ • ${PREFIX}anti-video (1/0)
-▢ • ${PREFIX}auto-responder (1/0)
-▢ • ${PREFIX}ban
-▢ • ${PREFIX}clear
-▢ • ${PREFIX}close
-▢ • ${PREFIX}delete
-▢ • ${PREFIX}demote
-▢ • ${PREFIX}exit (1/0)
-▢ • ${PREFIX}hidetag
-▢ • ${PREFIX}link-group
-▢ • ${PREFIX}mute
-▢ • ${PREFIX}only-admin (1/0)
-▢ • ${PREFIX}open
-▢ • ${PREFIX}promote
-▢ • ${PREFIX}reveal
-▢ • ${PREFIX}schedule-message
-▢ • ${PREFIX}unmute
-▢ • ${PREFIX}welcome (1/0)
+▢ • ${prefix}add-auto-responder
+▢ • ${prefix}anti-audio (1/0)
+▢ • ${prefix}anti-document (1/0)
+▢ • ${prefix}anti-event (1/0)
+▢ • ${prefix}anti-image (1/0)
+▢ • ${prefix}anti-link (1/0)
+▢ • ${prefix}anti-product (1/0)
+▢ • ${prefix}anti-sticker (1/0)
+▢ • ${prefix}anti-video (1/0)
+▢ • ${prefix}auto-responder (1/0)
+▢ • ${prefix}ban
+▢ • ${prefix}clear
+▢ • ${prefix}close
+▢ • ${prefix}delete
+▢ • ${prefix}delete-auto-responder
+▢ • ${prefix}demote
+▢ • ${prefix}exit (1/0)
+▢ • ${prefix}hidetag
+▢ • ${prefix}link-group
+▢ • ${prefix}list-auto-responder
+▢ • ${prefix}mute
+▢ • ${prefix}only-admin (1/0)
+▢ • ${prefix}open
+▢ • ${prefix}promote
+▢ • ${prefix}reveal
+▢ • ${prefix}schedule-message
+▢ • ${prefix}unmute
+▢ • ${prefix}welcome (1/0)
 ▢
 ╰━━─「⭐」─━━
 
 ╭━━⪩ PRINCIPAL ⪨━━
 ▢
-▢ • ${PREFIX}attp
-▢ • ${PREFIX}fake-chat
-▢ • ${PREFIX}generate-link
-▢ • ${PREFIX}get-lid
-▢ • ${PREFIX}google-search
-▢ • ${PREFIX}perfil
-▢ • ${PREFIX}profile
-▢ • ${PREFIX}raw-message
-▢ • ${PREFIX}rename
-▢ • ${PREFIX}samples-of-messages
-▢ • ${PREFIX}sticker
-▢ • ${PREFIX}to-image
-▢ • ${PREFIX}ttp
-▢ • ${PREFIX}yt-search
+▢ • ${prefix}attp
+▢ • ${prefix}fake-chat
+▢ • ${prefix}generate-link
+▢ • ${prefix}get-lid
+▢ • ${prefix}google-search
+▢ • ${prefix}perfil
+▢ • ${prefix}profile
+▢ • ${prefix}raw-message
+▢ • ${prefix}rename
+▢ • ${prefix}samples-of-messages
+▢ • ${prefix}sticker
+▢ • ${prefix}to-image
+▢ • ${prefix}ttp
+▢ • ${prefix}yt-search
 ▢
 ╰━━─「🚀」─━━
 
 ╭━━⪩ DESCARGAS ⪨━━
 ▢
-▢ • ${PREFIX}play-audio
-▢ • ${PREFIX}play-video
-▢ • ${PREFIX}tik-tok
-▢ • ${PREFIX}yt-mp3
-▢ • ${PREFIX}yt-mp4
+▢ • ${prefix}play-audio
+▢ • ${prefix}play-video
+▢ • ${prefix}tik-tok
+▢ • ${prefix}yt-mp3
+▢ • ${prefix}yt-mp4
 ▢
 ╰━━─「🎶」─━━
 
 ╭━━⪩ JUEGOS ⪨━━
 ▢
-▢ • ${PREFIX}abrazar
-▢ • ${PREFIX}besar
-▢ • ${PREFIX}bofetada
-▢ • ${PREFIX}cenar
-▢ • ${PREFIX}dado
-▢ • ${PREFIX}golpear
-▢ • ${PREFIX}luchar
-▢ • ${PREFIX}matar
+▢ • ${prefix}abrazar
+▢ • ${prefix}besar
+▢ • ${prefix}bofetada
+▢ • ${prefix}cenar
+▢ • ${prefix}dado
+▢ • ${prefix}golpear
+▢ • ${prefix}luchar
+▢ • ${prefix}matar
 ▢
 ╰━━─「🎡」─━━
 
 ╭━━⪩ IA ⪨━━
 ▢
-▢ • ${PREFIX}gemini
-▢ • ${PREFIX}ia-sticker
-▢ • ${PREFIX}pixart
-▢ • ${PREFIX}stable-diffusion-turbo
+▢ • ${prefix}gemini
+▢ • ${prefix}ia-sticker
+▢ • ${prefix}pixart
+▢ • ${prefix}stable-diffusion-turbo
 ▢
 ╰━━─「🚀」─━━
 
 ╭━━⪩ LIENZO ⪨━━
 ▢
-▢ • ${PREFIX}blur
-▢ • ${PREFIX}contrast
-▢ • ${PREFIX}gray
-▢ • ${PREFIX}invert
-▢ • ${PREFIX}jail
-▢ • ${PREFIX}mirror
-▢ • ${PREFIX}pixel
-▢ • ${PREFIX}rip
+▢ • ${prefix}blur
+▢ • ${prefix}contrast
+▢ • ${prefix}gray
+▢ • ${prefix}invert
+▢ • ${prefix}jail
+▢ • ${prefix}mirror
+▢ • ${prefix}pixel
+▢ • ${prefix}rip
 ▢
 ╰━━─「❇」─━━`;
 };

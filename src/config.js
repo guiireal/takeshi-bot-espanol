@@ -1,6 +1,6 @@
 const path = require("path");
 
-// Prefijo de los comandos.
+// Prefijo estándar de comandos.
 exports.PREFIX = "/";
 
 // Emoji del bot (cambia si lo prefieres).

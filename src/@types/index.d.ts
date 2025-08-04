@@ -1,14 +1,16 @@
+import { GroupMetadata, proto } from "baileys";
+
 declare global {
-  /** Ruta base del proyecto, usada para imports. */
+  /** Ruta base del proyecto, utilizada para las importaciones. */
   const BASE_DIR: string;
 
   /**
    * Propiedades y funciones disponibles en el objeto pasado a la función handle
-   * de cada comando. Puedes acceder a ellas con desestructuración:
+   * de cada comando. Puede acceder a ellas mediante la desestructuración:
    *
    * ```javascript
    * handle: async ({ args, sendReply, isImage }) => {
-   *    // Tu código aquí
+   * // Tu código aquí
    * }
    * ```
    */
@@ -21,18 +23,18 @@ declare global {
     args: string[];
 
     /**
-     * Nombre del comando que fue ejecutado
+     * Nombre del comando que se ha ejecutado
      */
     commandName: string;
 
     /**
-     * Argumentos pasados junto con el comando como string única.
+     * Argumentos pasados junto con el comando como una única cadena de texto.
      * Ejemplo: "arg1 / arg2"
      */
     fullArgs: string;
 
     /**
-     * Mensaje entero incluyendo el comando.
+     * Mensaje completo incluyendo el comando.
      */
     fullMessage: string;
 
@@ -42,12 +44,12 @@ declare global {
     isAudio: boolean;
 
     /**
-     * Si el mensaje viene de un grupo.
+     * Si el mensaje proviene de un grupo.
      */
     isGroup: boolean;
 
     /**
-     * Si el mensaje viene de un grupo cuyos participantes poseen LID.
+     * Si el mensaje proviene de un grupo cuyos participantes tienen LID.
      */
     isGroupWithLid: boolean;
 
@@ -67,7 +69,7 @@ declare global {
     isSticker: boolean;
 
     /**
-     * Si el mensaje es un video.
+     * Si el mensaje es un vídeo.
      */
     isVideo: boolean;
 
@@ -82,7 +84,7 @@ declare global {
     remoteJid: string;
 
     /**
-     * ID del mensaje que está siendo respondido.
+     * ID del mensaje al que se está respondiendo.
      */
     replyJid: string;
 
@@ -92,12 +94,12 @@ declare global {
     socket: any;
 
     /**
-     * Timestamp en que el comando fue iniciado.
+     * Marca de tiempo en la que se inició el comando.
      */
     startProcess?: number;
 
     /**
-     * Tipo de comando por cargo, si es "admin", "owner" o "member".
+     * Tipo de comando por rol, si es "admin", "owner" o "member".
      */
     type?: string;
 
@@ -113,13 +115,13 @@ declare global {
 
     /**
      * Elimina un mensaje de un participante de WhatsApp.
-     * Necesita ser administrador del grupo para eliminar mensajes de otros participantes.
+     * Es necesario ser administrador del grupo para eliminar mensajes de otros participantes.
      *
-     *  Ejemplo:
+     * Ejemplo:
      * ```javascript
      * await deleteMessage(webMessage.key);
      * ```
-     * @param key Clave de identificación del mensaje a ser eliminado.
+     * @param key Clave de identificación del mensaje a eliminar.
      */
     deleteMessage(key: {
       remoteJid: string;
@@ -147,8 +149,8 @@ declare global {
     downloadSticker(): Promise<string>;
 
     /**
-     * Descarga un video del mensaje actual.
-     * @returns Promise con la ruta del video
+     * Descarga un vídeo del mensaje actual.
+     * @returns Promise con la ruta del vídeo
      */
     downloadVideo(): Promise<string>;
 
@@ -171,7 +173,7 @@ declare global {
       filePath: string,
       asVoice: boolean,
       quoted: boolean
-    ): Promise<void>;
+    ): Promise<proto.WebMessageInfo>;
 
     /**
      * Envía un audio a partir de un archivo.
@@ -185,7 +187,7 @@ declare global {
      *
      * const buffer = fs.readFileSync(path.join(ASSETS_DIR, "samples" "sample-audio.mp3"))
      * o
-     * const buffer = await getBuffer("https://ejemplo.com/audio.mp3");
+     * const buffer = await getBuffer("[https://ejemplo.com/audio.mp3](https://ejemplo.com/audio.mp3)");
      * await sendAudioFromBuffer(filePath);
      * ```
      * @param buffer Buffer del archivo de audio
@@ -196,14 +198,14 @@ declare global {
       buffer: Buffer,
       asVoice: boolean,
       quoted: boolean
-    ): Promise<void>;
+    ): Promise<proto.WebMessageInfo>;
 
     /**
      * Envía un audio a partir de una URL.
      *
      * Ejemplo:
      * ```javascript
-     * await sendAudioFromURL("https://ejemplo.com/audio.mp3");
+     * await sendAudioFromURL("[https://ejemplo.com/audio.mp3](https://ejemplo.com/audio.mp3)");
      * ```
      * @param url URL del audio a ser enviado
      * @param asVoice Si el audio debe ser enviado como mensaje de voz (true o false)
@@ -213,14 +215,62 @@ declare global {
       url: string,
       asVoice: boolean,
       quoted: boolean
-    ): Promise<void>;
+    ): Promise<proto.WebMessageInfo>;
+
+    /**
+     * Envía un contacto al grupo o usuario.
+     *
+     * Ejemplo:
+     * ```javascript
+     * await sendContact("5511920202020", "Usuario Ejemplo");
+     * ```
+     * @param phoneNumber Número de teléfono del contacto (formato internacional, ej: "5511920202020")
+     * @param displayName Nombre del contacto a ser mostrado
+     */
+    sendContact(phoneNumber: string, displayName: string): Promise<void>;
+
+    /**
+     * Envía un mensaje editado como respuesta a un mensaje anterior.
+     *
+     * Ejemplo:
+     * ```javascript
+     * const response = await sendReply("Mensaje 1", [mentions]);
+     * await sendEditedReply("Mensaje editado", response, [mentions]);
+     * ```
+     * @param text Texto del mensaje
+     * @param messageToEdit Mensaje a editar
+     * @param mentions Array opcional de IDs de usuarios para mencionar
+     */
+    sendEditedReply(
+      text: string,
+      messageToEdit: proto.WebMessageInfo,
+      mentions?: string[]
+    ): Promise<proto.WebMessageInfo>;
+
+    /**
+     * Envía un mensaje de texto, opcionalmente mencionando a los usuarios.
+     *
+     * Ejemplo:
+     * ```javascript
+     * const response = await sendText("¡Hola @usuario!", ["123456789@s.whatsapp.net"]);
+     * await sendEditedText("Mensaje editado", response, ["123456789@s.whatsapp.net"]);
+     * ```
+     * @param text Texto del mensaje
+     * @param messageToEdit Mensaje a editar
+     * @param mentions Array opcional de IDs de usuarios para mencionar
+     */
+    sendEditedText(
+      text: string,
+      messageToEdit: proto.WebMessageInfo,
+      mentions?: string[]
+    ): Promise<proto.WebMessageInfo>;
 
     /**
      * Envía un gif a partir de un archivo local.
      *
      * Ejemplo:
      * ```javascript
-     * await sendGifFromFile("./assets/alguna-cosa.gif", "Aquí está tu gif @5511920202020", ["5511920202020@s.whatsapp.net"]);
+     * await sendGifFromFile("./assets/algo.gif", "Aquí está tu gif @5511920202020", ["5511920202020@s.whatsapp.net"]);
      * ```
      * @param file Ruta del archivo en el servidor
      * @param caption Texto del mensaje (opcional)
@@ -232,14 +282,14 @@ declare global {
       caption?: string,
       mentions?: string[],
       quoted?: boolean
-    ): Promise<void>;
+    ): Promise<proto.WebMessageInfo>;
 
     /**
      * Envía un gif a partir de una URL.
      *
      * Ejemplo:
      * ```javascript
-     * await sendGifFromURL("https://ejemplo.com/video.gif", "¡Aquí está tu gif @5511920202020!", ["5511920202020@s.whatsapp.net"]);
+     * await sendGifFromURL("[https://ejemplo.com/video.gif](https://ejemplo.com/video.gif)", "¡Aquí está tu gif @5511920202020!", ["5511920202020@s.whatsapp.net"]);
      * ```
      * @param url URL del gif a ser enviado
      * @param caption Texto del mensaje (opcional)
@@ -251,7 +301,7 @@ declare global {
       caption?: string,
       mentions?: string[],
       quoted?: boolean
-    ): Promise<void>;
+    ): Promise<proto.WebMessageInfo>;
 
     /**
      * Envía un gif a partir de un buffer.
@@ -265,7 +315,7 @@ declare global {
      *
      * const buffer = fs.readFileSync(path.join(ASSETS_DIR, "samples", "sample-video.mp4"));
      * o
-     * const buffer = await getBuffer("https://ejemplo.com/video.gif");
+     * const buffer = await getBuffer("[https://ejemplo.com/video.gif](https://ejemplo.com/video.gif)");
      * await sendGifFromBuffer(buffer, "¡Aquí está tu gif @5511920202020!", ["5511920202020@s.whatsapp.net"]);
      * ```
      * @param buffer Buffer del gif
@@ -278,7 +328,7 @@ declare global {
       caption?: string,
       mentions?: string[],
       quoted?: boolean
-    ): Promise<void>;
+    ): Promise<proto.WebMessageInfo>;
 
     /**
      * Envía una imagen a partir de un archivo local.
@@ -297,7 +347,7 @@ declare global {
       caption?: string,
       mentions?: string[],
       quoted?: boolean
-    ): Promise<void>;
+    ): Promise<proto.WebMessageInfo>;
 
     /**
      * Envía una imagen a partir de un buffer.
@@ -309,7 +359,7 @@ declare global {
      *
      * const buffer = fs.readFileSync("./assets/image.png");
      * o
-     * const buffer = await getBuffer("https://ejemplo.com/imagen.png");
+     * const buffer = await getBuffer("[https://ejemplo.com/imagen.png](https://ejemplo.com/imagen.png)");
      * await sendImageFromBuffer(buffer, "¡Aquí está tu imagen @5511920202020!", ["5511920202020@s.whatsapp.net"]);
      * ```
      * @param buffer Buffer de la imagen
@@ -322,14 +372,14 @@ declare global {
       caption?: string,
       mentions?: string[],
       quoted?: boolean
-    ): Promise<void>;
+    ): Promise<proto.WebMessageInfo>;
 
     /**
      * Envía una imagen a partir de una URL.
      *
      * Ejemplo:
      * ```javascript
-     * await sendImageFromURL("https://ejemplo.com/imagen.png", "¡Aquí está tu imagen @5511920202020!", ["5511920202020@s.whatsapp.net"]);
+     * await sendImageFromURL("[https://ejemplo.com/imagen.png](https://ejemplo.com/imagen.png)", "¡Aquí está tu imagen @5511920202020!", ["5511920202020@s.whatsapp.net"]);
      * ```
      * @param url URL de la imagen a ser enviada
      * @param caption Texto del mensaje (opcional)
@@ -341,10 +391,22 @@ declare global {
       caption?: string,
       mentions?: string[],
       quoted?: boolean
-    ): Promise<void>;
+    ): Promise<proto.WebMessageInfo>;
 
     /**
-     * Envía una reacción (emoji) en el mensaje.
+     * Envía una ubicación geográfica.
+     *
+     * Ejemplo:
+     * ```javascript
+     * await sendLocation(-23.550520, -46.633308);
+     * ```
+     * @param latitude Latitud de la ubicación
+     * @param longitude Longitud de la ubicación
+     */
+    sendLocation(latitude: number, longitude: number): Promise<void>;
+
+    /**
+     * Envía una reacción (emoji) al mensaje.
      *
      * Ejemplo:
      * ```javascript
@@ -352,7 +414,7 @@ declare global {
      * ```
      * @param emoji Emoji para reaccionar
      */
-    sendReact(emoji: string): Promise<void>;
+    sendReact(emoji: string): Promise<proto.WebMessageInfo>;
 
     /**
      * Simula una acción de grabación de audio, enviando un mensaje de estado.
@@ -362,9 +424,9 @@ declare global {
     sendRecordState(anotherJid?: string): Promise<void>;
 
     /**
-     * Envía una reacción de éxito (emoji ✅) en el mensaje
+     * Envía una reacción de éxito (emoji ✅) al mensaje
      */
-    sendSuccessReact(): Promise<void>;
+    sendSuccessReact(): Promise<proto.WebMessageInfo>;
 
     /**
      * Simula una acción de escritura, enviando un mensaje de estado.
@@ -374,19 +436,19 @@ declare global {
     sendTypingState(anotherJid?: string): Promise<void>;
 
     /**
-     * Envía una reacción de espera (emoji ⏳) en el mensaje.
+     * Envía una reacción de espera (emoji ⏳) al mensaje.
      */
-    sendWaitReact(): Promise<void>;
+    sendWaitReact(): Promise<proto.WebMessageInfo>;
 
     /**
-     * Envía una reacción de advertencia (emoji ⚠️) en el mensaje.
+     * Envía una reacción de advertencia (emoji ⚠️) al mensaje.
      */
-    sendWarningReact(): Promise<void>;
+    sendWarningReact(): Promise<proto.WebMessageInfo>;
 
     /**
-     * Envía una reacción de error (emoji ❌) en el mensaje.
+     * Envía una reacción de error (emoji ❌) al mensaje.
      */
-    sendErrorReact(): Promise<void>;
+    sendErrorReact(): Promise<proto.WebMessageInfo>;
 
     /**
      * Envía un mensaje como respuesta.
@@ -398,7 +460,7 @@ declare global {
      * @param text Texto del mensaje
      * @param mentions Array opcional de IDs de usuarios para mencionar
      */
-    sendReply(text: string, mentions?: string[]): Promise<void>;
+    sendReply(text: string, mentions?: string[]): Promise<proto.WebMessageInfo>;
 
     /**
      * Envía un mensaje de éxito como respuesta.
@@ -410,7 +472,10 @@ declare global {
      * @param text Texto del mensaje de éxito
      * @param mentions Array opcional de IDs de usuarios para mencionar
      */
-    sendSuccessReply(text: string, mentions?: string[]): Promise<void>;
+    sendSuccessReply(
+      text: string,
+      mentions?: string[]
+    ): Promise<proto.WebMessageInfo>;
 
     /**
      * Envía un mensaje de atención como respuesta.
@@ -422,10 +487,13 @@ declare global {
      * @param text Texto del mensaje de error
      * @param mentions Array opcional de IDs de usuarios para mencionar
      */
-    sendWarningReply(text: string, mentions?: string[]): Promise<void>;
+    sendWarningReply(
+      text: string,
+      mentions?: string[]
+    ): Promise<proto.WebMessageInfo>;
 
     /**
-     * Envía un mensaje de espere como respuesta.
+     * Envía un mensaje de espera como respuesta.
      *
      * Ejemplo:
      * ```javascript
@@ -434,19 +502,25 @@ declare global {
      * @param text Texto del mensaje de error
      * @param mentions Array opcional de IDs de usuarios para mencionar
      */
-    sendWaitReply(text: string, mentions?: string[]): Promise<void>;
+    sendWaitReply(
+      text: string,
+      mentions?: string[]
+    ): Promise<proto.WebMessageInfo>;
 
     /**
      * Envía un mensaje de error como respuesta.
      *
      * Ejemplo:
      * ```javascript
-     * await sendErrorReply("¡No fue posible encontrar resultados!");
+     * await sendErrorReply("¡No se encontraron resultados!");
      * ```
      * @param text Texto del mensaje de error
      * @param mentions Array opcional de IDs de usuarios para mencionar
      */
-    sendErrorReply(text: string, mentions?: string[]): Promise<void>;
+    sendErrorReply(
+      text: string,
+      mentions?: string[]
+    ): Promise<proto.WebMessageInfo>;
 
     /**
      * Envía un sticker a partir de un archivo local.
@@ -458,19 +532,25 @@ declare global {
      * @param path Ruta del archivo en el servidor
      * @param quoted Si el mensaje debe ser enviado mencionando otro mensaje (true o false)
      */
-    sendStickerFromFile(path: string, quoted?: boolean): Promise<void>;
+    sendStickerFromFile(
+      path: string,
+      quoted?: boolean
+    ): Promise<proto.WebMessageInfo>;
 
     /**
      * Envía un sticker a partir de una URL.
      *
      * Ejemplo:
      * ```javascript
-     * await sendStickerFromURL("https://ejemplo.com/sticker.webp");
+     * await sendStickerFromURL("[https://ejemplo.com/sticker.webp](https://ejemplo.com/sticker.webp)");
      * ```
      * @param url URL del sticker a ser enviado
      * @param quoted Si el mensaje debe ser enviado mencionando otro mensaje (true o false)
      */
-    sendStickerFromURL(url: string, quoted?: boolean): Promise<void>;
+    sendStickerFromURL(
+      url: string,
+      quoted?: boolean
+    ): Promise<proto.WebMessageInfo>;
 
     /**
      * Envía un sticker a partir de un buffer.
@@ -484,16 +564,19 @@ declare global {
      *
      * const buffer = fs.readFileSync(path.join(ASSETS_DIR, "samples", "sample-sticker.webp"));
      * o
-     * const buffer = await getBuffer("https://ejemplo.com/sticker.webp");
+     * const buffer = await getBuffer("[https://ejemplo.com/sticker.webp](https://ejemplo.com/sticker.webp)");
      * await sendStickerFromBuffer(buffer);
      * ```
      * @param buffer Buffer del sticker
      * @param quoted Si el mensaje debe ser enviado mencionando otro mensaje (true o false)
      */
-    sendStickerFromBuffer(buffer: Buffer, quoted?: boolean): Promise<void>;
+    sendStickerFromBuffer(
+      buffer: Buffer,
+      quoted?: boolean
+    ): Promise<proto.WebMessageInfo>;
 
     /**
-     * Envía un mensaje de texto, opcionalmente mencionando usuarios.
+     * Envía un mensaje de texto, opcionalmente mencionando a los usuarios.
      *
      * Ejemplo:
      * ```javascript
@@ -502,14 +585,14 @@ declare global {
      * @param text Texto del mensaje
      * @param mentions Array opcional de IDs de usuarios para mencionar
      */
-    sendText(text: string, mentions?: string[]): Promise<void>;
+    sendText(text: string, mentions?: string[]): Promise<proto.WebMessageInfo>;
 
     /**
-     * Envía un video a partir de un archivo local.
+     * Envía un vídeo a partir de un archivo local.
      *
      * Ejemplo:
      * ```javascript
-     * await sendVideoFromFile("./assets/video.mp4", "¡Aquí está tu video!", ["5511920202020@s.whatsapp.net"]);
+     * await sendVideoFromFile("./assets/video.mp4", "¡Aquí está tu vídeo!", ["5511920202020@s.whatsapp.net"]);
      * ```
      * @param file Ruta del archivo en el servidor
      * @param caption Texto del mensaje (opcional)
@@ -521,16 +604,16 @@ declare global {
       caption?: string,
       mentions?: string[],
       quoted?: boolean
-    ): Promise<void>;
+    ): Promise<proto.WebMessageInfo>;
 
     /**
-     * Envía un video a partir de una URL.
+     * Envía un vídeo a partir de una URL.
      *
      * Ejemplo:
      * ```javascript
-     * await sendVideoFromURL("https://ejemplo.com/video.mp4", "¡Aquí está tu video @5511920202020!", ["5511920202020@s.whatsapp.net"]);
+     * await sendVideoFromURL("[https://ejemplo.com/video.mp4](https://ejemplo.com/video.mp4)", "¡Aquí está tu vídeo @5511920202020!", ["5511920202020@s.whatsapp.net"]);
      * ```
-     * @param url URL del video a ser enviado
+     * @param url URL del vídeo a ser enviado
      * @param caption Texto del mensaje (opcional)
      * @param mentions Array opcional de JIDs de usuarios para mencionar
      * @param quoted Si el mensaje debe ser enviado mencionando otro mensaje (true o false)
@@ -540,10 +623,10 @@ declare global {
       caption?: string,
       mentions?: string[],
       quoted?: boolean
-    ): Promise<void>;
+    ): Promise<proto.WebMessageInfo>;
 
     /**
-     * Envía un video a partir de un buffer.
+     * Envía un vídeo a partir de un buffer.
      *
      * Ejemplo:
      * ```javascript
@@ -554,10 +637,10 @@ declare global {
      *
      * const buffer = fs.readFileSync(path.join(ASSETS_DIR, "samples", "sample-video.mp4"));
      * o
-     * const buffer = await getBuffer("https://ejemplo.com/video.mp4");
-     * await sendVideoFromBuffer(buffer, "¡Aquí está el video @5511920202020!", ["5511920202020@s.whatsapp.net"]);
+     * const buffer = await getBuffer("[https://ejemplo.com/video.mp4](https://ejemplo.com/video.mp4)");
+     * await sendVideoFromBuffer(buffer, "¡Aquí está el vídeo @5511920202020!", ["5511920202020@s.whatsapp.net"]);
      * ```
-     * @param buffer Buffer del video
+     * @param buffer Buffer del vídeo
      * @param caption Texto del mensaje (opcional)
      * @param mentions Array opcional de JIDs de usuarios para mencionar
      * @param quoted Si el mensaje debe ser enviado mencionando otro mensaje (true o false)
@@ -567,7 +650,7 @@ declare global {
       caption?: string,
       mentions?: string[],
       quoted?: boolean
-    ): Promise<void>;
+    ): Promise<proto.WebMessageInfo>;
 
     /**
      * Envía un documento a partir de un archivo local.
@@ -582,7 +665,7 @@ declare global {
      * ```
      * @param filePath Ruta del archivo
      * @param mimetype Tipo MIME del documento (ej: "application/pdf", "text/plain")
-     * @param fileName Nombre del archivo que será mostrado en WhatsApp
+     * @param fileName Nombre del archivo que se mostrará en WhatsApp
      * @param quoted Si el mensaje debe ser enviado mencionando otro mensaje (true o false)
      */
     sendDocumentFromFile(
@@ -590,18 +673,18 @@ declare global {
       mimetype?: string,
       fileName?: string,
       quoted?: boolean
-    ): Promise<void>;
+    ): Promise<proto.WebMessageInfo>;
 
     /**
      * Envía un documento a partir de una URL.
      *
      * Ejemplo:
      * ```javascript
-     * await sendDocumentFromURL("https://ejemplo.com/documento.pdf", "application/pdf", "documento.pdf");
+     * await sendDocumentFromURL("[https://ejemplo.com/documento.pdf](https://ejemplo.com/documento.pdf)", "application/pdf", "documento.pdf");
      * ```
      * @param url URL del documento a ser enviado
      * @param mimetype Tipo MIME del documento (ej: "application/pdf", "text/plain")
-     * @param fileName Nombre del archivo que será mostrado en WhatsApp
+     * @param fileName Nombre del archivo que se mostrará en WhatsApp
      * @param quoted Si el mensaje debe ser enviado mencionando otro mensaje (true o false)
      */
     sendDocumentFromURL(
@@ -609,7 +692,7 @@ declare global {
       mimetype?: string,
       fileName?: string,
       quoted?: boolean
-    ): Promise<void>;
+    ): Promise<proto.WebMessageInfo>;
 
     /**
      * Envía un documento a partir de un buffer.
@@ -623,12 +706,12 @@ declare global {
      *
      * const buffer = fs.readFileSync(path.join(ASSETS_DIR, "samples", "sample-document.pdf"));
      * o
-     * const buffer = await getBuffer("https://ejemplo.com/documento.pdf");
+     * const buffer = await getBuffer("[https://ejemplo.com/documento.pdf](https://ejemplo.com/documento.pdf)");
      * await sendDocumentFromBuffer(buffer, "application/pdf", "documento.pdf");
      * ```
      * @param buffer Buffer del documento
      * @param mimetype Tipo MIME del documento (ej: "application/pdf", "text/plain")
-     * @param fileName Nombre del archivo que será mostrado en WhatsApp
+     * @param fileName Nombre del archivo que se mostrará en WhatsApp
      * @param quoted Si el mensaje debe ser enviado mencionando otro mensaje (true o false)
      */
     sendDocumentFromBuffer(
@@ -636,10 +719,10 @@ declare global {
       mimetype?: string,
       fileName?: string,
       quoted?: boolean
-    ): Promise<void>;
+    ): Promise<proto.WebMessageInfo>;
 
     /**
-     * Obtiene metadatos completos del grupo.
+     * Obtiene los metadatos completos del grupo.
      *
      * Ejemplo:
      * ```javascript
@@ -648,9 +731,9 @@ declare global {
      * console.log("Participantes:", metadata.participants.length);
      * ```
      * @param jid ID del grupo (opcional, usa el grupo actual si no se proporciona)
-     * @returns Promise con metadatos del grupo o null si no es un grupo
+     * @returns Promise con los metadatos del grupo o null si no es un grupo
      */
-    getGroupMetadata(jid?: string): Promise<any | null>;
+    getGroupMetadata(jid?: string): Promise<GroupMetadata | null>;
 
     /**
      * Obtiene el nombre del grupo.
@@ -661,7 +744,7 @@ declare global {
      * await sendReply(`Nombre del grupo: ${groupName}`);
      * ```
      * @param groupJid ID del grupo (opcional, usa el grupo actual si no se proporciona)
-     * @returns Promise con el nombre del grupo o string vacía si no es un grupo
+     * @returns Promise con el nombre del grupo o cadena vacía si no es un grupo
      */
     getGroupName(groupJid?: string): Promise<string>;
 
@@ -674,12 +757,12 @@ declare global {
      * await sendReply(`Propietario del grupo: @${owner.split("@")[0]}`, [owner]);
      * ```
      * @param groupJid ID del grupo (opcional, usa el grupo actual si no se proporciona)
-     * @returns Promise con el ID del propietario o string vacía si no es un grupo
+     * @returns Promise con el ID del propietario o cadena vacía si no es un grupo
      */
     getGroupOwner(groupJid?: string): Promise<string>;
 
     /**
-     * Obtiene lista de participantes del grupo.
+     * Obtiene la lista de participantes del grupo.
      *
      * Ejemplo:
      * ```javascript
@@ -687,12 +770,12 @@ declare global {
      * await sendReply(`Total de participantes: ${participants.length}`);
      * ```
      * @param groupJid ID del grupo (opcional, usa el grupo actual si no se proporciona)
-     * @returns Promise con array de participantes o array vacío si no es un grupo
+     * @returns Promise con un array de participantes o un array vacío si no es un grupo
      */
     getGroupParticipants(groupJid?: string): Promise<any[]>;
 
     /**
-     * Obtiene lista de administradores del grupo.
+     * Obtiene la lista de administradores del grupo.
      *
      * Ejemplo:
      * ```javascript
@@ -701,7 +784,7 @@ declare global {
      * await sendReply(`Administradores: ${adminList}`, admins);
      * ```
      * @param groupJid ID del grupo (opcional, usa el grupo actual si no se proporciona)
-     * @returns Promise con array de IDs de los administradores o array vacío si no es un grupo
+     * @returns Promise con un array de IDs de los administradores o un array vacío si no es un grupo
      */
     getGroupAdmins(groupJid?: string): Promise<string[]>;
 
@@ -711,9 +794,9 @@ declare global {
      * Ejemplo:
      * ```javascript
      * const options = [
-     *   { optionName: "Opción 1" },
-     *   { optionName: "Opción 2" },
-     *   { optionName: "Opción 3" }
+     * { optionName: "Opción 1" },
+     * { optionName: "Opción 2" },
+     * { optionName: "Opción 3" }
      * ];
      *
      * await sendPoll("¿Cuál es tu opción favorita?", options, true);
@@ -728,7 +811,7 @@ declare global {
       title: string,
       options: { optionName: string }[],
       singleChoice?: boolean
-    ): Promise<void>;
+    ): Promise<proto.WebMessageInfo>;
   }
 }
 
