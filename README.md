@@ -347,6 +347,7 @@ exports.SPIDER_API_TOKEN = "tu_token_aqui";
 | Cambiar imagen del bot | Dueño | ❌
 | Ejecutar comandos de infraestructura | Dueño | ❌
 | Encender el bot en el grupo | Dueño | ❌
+| Modificar el prefijo por grupo | Dueño | ❌ |
 | Obtener el ID del grupo | Dueño | ❌
 | Abrir grupo | Admin | ❌
 | Activar/desactivar auto-respuesta | Admin | ❌
@@ -364,6 +365,7 @@ exports.SPIDER_API_TOKEN = "tu_token_aqui";
 | Cambiar nombre del grupo | Admin | ❌
 | Cerrar grupo | Admin | ❌
 | Eliminar mensajes | Admin | ❌
+| Gestão de mensagens do auto-responder | Admin | ❌
 | Limpiar chat | Admin | ❌
 | Mencionar a todos | Admin | ❌
 | Programar mensaje | Admin | ❌
