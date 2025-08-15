@@ -286,7 +286,7 @@ Comandos seguros incluyen: ls, pwd, cat, ps, df, git status, etc.`
         output = output.replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, "");
 
         return sendSuccessReply(
-          `✅ Resultado del comando: \`${fullArgs}\`\n\n` +
+          `Resultado del comando: \`${fullArgs}\`\n\n` +
             `\`\`\`\n${output.trim()}\n\`\`\``
         );
       }
