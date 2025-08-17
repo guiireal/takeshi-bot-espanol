@@ -3,19 +3,10 @@ const { imageAI } = require(`${BASE_DIR}/services/spider-x-api`);
 const { PREFIX } = require(`${BASE_DIR}/config`);
 
 module.exports = {
-  name: "stable-diffusion-turbo",
-  description: "Crea una imagen usando la IA Stable Diffusion Turbo",
-  commands: [
-    "stable-diffusion-turbo",
-    "stable-dif-turbo",
-    "stable-dif",
-    "stable-diff-turbo",
-    "stable-diff",
-    "stable-diffusion",
-    "stable-difusion-turbo",
-    "stable-difusion",
-  ],
-  usage: `${PREFIX}stable-diffusion-turbo descripción`,
+  name: "flux",
+  description: "Crea una imagen usando la IA Flux",
+  commands: ["flux"],
+  usage: `${PREFIX}flux descripción`,
   /**
    * @param {CommandHandleProps} props
    * @returns {Promise<void>}
@@ -36,7 +27,7 @@ module.exports = {
 
     await sendWaitReply("generando imagen...");
 
-    const data = await imageAI("stable-diffusion-turbo", fullArgs);
+    const data = await imageAI(fullArgs);
 
     if (!data?.image) {
       return sendWarningReply(
