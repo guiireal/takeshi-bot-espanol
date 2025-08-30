@@ -1,6 +1,6 @@
 /**
- * Evento llamado cuando un usuario
- * entra o sale de un grupo de WhatsApp.
+ * Evento que se activa cuando un usuario
+ * se une o sale de un grupo de WhatsApp.
  *
  * @author Dev Gui
  */
@@ -56,6 +56,16 @@ exports.onGroupParticipantsUpdate = async ({
 
       if (spiderAPITokenConfigured) {
         try {
+          if (!buffer) {
+            await socket.sendMessage(remoteJid, {
+              image: buffer,
+              caption: finalWelcomeMessage,
+              mentions,
+            });
+
+            return;
+          }
+
           const link = await upload(
             buffer,
             `${getRandomNumber(10_000, 99_9999)}.png`
@@ -63,7 +73,7 @@ exports.onGroupParticipantsUpdate = async ({
 
           if (!link) {
             throw new Error(
-              "¡No pude subir la imagen, intenta de nuevo más tarde!"
+              "No pude subir la imagen, ¡intenta de nuevo más tarde!"
             );
           }
 
@@ -125,11 +135,11 @@ exports.onGroupParticipantsUpdate = async ({
 
           if (!link) {
             throw new Error(
-              "¡No pude subir la imagen, intenta de nuevo más tarde!"
+              "No pude subir la imagen, ¡intenta de nuevo más tarde!"
             );
           }
 
-          const url = exit("miembro", "Fuiste un buen miembro", link);
+          const url = exit("membro", "Fuiste un buen miembro", link);
 
           await socket.sendMessage(remoteJid, {
             image: { url },

@@ -1,6 +1,6 @@
 /**
- * Evento llamado cuando un mensaje
- * es enviado al grupo de WhatsApp
+ * Evento que se activa cuando un mensaje
+ * es enviado a un grupo de WhatsApp.
  *
  * @author Dev Gui
  */
@@ -61,20 +61,23 @@ exports.onMessagesUpsert = async ({ socket, messages, startProcess }) => {
           action,
         });
       } else {
-        const commonFunctions = loadCommonFunctions({ socket, webMessage });
-
-        if (!commonFunctions) {
-          continue;
-        }
-
         if (
           checkIfMemberIsMuted(
-            commonFunctions.remoteJid,
-            commonFunctions.userJid
+            webMessage?.key?.remoteJid,
+            webMessage?.key?.participant?.replace(/:[0-9][0-9]|:[0-9]/g, "")
           )
         ) {
           try {
-            await commonFunctions.deleteMessage(webMessage.key);
+            const { id, remoteJid, participant } = webMessage.key;
+
+            const deleteKey = {
+              remoteJid,
+              fromMe: false,
+              id,
+              participant,
+            };
+
+            await socket.sendMessage(remoteJid, { delete: deleteKey });
           } catch (error) {
             errorLog(
               `Error al eliminar mensaje de miembro silenciado, ¡probablemente no soy administrador del grupo! ${error.message}`
@@ -82,6 +85,12 @@ exports.onMessagesUpsert = async ({ socket, messages, startProcess }) => {
           }
 
           return;
+        }
+
+        const commonFunctions = loadCommonFunctions({ socket, webMessage });
+
+        if (!commonFunctions) {
+          continue;
         }
 
         await dynamicCommand(commonFunctions, startProcess);
@@ -92,12 +101,12 @@ exports.onMessagesUpsert = async ({ socket, messages, startProcess }) => {
       }
 
       if (badMacHandler.isSessionError(error)) {
-        errorLog(`Error de sesión al procesar mensaje: ${error.message}`);
+        errorLog(`Error de sesión al procesar el mensaje: ${error.message}`);
         continue;
       }
 
       errorLog(
-        `Error al procesar mensaje: ${error.message} | Stack: ${error.stack}`
+        `Error al procesar el mensaje: ${error.message} | Stack: ${error.stack}`
       );
 
       continue;

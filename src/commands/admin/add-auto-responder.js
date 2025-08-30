@@ -18,25 +18,29 @@ module.exports = {
    * @param {CommandHandleProps} props
    * @returns {Promise<void>}
    */
-  handle: async ({ sendSuccessReply, args, prefix, sendErrorReply }) => {
-    if (args.length !== 2) {
+  handle: async ({ sendSuccessReply, prefix, sendErrorReply, fullArgs }) => {
+    const parts = fullArgs.split(/\s\/\s/);
+
+    if (parts.length !== 2) {
       throw new InvalidParameterError(`Debes informar el término y la respuesta del auto-responder de la siguiente forma:
 
 ${prefix}add-auto-responder término / lo que debo responder`);
     }
 
-    const success = await addAutoResponderItem(args[0], args[1]);
+    const [term, response] = parts;
+
+    const success = await addAutoResponderItem(term, response);
 
     if (!success) {
       await sendErrorReply(
-        `¡El término "${args[0]}" ya existe en el auto-responder!`
+        `¡El término "${term}" ya existe en el auto-responder!`
       );
 
       return;
     }
 
     await sendSuccessReply(
-      `El término "${args[0]}" fue agregado al auto-responder con la respuesta "${args[1]}".`
+      `El término "${term}" fue agregado al auto-responder con la respuesta "${response}".`
     );
   },
 };
