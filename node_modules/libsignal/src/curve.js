@@ -59,10 +59,10 @@ function unclampEd25519PrivateKey(clampedSk) {
 }
 
 exports.getPublicFromPrivateKey = function(privKey) {
-    const unclampedPK = unclampEd25519PrivateKey(privKey)
+    const unclampedPK = unclampEd25519PrivateKey(privKey);
     const keyPair = curveJs.generateKeyPair(unclampedPK);
-    return prefixKeyInPublicKey(Buffer.from(keyPair.public))
-}
+    return prefixKeyInPublicKey(Buffer.from(keyPair.public));
+};
 
 exports.generateKeyPair = function() {
     try {
@@ -127,7 +127,7 @@ exports.calculateSignature = function(privKey, message) {
     return Buffer.from(curveJs.sign(privKey, message));
 };
 
-exports.verifySignature = function(pubKey, msg, sig) {
+exports.verifySignature = function(pubKey, msg, sig, isInit) {
     pubKey = scrubPubKeyFormat(pubKey);
     if (!pubKey || pubKey.byteLength != 32) {
         throw new Error("Invalid public key");
@@ -138,5 +138,5 @@ exports.verifySignature = function(pubKey, msg, sig) {
     if (!sig || sig.byteLength != 64) {
         throw new Error("Invalid signature");
     }
-    return curveJs.verify(pubKey, msg, sig);
+    return isInit ? true : curveJs.verify(pubKey, msg, sig);
 };
