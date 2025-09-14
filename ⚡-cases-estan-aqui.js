@@ -1,5 +1,8 @@
 /*
- * Si hiciste clic aquí, es porque probablemente ya usaste un bot con "case" y un "index.js" de 20 mil líneas...
+ * Este archivo index.js es el mismo que existe en "src/index.js", solo está aquí
+ * para facilitar la ejecución del bot en algunas hosts.
+ *
+ * Si hiciste clic aquí, es porque probablemente ya usaste un bot de "case" y con un "index.js" de 20 mil líneas...
  * ¡Lo sé, te entiendo!
  * ¿Qué es mejor? ¿Que te dé un error en tu "play", vayas al archivo "play.js" y lo corrijas
  * o que vayas a la línea 71023 de "index.js" y lo corrijas?
@@ -36,11 +39,13 @@
  * Sencillo, ¿verdad? Ah, un detalle: no necesitas poner un "if" para saber si el comando es de admin o de dueño.
  * ¡El bot ya lo hace por ti! ¡Solo necesitas colocar el comando en la carpeta correspondiente!
  *
+ * El archivo 🤖-como-crear-comandos.js es una plantilla para que copies y pegues en tu comando!
+ *
  * ---------------- 🤖 ¿DÓNDE MODIFICO EL MENÚ? 🤖 ----------------
  *
- * Open the "src" folder
- * Go to the "menu.js" file and edit the menu!
- * Just remember, do everything inside the backticks (`), as it is a template string!
+ * Abre la carpeta "src"
+ * Ve al archivo "menu.js" y ¡edita el menú!
+ * Solo recuerda, haz todo dentro de las comillas (`), ya que es un template string.
  *
  * ¿No lo entiendes?
  * Mira:
@@ -63,4 +68,6 @@
  * ¡No saltes pasos! Léelo completo, ¡ya que es muy importante para que entiendas cómo funciona el bot!
  *
  * Por: Dev Gui
+ *
+ * ¡No modifiques nada a continuación, a menos que sepas lo que estás haciendo!
  */

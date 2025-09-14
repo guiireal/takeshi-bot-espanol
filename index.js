@@ -39,6 +39,8 @@
  * Sencillo, ¿verdad? Ah, un detalle: no necesitas poner un "if" para saber si el comando es de admin o de dueño.
  * ¡El bot ya lo hace por ti! ¡Solo necesitas colocar el comando en la carpeta correspondiente!
  *
+ * El archivo 🤖-como-crear-comandos.js es una plantilla para que copies y pegues en tu comando!
+ *
  * ---------------- 🤖 ¿DÓNDE MODIFICO EL MENÚ? 🤖 ----------------
  *
  * Abre la carpeta "src"
