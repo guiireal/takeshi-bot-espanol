@@ -12,6 +12,8 @@ const {
   baileysIs,
   download,
   onlyNumbers,
+  removeFileWithTimeout,
+  ajustAudioByBuffer,
 } = require(".");
 const fs = require("node:fs");
 const { delay } = require("baileys");
@@ -370,15 +372,30 @@ exports.loadCommonFunctions = ({ socket, webMessage }) => {
     asVoice = false,
     quoted = true
   ) => {
-    await sendRecordState();
-
     const quotedObject = quoted ? { quoted: webMessage } : {};
+
+    const audioBuffer = fs.readFileSync(filePath);
+
+    const {
+      audioPath,
+      audioBuffer: processedBuffer,
+      oldAudioPath,
+    } = await ajustAudioByBuffer(audioBuffer, asVoice);
+
+    const mimetype = asVoice ? "audio/ogg; codecs=opus" : "audio/mpeg";
+
+    if (asVoice) {
+      await sendRecordState();
+    }
+
+    removeFileWithTimeout(audioPath);
+    removeFileWithTimeout(oldAudioPath);
 
     return await socket.sendMessage(
       remoteJid,
       {
-        audio: fs.readFileSync(filePath),
-        mimetype: "audio/mpeg",
+        audio: processedBuffer,
+        mimetype,
         ptt: asVoice,
       },
       {
@@ -392,15 +409,28 @@ exports.loadCommonFunctions = ({ socket, webMessage }) => {
     asVoice = false,
     quoted = true
   ) => {
-    await sendRecordState();
-
     const quotedObject = quoted ? { quoted: webMessage } : {};
+
+    const {
+      audioPath,
+      audioBuffer: processedBuffer,
+      oldAudioPath,
+    } = await ajustAudioByBuffer(buffer, asVoice);
+
+    const mimetype = asVoice ? "audio/ogg; codecs=opus" : "audio/mpeg";
+
+    if (asVoice) {
+      await sendRecordState();
+    }
+
+    removeFileWithTimeout(audioPath);
+    removeFileWithTimeout(oldAudioPath);
 
     return await socket.sendMessage(
       remoteJid,
       {
-        audio: buffer,
-        mimetype: "audio/mpeg",
+        audio: processedBuffer,
+        mimetype,
         ptt: asVoice,
       },
       {
@@ -410,18 +440,42 @@ exports.loadCommonFunctions = ({ socket, webMessage }) => {
   };
 
   const sendAudioFromURL = async (url, asVoice = false, quoted = true) => {
-    await sendRecordState();
-
     const quotedObject = quoted ? { quoted: webMessage } : {};
+
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch audio from URL: ${response.statusText}`);
+    }
+
+    const arrayBuffer = await response.arrayBuffer();
+    const audioBuffer = Buffer.from(arrayBuffer);
+
+    const {
+      audioPath,
+      audioBuffer: processedBuffer,
+      oldAudioPath,
+    } = await ajustAudioByBuffer(audioBuffer, asVoice);
+
+    const mimetype = asVoice ? "audio/ogg; codecs=opus" : "audio/mpeg";
+
+    if (asVoice) {
+      await sendRecordState();
+    }
+
+    removeFileWithTimeout(audioPath);
+    removeFileWithTimeout(oldAudioPath);
 
     return await socket.sendMessage(
       remoteJid,
       {
-        audio: { url },
-        mimetype: "audio/mpeg",
+        audio: processedBuffer,
+        mimetype,
         ptt: asVoice,
       },
-      { url, ...quotedObject }
+      {
+        ...quotedObject,
+      }
     );
   };
 
