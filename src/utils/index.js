@@ -242,13 +242,9 @@ exports.readCommandImports = () => {
 
 const onlyNumbers = (text) => text.replace(/[^0-9]/g, "");
 
-exports.onlyNumbers = onlyNumbers;
-
 function toUserJid(number) {
   return `${onlyNumbers(number)}@s.whatsapp.net`;
 }
-
-exports.toUserJid = toUserJid;
 
 exports.toUserLid = (value) => `${onlyNumbers(value)}@lid`;
 
@@ -282,8 +278,6 @@ exports.readMore = () => {
   return invisibleBreak;
 };
 
-exports.getRandomNumber = getRandomNumber;
-
 function getRandomName(extension) {
   const fileName = `takeshi_temp_${getRandomNumber(0, 999999)}`;
 
@@ -293,8 +287,6 @@ function getRandomName(extension) {
 
   return `${fileName}.${extension}`;
 }
-
-exports.getRandomName = getRandomName;
 
 exports.removeFileWithTimeout = (filePath, timeout = 5000) => {
   setTimeout(() => {
@@ -449,6 +441,11 @@ exports.compareUserJidWithOtherNumber = ({ userJid, otherNumber }) => {
     userVariations.without9 === ownerVariations.without9
   );
 };
+
+exports.getRandomNumber = getRandomNumber;
+exports.getRandomName = getRandomName;
+exports.onlyNumbers = onlyNumbers;
+exports.toUserJid = toUserJid;
 
 exports.GROUP_PARTICIPANT_ADD = 27;
 exports.GROUP_PARTICIPANT_LEAVE = 32;
