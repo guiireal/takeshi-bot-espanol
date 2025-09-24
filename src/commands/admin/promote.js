@@ -31,7 +31,10 @@ module.exports = {
       );
     }
 
-    const userId = args[0].replace("@", "") + "@s.whatsapp.net";
+    const userId =
+      args[0].length > 14
+        ? `${args[0].replace("@", "")}@lid`
+        : args[0].replace("@", "") + "@s.whatsapp.net";
 
     try {
       await socket.groupParticipantsUpdate(remoteJid, [userId], "promote");
