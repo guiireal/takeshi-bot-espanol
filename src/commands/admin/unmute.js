@@ -4,7 +4,6 @@
  *
  * @author Dev Gui
  */
-const { toUserJid, onlyNumbers } = require(`${BASE_DIR}/utils`);
 const {
   checkIfMemberIsMuted,
   unmuteMember,
@@ -15,45 +14,43 @@ const { DangerError, WarningError } = require(`${BASE_DIR}/errors`);
 
 module.exports = {
   name: "unmute",
-  description: "Desactiva el silencio de un miembro del grupo",
-  commands: ["unmute"],
+  description: "Le quita el silencio a un miembro del grupo",
+  commands: ["unmute", "desilenciar"],
   usage: `${PREFIX}unmute @usuario`,
   /**
    * @param {CommandHandleProps} props
    * @returns {Promise<void>}
-   */
-  handle: async ({
+   */ handle: async ({
     remoteJid,
     sendSuccessReply,
     args,
     isGroup,
-    isGroupWithLid,
-    socket,
+    replyJid,
   }) => {
     if (!isGroup) {
-      throw new DangerError("Este comando solo puede ser usado en grupos.");
+      throw new DangerError("Este comando solo se puede usar en grupos.");
     }
 
-    if (!args.length) {
+    if (!args.length && !replyJid) {
       throw new DangerError(
-        `Necesitas mencionar a un usuario para desmutear.\n\nEjemplo: ${PREFIX}unmute @usuario`
+        `Necesitas mencionar a un usuario para quitarle el silencio.\n\nEjemplo: ${PREFIX}unmute @usuario`
       );
     }
 
-    const targetUserNumber = onlyNumbers(args[0]);
-    let targetUserJid = toUserJid(targetUserNumber);
+    const userId = replyJid
+      ? replyJid
+      : args?.[0]?.length > 14
+      ? `${args?.[0]?.replace("@", "")}@lid`
+      : args?.[0]?.replace("@", "") + "@s.whatsapp.net";
 
-    if (isGroupWithLid) {
-      const [result] = await socket.onWhatsApp(targetUserNumber);
-      targetUserJid = result?.lid;
-    }
-
-    if (!checkIfMemberIsMuted(remoteJid, targetUserJid)) {
+    if (!checkIfMemberIsMuted(remoteJid, userId)) {
       throw new WarningError("¡Este usuario no está silenciado!");
     }
 
-    unmuteMember(remoteJid, targetUserJid);
+    unmuteMember(remoteJid, userId);
 
-    await sendSuccessReply("¡Usuario desmuteado con éxito!");
+    await sendSuccessReply(
+      "¡Se le ha quitado el silencio al usuario con éxito!"
+    );
   },
 };
