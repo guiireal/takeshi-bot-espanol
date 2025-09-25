@@ -1,6 +1,9 @@
-const { OWNER_NUMBER } = require("../../config");
-
-const { PREFIX, BOT_NUMBER } = require(`${BASE_DIR}/config`);
+const {
+  PREFIX,
+  BOT_NUMBER,
+  OWNER_NUMBER,
+  ONWER_LID,
+} = require(`${BASE_DIR}/config`);
 const { DangerError, InvalidParameterError } = require(`${BASE_DIR}/errors`);
 const { toUserJid, onlyNumbers } = require(`${BASE_DIR}/utils`);
 
@@ -25,7 +28,6 @@ ${PREFIX}ban (mencionando un mensaje)`,
     replyJid,
     sendReply,
     userJid,
-    isLid,
     sendSuccessReact,
   }) => {
     if (!args.length && !isReply) {
@@ -35,29 +37,21 @@ ${PREFIX}ban (mencionando un mensaje)`,
     }
 
     const userId =
-      args[0].length > 14
-        ? `${args[0].replace("@", "")}@lid`
-        : args[0].replace("@", "") + "@s.whatsapp.net";
+      args?.[0]?.length > 14
+        ? `${args?.[0]?.replace("@", "")}@lid`
+        : args?.[0]?.replace("@", "") + "@s.whatsapp.net";
 
-    const replyJidToRemove =
-      isReply && replyJid?.length > 14
-        ? `${replyJid.replace("@", "")}@lid`
-        : replyJid;
-
-    let memberToRemoveId = null;
-
-    const memberToRemoveJid = isReply ? replyJidToRemove : userId;
+    const memberToRemoveJid = isReply ? replyJid : userId;
     const memberToRemoveNumber = onlyNumbers(memberToRemoveJid);
-
-    if (memberToRemoveNumber.length < 7 || memberToRemoveNumber.length > 15) {
-      throw new InvalidParameterError("¡Número inválido!");
-    }
 
     if (memberToRemoveJid === userJid) {
       throw new DangerError("¡No puedes eliminarte a ti mismo!");
     }
 
-    if (memberToRemoveNumber === OWNER_NUMBER) {
+    if (
+      memberToRemoveNumber === OWNER_NUMBER ||
+      memberToRemoveNumber + "@lid" === ONWER_LID
+    ) {
       throw new DangerError("¡No puedes eliminar al dueño del bot!");
     }
 
@@ -67,11 +61,9 @@ ${PREFIX}ban (mencionando un mensaje)`,
       throw new DangerError("¡No puedes eliminarme!");
     }
 
-    memberToRemoveId = memberToRemoveJid;
-
     await socket.groupParticipantsUpdate(
       remoteJid,
-      [memberToRemoveId],
+      [memberToRemoveJid],
       "remove"
     );
 
