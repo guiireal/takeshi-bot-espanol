@@ -665,6 +665,10 @@ Todos los archivos de ejemplo se almacenan en `assets/samples/`:
 - 📝 reset-qr-auth.sh ➔ _archivo para eliminar las credenciales de bot_
 - 📝 update.sh ➔ _archivo de actualización del bot_
 
+## Actualizar el bot
+
+Ejecuta `bash update.sh`
+
 ## Errores comunes
 
 ### 📁 Operación denegada al extraer la carpeta
