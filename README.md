@@ -653,6 +653,7 @@ Todos los archivos de ejemplo se almacenan en `assets/samples/`:
     - 📝 index.js ➔ _script de punto de entrada de bot_
     - 📝 loader.js ➔ _script de carga de función_
     - 📝 menu.js ➔ _menú de robots_
+    - 📝 messages.js ➔ _archivos de mensajes de bienvenida y despedida_
     - 📝 test.js ➔ _guión de prueba_
 - 📝 ⚡-cases-estan-aqui.js ➔ _easter egg_ 
 - 📝 index.js ➔ _script de punto de entrada de bot para alojamiento_
@@ -662,6 +663,7 @@ Todos los archivos de ejemplo se almacenan en `assets/samples/`:
 - 📝 package.json ➔ _archivo de definición de dependencias del bot_
 - 📝 README.md ➔ _esta documentación_
 - 📝 reset-qr-auth.sh ➔ _archivo para eliminar las credenciales de bot_
+- 📝 update.sh ➔ _archivo de actualización del bot_
 
 ## Errores comunes
 
