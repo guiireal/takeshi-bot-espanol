@@ -373,6 +373,7 @@ exports.SPIDER_API_TOKEN = "tu_token_aqui";
 | Revelar | Admin | ❌
 | Silenciar/desmutear | Admin | ❌
 | Solo administradores | Admin | ❌
+| Veja saldo | Admin | 
 | Chat falso | Miembro | ❌
 | Comandos de diversión/juegos | Miembro |❌
 | Descarga de video TikTok | Miembro | ✅
