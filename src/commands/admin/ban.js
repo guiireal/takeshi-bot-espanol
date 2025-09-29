@@ -45,6 +45,10 @@ ${PREFIX}ban (mencionando un mensaje)`,
     const memberToRemoveJid = isReply ? replyJid : userId;
     const memberToRemoveNumber = onlyNumbers(memberToRemoveJid);
 
+    if (!memberToRemoveJid) {
+      throw new InvalidParameterError("¡Membro inválido!");
+    }
+
     if (memberToRemoveJid === userJid) {
       throw new DangerError("¡No puedes eliminarte a ti mismo!");
     }
