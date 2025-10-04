@@ -78,6 +78,7 @@ exports.menuMessage = (groupJid) => {
 ▢ • ${prefix}perfil
 ▢ • ${prefix}profile
 ▢ • ${prefix}raw-message
+▢ • ${prefix}refresh
 ▢ • ${prefix}rename
 ▢ • ${prefix}samples-of-messages
 ▢ • ${prefix}sticker

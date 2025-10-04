@@ -2,12 +2,12 @@
  * Script de
  * inicialización del bot.
  *
- * Este script es
- * responsable de
+ * Este script se
+ * encarga de
  * iniciar la conexión
  * con WhatsApp.
  *
- * No se recomienda alterar
+ * No es recomendable modificar
  * este archivo,
  * a menos que sepas
  * lo que estás haciendo.
@@ -53,6 +53,13 @@ logger.level = "error";
 
 const msgRetryCounterCache = new NodeCache();
 
+const oneDay = 60 * 60 * 24;
+const groupCache = new NodeCache({ stdTTL: oneDay, checkperiod: 60 });
+
+function updateGroupMetadataCache(jid, metadata) {
+  groupCache.set(jid, metadata);
+}
+
 async function connect() {
   const baileysFolder = path.resolve(
     __dirname,
@@ -77,12 +84,15 @@ async function connect() {
     },
     shouldIgnoreJid: (jid) =>
       isJidBroadcast(jid) || isJidStatusBroadcast(jid) || isJidNewsletter(jid),
+    connectTimeoutMs: 20_000,
     keepAliveIntervalMs: 30_000,
     maxMsgRetryCount: 5,
     markOnlineOnConnect: true,
     syncFullHistory: false,
+    emitOwnEvents: false,
     msgRetryCounterCache,
     shouldSyncHistoryMessage: () => false,
+    cachedGroupMetadata: (jid) => groupCache.get(jid),
   });
 
   if (!socket.authState.creds.registered) {
@@ -98,7 +108,7 @@ async function connect() {
 
     if (!phoneNumber) {
       errorLog(
-        '¡Número de teléfono inválido! Inténtalo de nuevo con el comando "npm start".'
+        '¡Número de teléfono inválido! Intenta de nuevo con el comando "npm start".'
       );
 
       process.exit(1);
@@ -120,12 +130,12 @@ async function connect() {
         error?.message?.includes("Bad MAC") ||
         error?.toString()?.includes("Bad MAC")
       ) {
-        errorLog("Error Bad MAC en la desconexión detectado");
+        errorLog("Error de Bad MAC detectado en la desconexión");
 
         if (badMacHandler.handleError(error, "connection.update")) {
           if (badMacHandler.hasReachedLimit()) {
             warningLog(
-              "Límite de errores Bad MAC alcanzado. Limpiando archivos de sesión problemáticos..."
+              "Se ha alcanzado el límite de errores Bad MAC. Limpiando archivos de sesión problemáticos..."
             );
             badMacHandler.clearProblematicSessionFiles();
             badMacHandler.resetErrorCount();
@@ -149,7 +159,7 @@ async function connect() {
             if (badMacHandler.handleError(sessionError, "badSession")) {
               if (badMacHandler.hasReachedLimit()) {
                 warningLog(
-                  "Límite de errores de sesión alcanzado. Limpiando archivos de sesión..."
+                  "Se ha alcanzado el límite de errores de sesión. Limpiando archivos de sesión..."
                 );
                 badMacHandler.clearProblematicSessionFiles();
                 badMacHandler.resetErrorCount();
@@ -172,7 +182,7 @@ async function connect() {
             warningLog("¡Conexión prohibida!");
             break;
           case DisconnectReason.restartRequired:
-            infoLog('¡Por favor reiníciame! Escribe "npm start".');
+            infoLog('¡Por favor, reiníciame! Escribe "npm start".');
             break;
           case DisconnectReason.unavailableService:
             warningLog("¡Servicio no disponible!");
@@ -183,7 +193,7 @@ async function connect() {
         load(newSocket);
       }
     } else if (connection === "open") {
-      successLog("¡Me conecté exitosamente!");
+      successLog("¡Me he conectado con éxito!");
       infoLog("Versión de WhatsApp Web: " + version.join("."));
       infoLog(
         "¿Es la última versión de WhatsApp Web?: " + (isLatest ? "Sí" : "No")
@@ -200,4 +210,5 @@ async function connect() {
   return socket;
 }
 
+exports.updateCacheGroupMetadata = updateGroupMetadataCache;
 exports.connect = connect;

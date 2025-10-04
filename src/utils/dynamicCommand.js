@@ -1,5 +1,5 @@
 /**
- * Direccionador
+ * Enrutador
  * de comandos.
  *
  * @author Dev Gui
@@ -61,7 +61,7 @@ exports.dynamicCommand = async (paramsHandler, startProcess) => {
       await socket.groupParticipantsUpdate(remoteJid, [userJid], "remove");
 
       await sendReply(
-        "¡Anti-link activado! ¡Fuiste removido por enviar un enlace!"
+        "¡Anti-link activado! ¡Te he eliminado por enviar un enlace!"
       );
 
       await socket.sendMessage(remoteJid, {
@@ -100,7 +100,9 @@ exports.dynamicCommand = async (paramsHandler, startProcess) => {
     }
 
     if (!(await checkPermission({ type, ...paramsHandler }))) {
-      await sendErrorReply("¡No tienes permiso para ejecutar este comando!");
+      await sendErrorReply(
+        `¡No tienes permiso para ejecutar este comando!\n\nSi crees que sí, ¡usa el comando ${prefix}refresh para actualizar los datos del grupo!`
+      );
       return;
     }
 
@@ -122,13 +124,15 @@ exports.dynamicCommand = async (paramsHandler, startProcess) => {
     ) {
       if (command.name !== "on") {
         await sendWarningReply(
-          "¡Este grupo está desactivado! ¡Pide al dueño del grupo que active el bot!"
+          "¡Este grupo está desactivado! ¡Pídele al dueño del grupo que active el bot!"
         );
         return;
       }
 
       if (!(await checkPermission({ type, ...paramsHandler }))) {
-        await sendErrorReply("¡No tienes permiso para ejecutar este comando!");
+        await sendErrorReply(
+          `¡No tienes permiso para ejecutar este comando!\n\nSi crees que sí, ¡usa el comando ${prefix}refresh para actualizar los datos del grupo!`
+        );
         return;
       }
     } else {
@@ -168,7 +172,7 @@ exports.dynamicCommand = async (paramsHandler, startProcess) => {
   } catch (error) {
     if (badMacHandler.handleError(error, `command:${command?.name}`)) {
       await sendWarningReply(
-        "Error temporal de sincronización. Inténtalo de nuevo en unos segundos."
+        "Error temporal de sincronización. Intenta de nuevo en unos segundos."
       );
       return;
     }
@@ -178,7 +182,7 @@ exports.dynamicCommand = async (paramsHandler, startProcess) => {
         `Error de sesión durante la ejecución del comando ${command?.name}: ${error.message}`
       );
       await sendWarningReply(
-        "Error de comunicación. Intenta ejecutar el comando nuevamente."
+        "Error de comunicación. Intenta ejecutar el comando de nuevo."
       );
       return;
     }
@@ -196,8 +200,8 @@ exports.dynamicCommand = async (paramsHandler, startProcess) => {
       const isSpiderAPIError = url.includes("api.spiderx.com.br");
 
       await sendErrorReply(
-        `Ocurrió un error al ejecutar una llamada remota a ${
-          isSpiderAPIError ? "la API de Spider X" : url
+        `¡Ocurrió un error al ejecutar una llamada remota a ${
+          isSpiderAPIError ? "la Spider X API" : url
         } en el comando ${command.name}!
       
 📄 *Detalles*: ${messageText}`
@@ -205,7 +209,7 @@ exports.dynamicCommand = async (paramsHandler, startProcess) => {
     } else {
       errorLog("Error al ejecutar comando", error);
       await sendErrorReply(
-        `Ocurrió un error al ejecutar el comando ${command.name}!
+        `¡Ocurrió un error al ejecutar el comando ${command.name}!
       
 📄 *Detalles*: ${error.message}`
       );
