@@ -182,12 +182,17 @@ Las principales hosts ya ofrecen Takeshi como **bot por defecto**, ¡no siendo n
 | Bronxys | Nexfuture |
 |---------|-----------|
 | [Grupo oficial](https://chat.whatsapp.com/J5OewHvweK1Kf7RGXAwIYM) | [Grupo oficial](https://chat.whatsapp.com/Fl5FzZQC00J5CZp07AZVwQ?mode=r_c) |
-| [![Bronxys](./assets/images/bronxys.png)](https://bronxyshost.com/) | [![Nexfuture](./assets/images/nexfuture.png)](https://speedhosting.cloud/) |
+| [![Bronxys](./assets/images/bronxys.png)](https://bronxyshost.com/) | [![Nexfuture](./assets/images/nexfuture.png)](https://nexfuture.com.br/) |
 
 | Speed Cloud | SpeedMaster |
 |-------------| ------------ |
 | [Grupo oficial](https://chat.whatsapp.com/HsZDn6DJrx34z5lbNbNB2M) | [Grupo oficial](https://chat.whatsapp.com/H48GLkKeh3YAWGQRSActa2?mode=ac_t) |
 | [![Speed Cloud](./assets/images/speed-cloud.png)](https://speedhosting.cloud/) | [![Speed Master](./assets/images/speed-master.png)](https://speedmasterx.shop/) |
+
+| Bores Host |
+|-------------|
+| [Grupo oficial](https://chat.whatsapp.com/JDciDHplLDhKkgyTCoYhs0) |
+| [![Speed Cloud](./assets/images/bores-host.png)](https://speedhosting.cloud/) |
 
 ## Instalación en VPS (Debian/Ubuntu)
 
