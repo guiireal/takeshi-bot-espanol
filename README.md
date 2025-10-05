@@ -192,7 +192,7 @@ Las principales hosts ya ofrecen Takeshi como **bot por defecto**, ¡no siendo n
 | Bores Host |
 |-------------|
 | [Grupo oficial](https://chat.whatsapp.com/JDciDHplLDhKkgyTCoYhs0) |
-| [![Speed Cloud](./assets/images/bores-host.png)](https://speedhosting.cloud/) |
+| [![Speed Cloud](./assets/images/bores-host.png)](https://loja.botbores.shop/) |
 
 ## Instalación en VPS (Debian/Ubuntu)
 
