@@ -1,5 +1,5 @@
 /**
- * Funciones diversas.
+ * Varias funciones.
  *
  * @author Dev Gui
  */
@@ -185,7 +185,7 @@ exports.findCommandImport = (commandName) => {
       const targetCommand = commands.find((cmd) => {
         if (!cmd?.commands || !Array.isArray(cmd.commands)) {
           errorLog(
-            `Error en el comando del tipo "${type}": ¡La propiedad "commands" necesita existir y ser un ["array"] con los nombres de los comandos! Archivo erróneo: ${cmd.name}.js`
+            `Error en el comando del tipo "${type}": La propiedad "commands" debe existir y ser un ["array"] con los nombres de los comandos! Archivo incorrecto: ${cmd.name}.js`
           );
 
           return false;
@@ -244,20 +244,6 @@ const onlyNumbers = (text) => text.replace(/[^0-9]/g, "");
 
 function toUserJid(number) {
   return `${onlyNumbers(number)}@s.whatsapp.net`;
-}
-
-/**
- * @deprecated O nome toUserOrGroupJid é meio ruim, em breve será substituído por toUserJidOrLid
- */
-function toUserOrGroupJid(userArg) {
-  if (!userArg) {
-    return null;
-  }
-
-  const cleanArg = userArg.replace("@", "");
-  return cleanArg.length >= 14
-    ? `${cleanArg}@lid`
-    : `${cleanArg}@s.whatsapp.net`;
 }
 
 function toUserJidOrLid(userArg) {
@@ -320,7 +306,7 @@ exports.removeFileWithTimeout = (filePath, timeout = 5000) => {
         fs.unlinkSync(filePath);
       }
     } catch (error) {
-      console.error("Erro ao remover arquivo:", error);
+      console.error("Error al eliminar el archivo:", error);
     }
   }, timeout);
 };
@@ -379,7 +365,7 @@ exports.getImageBuffer = async (url, options = {}) => {
 
     if (!response.ok) {
       throw new Error(
-        `Fallo al obtener imagen: ${response.status} ${response.statusText}`
+        `No se pudo obtener la imagen: ${response.status} ${response.statusText}`
       );
     }
 
@@ -387,7 +373,7 @@ exports.getImageBuffer = async (url, options = {}) => {
 
     return buffer;
   } catch (error) {
-    errorLog(`Error al obtener el buffer de la imagen: ${error.message}`);
+    errorLog(`Error al obtener el búfer de imagen: ${error.message}`);
     throw error;
   }
 };
@@ -467,12 +453,55 @@ exports.compareUserJidWithOtherNumber = ({ userJid, otherNumber }) => {
   );
 };
 
+async function getLidFromJid(socket, jid) {
+  if (!jid) {
+    return jid;
+  }
+
+  if (jid.includes("@lid")) {
+    return jid;
+  }
+
+  try {
+    const phoneNumber = onlyNumbers(jid);
+
+    const [contactInfo] = await socket.onWhatsApp(phoneNumber);
+
+    if (contactInfo && contactInfo.lid) {
+      return contactInfo.lid;
+    }
+
+    return `${phoneNumber}@lid`;
+  } catch (error) {
+    console.warn("Error getting LID from JID:", error.message);
+    const phoneNumber = onlyNumbers(jid);
+    return phoneNumber ? `${phoneNumber}@lid` : jid;
+  }
+}
+
+async function normalizeToLid(socket, jid) {
+  if (!jid) {
+    return jid;
+  }
+
+  if (jid.includes("@lid")) {
+    return jid;
+  }
+
+  if (jid.includes("@s.whatsapp.net")) {
+    return await getLidFromJid(socket, jid);
+  }
+
+  return await getLidFromJid(socket, jid);
+}
+
 exports.getRandomNumber = getRandomNumber;
 exports.getRandomName = getRandomName;
 exports.onlyNumbers = onlyNumbers;
 exports.toUserJid = toUserJid;
 exports.toUserJidOrLid = toUserJidOrLid;
-exports.toUserOrGroupJid = toUserOrGroupJid;
+exports.normalizeToLid = normalizeToLid;
+exports.getLidFromJid = getLidFromJid;
 
 exports.GROUP_PARTICIPANT_ADD = 27;
 exports.GROUP_PARTICIPANT_LEAVE = 32;
