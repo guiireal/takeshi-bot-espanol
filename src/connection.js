@@ -210,5 +210,5 @@ async function connect() {
   return socket;
 }
 
-exports.updateCacheGroupMetadata = updateGroupMetadataCache;
+exports.updateGroupMetadataCache = updateGroupMetadataCache;
 exports.connect = connect;

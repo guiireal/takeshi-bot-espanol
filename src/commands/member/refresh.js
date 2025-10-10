@@ -1,5 +1,5 @@
 const { PREFIX } = require(`${BASE_DIR}/config`);
-const { updateCacheGroupMetadata } = require(`${BASE_DIR}/connection`);
+const { updateGroupMetadataCache } = require(`${BASE_DIR}/connection`);
 const { errorLog } = require(`${BASE_DIR}/utils/logger`);
 
 module.exports = {
@@ -20,7 +20,7 @@ module.exports = {
   }) => {
     try {
       const data = await socket.groupMetadata(remoteJid);
-      updateCacheGroupMetadata(remoteJid, data);
+      updateGroupMetadataCache(remoteJid, data);
       await sendSuccessReply(
         `¡Datos actualizados con éxito! ¡Intenta de nuevo lo que estabas haciendo!
 
