@@ -1,269 +1,210 @@
-# Takeshi Bot - AI Coding Assistant Instructions
+# Takeshi Bot - Instrucciones del AI Coding Assistant
 
-## Project Overview
-Takeshi Bot is a modular WhatsApp bot built on Baileys (WhatsApp Web API) with a command-based architecture. Commands are NOT "cases" in a giant switch statement. Each command is a separate file in role-based folders (`admin/`, `member/`, `owner/`). This maintains clean, maintainable code.
+## Descripción del Proyecto
 
-## Architecture
+Takeshi Bot es un bot modular de WhatsApp construido sobre Baileys (WhatsApp Web API) con una arquitectura basada en comandos. Los comandos NO son "cases" en un switch gigante. Cada comando es un archivo separado en carpetas basadas en roles (`admin/`, `member/`, `owner/`). Esto mantiene el código limpio y mantenible.
 
-### Command System
-- **Location**: `src/commands/{admin|member|owner}/`
-- **Auto-loading**: Commands are dynamically loaded at startup via `src/utils/dynamicCommand.js`
-- **Permission model**: Folder placement determines who can execute:
-  - `owner/` - Bot/group owner only
-  - `admin/` - Group admins only
-  - `member/` - All group members
+## Arquitectura
 
-**Command template** (`src/commands/🤖-como-criar-comandos.js`):
+### Sistema de Comandos
+
+* **Ubicación**: `src/commands/{admin|member|owner}/`
+* **Carga automática**: Los comandos se cargan dinámicamente al iniciar mediante `src/utils/dynamicCommand.js`
+* **Modelo de permisos**: La ubicación en la carpeta determina quién puede ejecutarlo:
+* `owner/` - Solo el dueño del bot/grupo
+* `admin/` - Solo administradores del grupo
+* `member/` - Todos los miembros del grupo
+
+
+
+**Plantilla de comando** (`src/commands/🤖-como-criar-comandos.js`):
+
 ```javascript
 import { PREFIX } from "../../config.js";
 
 export default {
   name: "comando",
-  description: "Descrição do comando",
-  commands: ["comando1", "comando2"], // aliases
+  description: "Descripción del comando",
+  commands: ["comando1", "comando2"], // alias
   usage: `${PREFIX}comando`,
   handle: async ({ sendReply, args, isImage, /* ... */ }) => {
-    // Implementation - NO permission checks needed, folder handles it
+    // Implementación - NO requiere validación de permisos, la carpeta lo gestiona
   },
 };
+
 ```
 
-### Message Flow
-1. **Entry**: `src/middlewares/onMesssagesUpsert.js` - Receives all WhatsApp messages
-2. **Custom Hook**: `src/middlewares/customMiddleware.js` - User customizations (BEFORE command processing)
-3. **Common functions**: `src/utils/loadCommonFunctions.js` - Extracts message data, provides send* helpers
-4. **Router**: `src/utils/dynamicCommand.js` - Matches commands, enforces permissions, handles errors
-5. **Execution**: Individual command file's `handle()` function
+### Flujo de Mensajes
 
-### Database System
-- **Format**: JSON files in `database/` directory
-- **Access**: Through `src/utils/database.js` functions ONLY
-- **Pattern**: Read JSON → Modify → Write JSON (file-based, no SQL)
-- **Key files**: 
-  - `config.json` - Runtime settings (prefix, tokens, numbers)
-  - `auto-responder.json` - Match/answer pairs
-  - `muted.json` - Per-group muted members
+1. **Entrada**: `src/middlewares/onMesssagesUpsert.js` - Recibe todos los mensajes de WhatsApp.
+2. **Hook Personalizado**: `src/middlewares/customMiddleware.js` - Personalizaciones del usuario (ANTES del procesamiento de comandos).
+3. **Funciones Comunes**: `src/utils/loadCommonFunctions.js` - Extrae datos del mensaje y provee helpers `send*`.
+4. **Router**: `src/utils/dynamicCommand.js` - Coincide comandos, aplica permisos y gestiona errores.
+5. **Ejecución**: Función `handle()` del archivo de comando individual.
 
-**Never** read/write JSON files directly. Use exported functions like `activateAntiLinkGroup()`, `getPrefix()`.
+### Sistema de Base de Datos
 
-## Critical Developer Patterns
+* **Formato**: Archivos JSON en el directorio `database/`.
+* **Acceso**: ÚNICAMENTE a través de las funciones de `src/utils/database.js`.
+* **Patrón**: Leer JSON → Modificar → Escribir JSON (basado en archivos, sin SQL).
+* **Archivos clave**:
+* `config.json` - Ajustes de runtime (prefijo, tokens, números).
+* `auto-responder.json` - Pares de coincidencia/respuesta.
+* `muted.json` - Miembros silenciados por grupo.
 
-### 1. Using CommandHandleProps
-The `handle` function receives a rich context object. Available properties are **TypeScript-documented** in `src/@types/index.d.ts`:
+
+
+**Nunca** leas/escribas archivos JSON directamente. Usa funciones exportadas como `activateAntiLinkGroup()`, `getPrefix()`.
+
+## Patrones Críticos de Desarrollo
+
+### 1. Uso de CommandHandleProps
+
+La función `handle` recibe un objeto de contexto enriquecido. Las propiedades están **documentadas en TypeScript** en `src/@types/index.d.ts`:
 
 ```javascript
 handle: async ({ 
-  args,           // ["arg1", "arg2"] - split by / | \
-  fullArgs,       // "arg1 / arg2" - raw string
-  isImage,        // boolean - message type checks
-  sendReply,      // Send quoted reply
-  sendSuccessReply, sendErrorReply, sendWarningReply, // Pre-styled responses
-  downloadImage,  // Extract media from message
-  getGroupAdmins, // Fetch group metadata
-  // ... 50+ more utilities
+  args,           // ["arg1", "arg2"] - dividido por / | \
+  fullArgs,       // "arg1 / arg2" - string crudo
+  isImage,        // boolean - chequeo de tipo de mensaje
+  sendReply,      // Envía respuesta citada
+  sendSuccessReply, sendErrorReply, sendWarningReply, // Respuestas pre-estilizadas
+  downloadImage,  // Extrae media del mensaje
+  getGroupAdmins, // Obtiene metadata del grupo
+  // ... más de 50 utilidades
 }) => { /* ... */ }
+
 ```
 
-**Rule**: Always destructure only what you need. Check `src/@types/index.d.ts` for full API.
+**Regla**: Desestructura siempre solo lo que necesites. Consulta `src/@types/index.d.ts` para la API completa.
 
-### 2. Custom Middleware Pattern
-`src/middlewares/customMiddleware.js` is the SAFE ZONE for user customizations:
+### 2. Patrón Custom Middleware
+
+`src/middlewares/customMiddleware.js` es la ZONA SEGURA para personalizaciones:
 
 ```javascript
 export async function customMiddleware({ type, commonFunctions, socket, webMessage, action, data }) {
   // type: "message" | "participant"
-  // commonFunctions: Available when type === "message", null for participant events
-  // action: "add" | "remove" (only for participant events)
   
   if (type === "message" && commonFunctions) {
     const { sendReply, userMessageText } = commonFunctions;
-    // Custom logic for messages
+    // Lógica personalizada para mensajes
   }
   
   if (type === "participant" && action === "add") {
-    // Custom logic for new members
+    // Lógica personalizada para nuevos miembros
   }
 }
+
 ```
 
-**See**: `CustomMiddlewareProps` in `src/@types/index.d.ts` for full type definitions.
+### 3. Patrón de Manejo de Media
 
-### 3. Media Handling Pattern
-Three variants for each media type (audio, image, video, sticker, document, gif):
+Tres variantes para cada tipo de media (audio, imagen, video, sticker, documento, gif):
 
 ```javascript
-// From local file
-await sendImageFromFile("./assets/image.jpg", "Caption", [mentions], quoted);
+// Desde archivo local
+await sendImageFromFile("./assets/image.jpg", "Leyenda", [mentions], quoted);
 
-// From URL
-await sendImageFromURL("https://example.com/img.png", "Caption");
+// Desde URL
+await sendImageFromURL("https://example.com/img.png", "Leyenda");
 
-// From buffer (after download/processing)
+// Desde buffer (tras descarga/procesamiento)
 const buffer = await getBuffer(url);
-await sendImageFromBuffer(buffer, "Caption");
+await sendImageFromBuffer(buffer, "Leyenda");
+
 ```
 
-**Important**: Audio uses `sendAudioFrom*` with `asVoice` boolean parameter for PTT (Push-to-Talk).
+**Importante**: El audio usa `sendAudioFrom*` con el parámetro booleano `asVoice` para PTT (Push-to-Talk).
 
-### 4. Error Handling
-Use custom error classes from `src/errors/`:
+### 4. Manejo de Errores
+
+Usa clases de error personalizadas de `src/errors/`:
 
 ```javascript
 import { InvalidParameterError, WarningError } from "../../../errors/index.js";
 
-// Throws are caught by dynamicCommand and auto-formatted
-if (!args[0]) throw new InvalidParameterError("Missing required parameter");
-if (notAllowed) throw new WarningError("Action not permitted");
+// Los "throws" son capturados por dynamicCommand y formateados automáticamente
+if (!args[0]) throw new InvalidParameterError("Falta parámetro requerido");
+if (notAllowed) throw new WarningError("Acción no permitida");
+
 ```
 
-Generic errors are caught and displayed with details. Axios errors show API-specific messages.
+### 5. Acceso a la Configuración
 
-### 5. Configuration Access
-**Runtime settings** can override `src/config.js`:
+Los **ajustes de runtime** pueden sobrescribir `src/config.js`:
 
 ```javascript
 import { getBotNumber, getPrefix, getSpiderApiToken } from "../../utils/database.js";
 
-// DON'T: import { PREFIX } from "../../config.js"; 
-// DO:
-const prefix = getPrefix(remoteJid); // Checks database first, falls back to config
+// NO HACER: import { PREFIX } from "../../config.js"; 
+// SÍ HACER:
+const prefix = getPrefix(remoteJid); // Prioriza base de datos, fallback a config
+
 ```
 
-### 6. Bad MAC Error Handling
-The bot has automatic recovery for WhatsApp's "Bad MAC" errors via `src/utils/badMacHandler.js`:
-- Tracks error count with 15-attempt limit
-- Auto-clears session files when limit reached
-- Handles session errors gracefully in connection and message processing
+### 6. Manejo de Error "Bad MAC"
 
-**Don't** add manual Bad MAC handling in commands.
+El bot tiene recuperación automática para errores "Bad MAC" de WhatsApp vía `src/utils/badMacHandler.js`:
 
-## Developer Workflows
+* Rastrea el conteo de errores con un límite de 15 intentos.
+* Limpia automáticamente archivos de sesión al alcanzar el límite.
 
-### Running the Bot
+**No** añadas manejo manual de Bad MAC en los comandos.
+
+## Flujos de Trabajo del Desarrollador
+
+### Ejecución del Bot
+
 ```bash
-npm start           # Development with --watch flag
-npm run test        # Run src/test.js
-npm run test:all    # Execute all Node.js tests
-bash update.sh      # Pull latest changes from git
-bash reset-qr-auth.sh # Delete session files and reconnect
+npm start           # Desarrollo con flag --watch
+npm run test        # Ejecuta src/test.js
+npm run test:all    # Ejecuta todos los tests de Node.js
+bash update.sh      # Descarga últimos cambios de git
+bash reset-qr-auth.sh # Borra archivos de sesión y reconecta
+
 ```
 
-### Adding a New Command
-1. Create file in `src/commands/{admin|member|owner}/nome-do-comando.js`
-2. Copy template from `🤖-como-criar-comandos.js`
-3. Implement `handle` function with destructured props
-4. **No restart needed** - dynamic loader picks it up
+### Añadir un Nuevo Comando
 
-### Customizing Bot Behavior
-1. Edit `src/middlewares/customMiddleware.js` (NOT core files)
-2. Use `type` parameter to distinguish message vs participant events
-3. Access `commonFunctions` for full bot API when `type === "message"`
-4. See examples in `README.md` and `CLAUDE.md`
+1. Crea el archivo en `src/commands/{admin|member|owner}/nombre-del-comando.js`.
+2. Copia la plantilla de `🤖-como-criar-comandos.js`.
+3. Implementa la función `handle` con propiedades desestructuradas.
+4. **No requiere reinicio** - el cargador dinámico lo detecta.
 
-### Testing Commands
-- Use `/exemplos-de-mensagens` to see 24 working examples of send functions
-- Check `src/commands/member/exemplos/` for real implementations
-- Test media with sample files in `assets/samples/`
+### Depuración (Debugging)
 
-### Debugging
-- Set `DEVELOPER_MODE = true` in `src/config.js` to log all incoming messages
-- Logs stored in `assets/temp/wa-logs.txt` via Pino
-- Use `errorLog()`, `warningLog()`, `successLog()` from `src/utils/logger.js`
+* Activa `DEVELOPER_MODE = true` en `src/config.js` para loguear mensajes entrantes.
+* Logs almacenados en `assets/temp/wa-logs.txt` vía Pino.
+* Usa `errorLog()`, `warningLog()`, `successLog()` de `src/utils/logger.js`.
 
-## Integration Points
+## Puntos de Integración
 
-### External API - Spider X API
-- **Config**: `SPIDER_API_TOKEN` in `src/config.js` or runtime via `setSpiderApiToken()`
-- **Service wrapper**: `src/services/spider-x-api.js`
-- **Used for**: TikTok downloads, YouTube, Google search, AI stickers, etc.
-- **Error handling**: Axios errors auto-detected and formatted by `dynamicCommand.js`
+### API Externa - Spider X API
+
+* **Config**: `SPIDER_API_TOKEN` en `src/config.js` o vía `setSpiderApiToken()`.
+* **Servicio**: `src/services/spider-x-api.js`.
+* **Uso**: Descargas de TikTok, YouTube, búsqueda en Google, AI stickers, etc.
 
 ### Baileys (WhatsApp)
-- **Connection**: `src/connection.js` - Handles pairing, reconnection, caching
-- **State**: Stored in `assets/auth/baileys/` (creds.json, pre-keys)
-- **Socket**: Passed to all commands via `loadCommonFunctions`
-- **Group cache**: 24-hour TTL via NodeCache to reduce API calls
 
-### FFmpeg (Media Processing)
-- **Service**: `src/services/ffmpeg.js`
-- **Used for**: Audio format conversion (to Opus for PTT)
-- **Pattern**: `ajustAudioByBuffer()` - Converts MP3/WAV to Opus, returns buffer + temp paths
+* **Conexión**: `src/connection.js` - Gestiona emparejamiento, reconexión y caché.
+* **Estado**: Almacenado en `assets/auth/baileys/`.
+* **Caché de grupos**: TTL de 24 horas vía NodeCache para reducir llamadas a la API.
 
-## Project-Specific Conventions
+## Convenciones Específicas
 
-### File Naming
-- Commands: `kebab-case.js` (e.g., `anti-link.js`, `set-menu-image.js`)
-- Use emoji prefix for tutorial files: `🤖-como-criar-comandos.js`
+### Nomenclatura
 
-### Global Variables
-- `BASE_DIR` - Set in `src/loader.js`, points to `src/` directory
-- Used for requires: `require(\`\${BASE_DIR}/config\`)`
+* Comandos: `kebab-case.js` (ej: `anti-link.js`).
+* Tutoriales: Prefijo emoji `🤖-archivo.js`.
 
-### Message Processing Timeout
-- All message handlers have 700ms delay (`TIMEOUT_IN_MILLISECONDS_BY_EVENT`)
-- Prevents WhatsApp rate limiting/bans
-- Enforced in `src/loader.js`
+### Variables Globales
 
-### Mentions Format
-JID format: `"5511999999999@s.whatsapp.net"` (full number + @s.whatsapp.net)
+* `BASE_DIR`: Definida en `src/loader.js`, apunta al directorio `src/`.
+* Uso en imports: `require(\`${BASE_DIR}/config`)`.
 
-In messages: `@5511999999999` (number only, array passed separately)
+### Formato de Menciones
 
-```javascript
-await sendReply(
-  "Olá @5511999999999!",
-  ["5511999999999@s.whatsapp.net"]
-);
-```
-
-### Prefix System
-- Default: `/` (configured in `src/config.js`)
-- Per-group override: Stored in `database/prefix-groups.json`
-- Always use `getPrefix(remoteJid)` to get effective prefix
-
-## Common Gotchas
-
-1. **Don't use `webMessage` directly** - Extract via `loadCommonFunctions` or use provided `isImage`, `isVideo`, etc.
-2. **Permission checks are automatic** - Folder placement handles it, don't add manual `isAdmin()` checks
-3. **Media downloads create temp files** - Use `removeFileWithTimeout()` after processing
-4. **Auto-responder runs when no command matches** - Check `database/auto-responder.json`
-5. **Group metadata is cached** - Use `getGroupMetadata()` helper, not raw `socket.groupMetadata()`
-6. **Customizations go in customMiddleware.js** - Don't modify `onMesssagesUpsert.js` or `onGroupParticipantsUpdate.js`
-
-## Example: Complete Command
-
-```javascript
-import { PREFIX } from "../../../config.js";
-import { InvalidParameterError } from "../../../errors/index.js";
-
-export default {
-  name: "exemplo",
-  description: "Demonstra padrões do Takeshi Bot",
-  commands: ["exemplo", "ex"],
-  usage: `${PREFIX}exemplo <argumento>`,
-  handle: async ({ 
-    args, 
-    isImage, 
-    sendSuccessReply, 
-    sendErrorReply,
-    downloadImage,
-    sendImageFromBuffer,
-    webMessage
-  }) => {
-    if (!args[0] && !isImage) {
-      throw new InvalidParameterError("Envie uma imagem ou argumento");
-    }
-
-    if (isImage) {
-      const imagePath = await downloadImage(webMessage, "exemplo");
-      await sendSuccessReply("Imagem processada!");
-    } else {
-      await sendSuccessReply(`Argumento recebido: ${args[0]}`);
-    }
-  },
-};
-```
-
----
-
-**Remember**: This codebase values clarity over cleverness. Each command is self-contained, permissions are implicit, and helpers abstract Baileys complexity. When in doubt, check `src/@types/index.d.ts` or explore `src/commands/member/exemplos/`.
+Formato JID: `"5511999999999@s.whatsapp.net"`.
+En mensajes: `@5511999999999` (solo número, array pasado por separado).
