@@ -3,7 +3,6 @@
 ![Takeshi Bot](./assets/images/takeshi-bot.png)
 
 [![Version](https://img.shields.io/badge/Versión-7.4.0-blue)](https://github.com/guiireal/takeshi-bot)
-[![Tests](https://github.com/guiireal/takeshi-bot-private/actions/workflows/test.yml/badge.svg)](https://github.com/guiireal/takeshi-bot-private/actions/workflows/test.yml)
 
 > Base para bots de WhatsApp multifuncional con diversos comandos listos.
 
