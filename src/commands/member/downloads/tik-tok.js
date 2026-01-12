@@ -1,15 +1,15 @@
-const { PREFIX } = require(`${BASE_DIR}/config`);
-const { download } = require(`${BASE_DIR}/services/spider-x-api`);
-const { WarningError, InvalidParameterError } = require(`${BASE_DIR}/errors`);
+import { PREFIX } from "../../../config.js";
+import { InvalidParameterError, WarningError } from "../../../errors/index.js";
+import { download } from "../../../services/spider-x-api.js";
+import { errorLog } from "../../../utils/logger.js";
 
-module.exports = {
+export default {
   name: "tik-tok",
-  description: "Descargo videos de TikTok",
+  description: "Realizo la descarga de vídeos de TikTok",
   commands: ["tik-tok", "ttk"],
   usage: `${PREFIX}tik-tok https://www.tiktok.com/@yrrefutavel/video/7359413022483287301`,
   /**
    * @param {CommandHandleProps} props
-   * @returns {Promise<void>}
    */
   handle: async ({
     sendVideoFromURL,
@@ -32,7 +32,7 @@ module.exports = {
       const data = await download("tik-tok", fullArgs);
 
       if (!data) {
-        await sendErrorReply("¡No se encontraron resultados!");
+        await sendErrorReply("¡No se encontró ningún resultado!");
         return;
       }
 
@@ -40,7 +40,7 @@ module.exports = {
 
       await sendVideoFromURL(data.download_link);
     } catch (error) {
-      console.log(error);
+      errorLog(JSON.stringify(error, null, 2));
       await sendErrorReply(error.message);
     }
   },

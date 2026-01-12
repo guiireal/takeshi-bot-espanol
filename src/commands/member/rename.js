@@ -1,19 +1,19 @@
-const fs = require("node:fs");
-const { PREFIX } = require(`${BASE_DIR}/config`);
-const { InvalidParameterError, DangerError } = require(`${BASE_DIR}/errors`);
-const {
-  isAnimatedSticker,
-  processStaticSticker,
-  processAnimatedSticker,
+import fs from "node:fs";
+import { PREFIX } from "../../config.js";
+import { DangerError, InvalidParameterError } from "../../errors/index.js";
+import {
   addStickerMetadata,
-} = require(`${BASE_DIR}/services/sticker`);
-const { getRandomName } = require(`${BASE_DIR}/utils`);
+  isAnimatedSticker,
+  processAnimatedSticker,
+  processStaticSticker,
+} from "../../services/sticker.js";
+import { getRandomName } from "../../utils/index.js";
 
-module.exports = {
+export default {
   name: "rename",
-  description: "Añade nuevos metadatos al sticker.",
-  commands: ["rename", "rn"],
-  usage: `${PREFIX}rename paquete / autor (responde a un sticker)`,
+  description: "Adiciona novos meta-dados à figurinha.",
+  commands: ["rename", "renomear", "rn"],
+  usage: `${PREFIX}rename pacote / autor (responda a una figurita)`,
   handle: async ({
     isSticker,
     downloadSticker,
@@ -24,12 +24,14 @@ module.exports = {
     args,
   }) => {
     if (!isSticker) {
-      throw new InvalidParameterError("¡Necesitas responder a un sticker!");
+      throw new InvalidParameterError(
+        "Necesitas precisa responder a una figurita!"
+      );
     }
 
     if (args.length !== 2) {
       throw new InvalidParameterError(
-        "Necesitas proporcionar el paquete y el autor en el formato: paquete / autor"
+        "Necesitas precisa fornecer o pacote e o autor no formato: pacote / autor"
       );
     }
 
@@ -38,7 +40,7 @@ module.exports = {
 
     if (!pack || !author) {
       throw new InvalidParameterError(
-        "Necesitas proporcionar el paquete y el autor en el formato: paquete / autor"
+        "Necesitas precisa fornecer o pacote e o autor no formato: pacote / autor"
       );
     }
 
@@ -47,13 +49,13 @@ module.exports = {
 
     if (pack.length < minLength || pack.length > maxLength) {
       throw new DangerError(
-        `El paquete debe tener entre ${minLength} y ${maxLength} caracteres.`
+        `O pacote deve ter entre ${minLength} e ${maxLength} caracteres.`
       );
     }
 
     if (author.length < minLength || author.length > maxLength) {
       throw new DangerError(
-        `El autor debe tener entre ${minLength} y ${maxLength} caracteres.`
+        `O autor deve ter entre ${minLength} e ${maxLength} caracteres.`
       );
     }
 
@@ -89,7 +91,7 @@ module.exports = {
 
       await sendStickerFromFile(finalStickerPath);
     } catch (error) {
-      throw new Error(`Error al renombrar el sticker: ${error.message}`);
+      throw new Error(`Erro ao renomear a figurinha: ${error.message}`);
     } finally {
       if (fs.existsSync(inputPath)) {
         fs.unlinkSync(inputPath);

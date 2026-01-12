@@ -1,19 +1,19 @@
 /**
- * Desenvolvido por: MRX
- * Refatorado por: Dev Gui
+ * Desarrollado por: MRX
+ * Refactorizado por: Dev Gui
  *
  * @author Dev Gui
  */
-const { PREFIX } = require(`${BASE_DIR}/config`);
-const { InvalidParameterError } = require(`${BASE_DIR}/errors`);
-const Ffmpeg = require(`${BASE_DIR}/services/ffmpeg`);
+import { PREFIX } from "../../../config.js";
+import { InvalidParameterError } from "../../../errors/index.js";
+import { Ffmpeg } from "../../../services/ffmpeg.js";
 
-module.exports = {
+export default {
   name: "pixel",
   description:
-    "Genero una edición que convierte la imagen que envíes a pixel-art",
+    "Genero un montaje que convierte la imagen que envíes en pixel-art",
   commands: ["pixel", "pixel-art", "px"],
-  usage: `${PREFIX}pixel (marca la imagen) o ${PREFIX}pixel (responde la imagen)`,
+  usage: `${PREFIX}pixel (menciona la imagen) o ${PREFIX}pixel (responde a la imagen)`,
   handle: async ({
     isImage,
     downloadImage,
@@ -24,7 +24,7 @@ module.exports = {
   }) => {
     if (!isImage) {
       throw new InvalidParameterError(
-        "¡Necesitas marcar una imagen o responder a una imagen!"
+        "Necesitas mencionar una imagen o responder a una imagen"
       );
     }
 
@@ -38,7 +38,7 @@ module.exports = {
       await sendImageFromFile(outputPath);
     } catch (error) {
       console.error(error);
-      throw new Error("Error al aplicar el efecto pixel");
+      throw new Error("Error al aplicar el efecto píxel");
     } finally {
       await ffmpeg.cleanup(filePath);
     }

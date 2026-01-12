@@ -1,18 +1,17 @@
-const { PREFIX, TEMP_DIR } = require(`${BASE_DIR}/config`);
-const fs = require("fs");
-const path = require("path");
-const { exec } = require("child_process");
-const { InvalidParameterError } = require(`${BASE_DIR}/errors`);
-const { getRandomNumber } = require(`${BASE_DIR}/utils`);
+import { exec as execChild } from "node:child_process";
+import path from "node:path";
+import { PREFIX, TEMP_DIR } from "../../config.js";
+import { InvalidParameterError } from "../../errors/index.js";
+import { getRandomNumber } from "../../utils/index.js";
+import { errorLog } from "../../utils/logger.js";
 
-module.exports = {
+export default {
   name: "toimage",
-  description: "Transforma stickers estáticos en imagen",
+  description: "Transformo figurinhas estáticas em imagem",
   commands: ["toimage", "toimg"],
-  usage: `${PREFIX}toimage (etiqueta el sticker) o ${PREFIX}toimage (responde al sticker)`,
+  usage: `${PREFIX}toimage (marca la figurita) o .* (responde a la figurita)`,
   /**
    * @param {CommandHandleProps} props
-   * @returns {Promise<void>}
    */
   handle: async ({
     isSticker,
@@ -23,7 +22,7 @@ module.exports = {
     sendImageFromFile,
   }) => {
     if (!isSticker) {
-      throw new InvalidParameterError("¡Necesitas enviar un sticker!");
+      throw new InvalidParameterError("Necesitas enviar una figurita!");
     }
 
     await sendWaitReact();
@@ -34,9 +33,9 @@ module.exports = {
       `${getRandomNumber(10_000, 99_999)}.png`
     );
 
-    exec(`ffmpeg -i ${inputPath} ${outputPath}`, async (error) => {
+    execChild(`ffmpeg -i ${inputPath} ${outputPath}`, async (error) => {
       if (error) {
-        console.log(error);
+        errorLog(JSON.stringify(error, null, 2));
         throw new Error(error);
       }
 

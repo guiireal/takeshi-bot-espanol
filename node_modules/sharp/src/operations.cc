@@ -1,5 +1,7 @@
-// Copyright 2013 Lovell Fuller and others.
-// SPDX-License-Identifier: Apache-2.0
+/*!
+  Copyright 2013 Lovell Fuller and others.
+  SPDX-License-Identifier: Apache-2.0
+*/
 
 #include <algorithm>
 #include <functional>
@@ -8,8 +10,8 @@
 #include <vector>
 #include <vips/vips8>
 
-#include "common.h"
-#include "operations.h"
+#include "./common.h"
+#include "./operations.h"
 
 using vips::VImage;
 using vips::VError;

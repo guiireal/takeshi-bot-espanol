@@ -1,7 +1,7 @@
-// Copyright 2013 Lovell Fuller and others.
-// SPDX-License-Identifier: Apache-2.0
-
-'use strict';
+/*!
+  Copyright 2013 Lovell Fuller and others.
+  SPDX-License-Identifier: Apache-2.0
+*/
 
 const is = require('./is');
 const sharp = require('./sharp');
@@ -54,7 +54,7 @@ function _createInputDescriptor (input, inputOptions, containerOptions) {
   const inputDescriptor = {
     autoOrient: false,
     failOn: 'warning',
-    limitInputPixels: Math.pow(0x3FFF, 2),
+    limitInputPixels: 0x3FFF ** 2,
     ignoreIcc: false,
     unlimited: false,
     sequentialRead: true
@@ -150,7 +150,7 @@ function _createInputDescriptor (input, inputOptions, containerOptions) {
     if (is.defined(inputOptions.limitInputPixels)) {
       if (is.bool(inputOptions.limitInputPixels)) {
         inputDescriptor.limitInputPixels = inputOptions.limitInputPixels
-          ? Math.pow(0x3FFF, 2)
+          ? 0x3FFF ** 2
           : 0;
       } else if (is.integer(inputOptions.limitInputPixels) && is.inRange(inputOptions.limitInputPixels, 0, Number.MAX_SAFE_INTEGER)) {
         inputDescriptor.limitInputPixels = inputOptions.limitInputPixels;
@@ -513,7 +513,7 @@ function _createInputDescriptor (input, inputOptions, containerOptions) {
       }
     }
   } else if (is.defined(inputOptions)) {
-    throw new Error('Invalid input options ' + inputOptions);
+    throw new Error(`Invalid input options ${inputOptions}`);
   }
   return inputDescriptor;
 }
@@ -525,10 +525,8 @@ function _createInputDescriptor (input, inputOptions, containerOptions) {
  * @param {string} encoding - unused
  * @param {Function} callback
  */
-function _write (chunk, encoding, callback) {
-  /* istanbul ignore else */
+function _write (chunk, _encoding, callback) {
   if (Array.isArray(this.options.input.buffer)) {
-    /* istanbul ignore else */
     if (is.buffer(chunk)) {
       if (this.options.input.buffer.length === 0) {
         this.on('finish', () => {
@@ -572,7 +570,7 @@ function _isStreamInput () {
  * such as resize or rotate.
  *
  * Dimensions in the response will respect the `page` and `pages` properties of the
- * {@link /api-constructor#parameters|constructor parameters}.
+ * {@link /api-constructor/ constructor parameters}.
  *
  * A `Promise` is returned when `callback` is not provided.
  *
@@ -580,9 +578,9 @@ function _isStreamInput () {
  * - `size`: Total size of image in bytes, for Stream and Buffer input only
  * - `width`: Number of pixels wide (EXIF orientation is not taken into consideration, see example below)
  * - `height`: Number of pixels high (EXIF orientation is not taken into consideration, see example below)
- * - `space`: Name of colour space interpretation e.g. `srgb`, `rgb`, `cmyk`, `lab`, `b-w` [...](https://www.libvips.org/API/current/VipsImage.html#VipsInterpretation)
+ * - `space`: Name of colour space interpretation e.g. `srgb`, `rgb`, `cmyk`, `lab`, `b-w` [...](https://www.libvips.org/API/current/enum.Interpretation.html)
  * - `channels`: Number of bands e.g. `3` for sRGB, `4` for CMYK
- * - `depth`: Name of pixel depth format e.g. `uchar`, `char`, `ushort`, `float` [...](https://www.libvips.org/API/current/VipsImage.html#VipsBandFormat)
+ * - `depth`: Name of pixel depth format e.g. `uchar`, `char`, `ushort`, `float` [...](https://www.libvips.org/API/current/enum.BandFormat.html)
  * - `density`: Number of pixels per inch (DPI), if present
  * - `chromaSubsampling`: String containing JPEG chroma subsampling, `4:2:0` or `4:4:4` for RGB, `4:2:0:4` or `4:4:4:4` for CMYK
  * - `isProgressive`: Boolean indicating whether the image is interlaced using a progressive scan
@@ -794,7 +792,7 @@ function stats (callback) {
  * @module Sharp
  * @private
  */
-module.exports = function (Sharp) {
+module.exports = (Sharp) => {
   Object.assign(Sharp.prototype, {
     // Private
     _inputOptionsFromObject,

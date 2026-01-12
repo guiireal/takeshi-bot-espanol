@@ -1,33 +1,33 @@
 /**
- * Desarrollado por: Mkg
- * Refactorizado por: Dev Gui
+ * Desenvolvido por: Mkg
+ * Refatorado por: Dev Gui
  *
  * @author Dev Gui
  */
-const { PREFIX } = require(`${BASE_DIR}/config`);
-const { InvalidParameterError } = require(`${BASE_DIR}/errors`);
-const { toUserJidOrLid } = require(`${BASE_DIR}/utils`);
+import { PREFIX } from "../../config.js";
+import { InvalidParameterError } from "../../errors/index.js";
 
-module.exports = {
+export default {
   name: "fake-chat",
   description: "Crea una cita falsa mencionando a un usuario",
   commands: ["fake-chat", "fq", "fake-quote", "f-quote", "fk"],
-  usage: `${PREFIX}fake-chat @usuario / texto citado / mensaje que se enviará`,
+  usage: `${PREFIX}fake-chat @usuário / texto citado / mensaje que será enviado`,
   /**
    * @param {CommandHandleProps} props
-   * @returns {Promise<void>}
    */
   handle: async ({ remoteJid, socket, args }) => {
     if (args.length !== 3) {
       throw new InvalidParameterError(
-        `Uso incorrecto del comando. Ejemplo: ${PREFIX}fake-chat @usuario / texto citado / mensaje que se enviará`
+        `Uso incorrecto del comando. Ejemplo: ${PREFIX}fake-chat @usuário / texto citado / mensaje que será enviado`
       );
     }
 
     const quotedText = args[1];
     const responseText = args[2];
 
-    const mentionedJid = toUserJidOrLid(args[0]);
+    const mentionedLid = args[0]
+      ? `${args[0].replace(/[^0-9]/g, "")}@lid`
+      : null;
 
     if (quotedText.length < 2) {
       throw new InvalidParameterError(
@@ -37,21 +37,21 @@ module.exports = {
 
     if (responseText.length < 2) {
       throw new InvalidParameterError(
-        "El mensaje de respuesta debe tener al menos 2 caracteres."
+        "A mensagem de resposta deve ter al menos 2 caracteres."
       );
     }
 
     const fakeQuoted = {
       key: {
         fromMe: false,
-        participant: mentionedJid,
+        participant: mentionedLid,
         remoteJid,
       },
       message: {
         extendedTextMessage: {
           text: quotedText,
           contextInfo: {
-            mentionedJid: [mentionedJid],
+            mentionedJid: [mentionedLid],
           },
         },
       },

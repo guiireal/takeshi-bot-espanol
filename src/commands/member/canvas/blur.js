@@ -1,18 +1,18 @@
 /**
- * Desenvolvido por: MRX
- * Refatorado por: Dev Gui
+ * Desarrollado por: MRX
+ * Refactorizado por: Dev Gui
  *
  * @author Dev Gui
  */
-const { PREFIX } = require(`${BASE_DIR}/config`);
-const { InvalidParameterError } = require(`${BASE_DIR}/errors`);
-const Ffmpeg = require(`${BASE_DIR}/services/ffmpeg`);
+import { PREFIX } from "../../../config.js";
+import { InvalidParameterError } from "../../../errors/index.js";
+import { Ffmpeg } from "../../../services/ffmpeg.js";
 
-module.exports = {
+export default {
   name: "blur",
-  description: "Genero una edición que desenfoca la imagen que envíes",
-  commands: ["blur", "desenfocar", "desenfoque"],
-  usage: `${PREFIX}blur (marca la imagen) o ${PREFIX}blur (responde la imagen)`,
+  description: "Generó un montaje que desenfoca la imagen que envíes",
+  commands: ["blur", "desenfocar", "embaçar"],
+  usage: `${PREFIX}blur (menciona la imagen) o ${PREFIX}blur (responde a la imagen)`,
   handle: async ({
     isImage,
     downloadImage,
@@ -23,7 +23,7 @@ module.exports = {
   }) => {
     if (!isImage) {
       throw new InvalidParameterError(
-        "¡Necesitas marcar una imagen o responder a una imagen!"
+        "Necesitas mencionar una imagen o responder a una imagen"
       );
     }
 
@@ -37,7 +37,7 @@ module.exports = {
       await sendImageFromFile(outputPath);
     } catch (error) {
       console.error(error);
-      throw new Error("Error al aplicar el efecto de desenfoque");
+      throw new Error("Error al aplicar el efecto de desenfoque (blur)");
     } finally {
       await ffmpeg.cleanup(filePath);
     }

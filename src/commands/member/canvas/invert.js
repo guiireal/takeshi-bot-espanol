@@ -1,19 +1,18 @@
-const fs = require("node:fs");
-const { PREFIX } = require(`${BASE_DIR}/config`);
-const { InvalidParameterError } = require(`${BASE_DIR}/errors`);
-const { upload } = require(`${BASE_DIR}/services/upload`);
-const { canvas } = require(`${BASE_DIR}/services/spider-x-api`);
-const { getRandomNumber } = require(`${BASE_DIR}/utils`);
+import fs from "node:fs";
+import { PREFIX } from "../../../config.js";
+import { InvalidParameterError } from "../../../errors/index.js";
+import { upload } from "../../../services/linker.js";
+import { canvas } from "../../../services/spider-x-api.js";
+import { getRandomNumber } from "../../../utils/index.js";
 
-module.exports = {
-  name: "invert",
+export default {
+  name: "inverter",
   description:
-    "Genero uma edição com cores invertidos usando a imagem que envíes",
-  commands: ["invertir", "invert", "inverter"],
-  usage: `${PREFIX}invert (marca la imagen) o ${PREFIX}invert (responde la imagen)`,
+    "Genero un montaje con colores invertidos de la imagen que envíes",
+  commands: ["invert", "inverter"],
+  usage: `${PREFIX}inverter (menciona la imagen) o ${PREFIX}inverter (responde a la imagen)`,
   /**
    * @param {CommandHandleProps} props
-   * @returns {Promise<void>}
    */
   handle: async ({
     isImage,
@@ -21,11 +20,12 @@ module.exports = {
     sendSuccessReact,
     sendWaitReact,
     sendImageFromURL,
+    sendErrorReply,
     webMessage,
   }) => {
     if (!isImage) {
       throw new InvalidParameterError(
-        "¡Necesitas marcar una imagen o responder a una imagen!"
+        "Necesitas mencionar una imagen o responder a una imagen"
       );
     }
 
@@ -39,7 +39,7 @@ module.exports = {
 
     if (!link) {
       throw new Error(
-        "Error al subir la imagen, inténtalo de nuevo más tarde."
+        "¡No pude cargar la imagen, inténtalo de nuevo más tarde!"
       );
     }
 
@@ -51,7 +51,7 @@ module.exports = {
       const data = await response.json();
 
       await sendErrorReply(
-        `¡Ocurrió un error al ejecutar una llamada remota a la API de Spider X en el comando invert!
+        `¡Ocurrió un error al ejecutar una llamada remota a la Spider X API en el comando inverter!
       
 📄 *Detalles*: ${data.message}`
       );

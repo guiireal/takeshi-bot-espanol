@@ -1,24 +1,23 @@
 /**
- * Mejorado por: Mkg
+ * Melhorado por: Mkg
  *
  * @author Dev Gui
  */
-const { PREFIX } = require(`${BASE_DIR}/config`);
+import { PREFIX } from "../../config.js";
 
-module.exports = {
+export default {
   name: "ping",
   description:
-    "Verifica si el bot está en línea, el tiempo de respuesta y el tiempo de actividad.",
+    "Verificar se o bot está online, o tempo de resposta e o tempo de atividade.",
   commands: ["ping", "pong"],
   usage: `${PREFIX}ping`,
   /**
    * @param {CommandHandleProps} props
-   * @returns {Promise<void>}
    */
   handle: async ({ sendReply, sendReact, startProcess, fullMessage }) => {
     const response = fullMessage.slice(1).startsWith("ping")
-      ? "🏓 ¡Pong!"
-      : "🏓 ¡Ping!";
+      ? "🏓 Pong!"
+      : "🏓 Ping!";
 
     await sendReact("🏓");
 
@@ -32,7 +31,7 @@ module.exports = {
 
     await sendReply(`${response}
 
-📶 Velocidad de respuesta: ${ping}ms
-⏱️ Tiempo de actividad: ${h}h ${m}m ${s}s`);
+📶 Velocidade de resposta: ${ping}ms
+⏱️ Uptime: ${h}h ${m}m ${s}s`);
   },
 };

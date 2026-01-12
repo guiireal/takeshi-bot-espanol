@@ -1,7 +1,7 @@
-// Copyright 2013 Lovell Fuller and others.
-// SPDX-License-Identifier: Apache-2.0
-
-'use strict';
+/*!
+  Copyright 2013 Lovell Fuller and others.
+  SPDX-License-Identifier: Apache-2.0
+*/
 
 const is = require('./is');
 
@@ -239,7 +239,7 @@ function affine (matrix, options) {
  * When a `sigma` is provided, performs a slower, more accurate sharpen of the L channel in the LAB colour space.
  * Fine-grained control over the level of sharpening in "flat" (m1) and "jagged" (m2) areas is available.
  *
- * See {@link https://www.libvips.org/API/current/libvips-convolution.html#vips-sharpen|libvips sharpen} operation.
+ * See {@link https://www.libvips.org/API/current/method.Image.sharpen.html libvips sharpen} operation.
  *
  * @example
  * const data = await sharp(input).sharpen().toBuffer();
@@ -485,7 +485,7 @@ function erode (width) {
 /**
  * Merge alpha transparency channel, if any, with a background, then remove the alpha channel.
  *
- * See also {@link /api-channel#removealpha|removeAlpha}.
+ * See also {@link /api-channel#removealpha removeAlpha}.
  *
  * @example
  * await sharp(rgbaInput)
@@ -660,7 +660,7 @@ function normalize (options) {
 
 /**
  * Perform contrast limiting adaptive histogram equalization
- * {@link https://en.wikipedia.org/wiki/Adaptive_histogram_equalization#Contrast_Limited_AHE|CLAHE}.
+ * {@link https://en.wikipedia.org/wiki/Adaptive_histogram_equalization#Contrast_Limited_AHE CLAHE}.
  *
  * This will, in general, enhance the clarity of the image by bringing out darker details.
  *
@@ -742,9 +742,7 @@ function convolve (kernel) {
   }
   // Default scale is sum of kernel values
   if (!is.integer(kernel.scale)) {
-    kernel.scale = kernel.kernel.reduce(function (a, b) {
-      return a + b;
-    }, 0);
+    kernel.scale = kernel.kernel.reduce((a, b) => a + b, 0);
   }
   // Clip scale to a minimum value of 1
   if (kernel.scale < 1) {
@@ -989,7 +987,7 @@ function modulate (options) {
  * @module Sharp
  * @private
  */
-module.exports = function (Sharp) {
+module.exports = (Sharp) => {
   Object.assign(Sharp.prototype, {
     autoOrient,
     rotate,

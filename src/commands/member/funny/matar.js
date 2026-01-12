@@ -1,10 +1,9 @@
-const { PREFIX } = require(`${BASE_DIR}/config`);
-const { InvalidParameterError } = require(`${BASE_DIR}/errors`);
-const { toUserJidOrLid, onlyNumbers } = require(`${BASE_DIR}/utils`);
-const path = require("node:path");
-const { ASSETS_DIR } = require(`${BASE_DIR}/config`);
+import path from "node:path";
+import { ASSETS_DIR, PREFIX } from "../../config.js";
+import { InvalidParameterError } from "../../errors/index.js";
+import { onlyNumbers, toUserJidOrLid } from "../../utils/index.js";
 
-module.exports = {
+export default {
   name: "matar",
   description: "Mata a un usuario deseado.",
   commands: ["matar", "mata"],

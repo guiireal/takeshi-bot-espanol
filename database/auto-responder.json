@@ -1,14 +1,14 @@
 [
-    {
-        "match": "Hola",
-        "answer": "¿Hola, cómo estás?"
-    },
-    {
-        "match": "Todo bien",
-        "answer": "Estoy bien, gracias por preguntar"
-    },
-    {
-        "match": "¿Cuál es tu nombre?",
-        "answer": "Mi nombre es Takeshi Bot"
-    }
+  {
+    "match": "Oi",
+    "answer": "Olá, tudo bem?"
+  },
+  {
+    "match": "Tudo bem",
+    "answer": "Estou bem, obrigado por perguntar"
+  },
+  {
+    "match": "Qual seu nome",
+    "answer": "Meu nome é Takeshi Bot"
+  }
 ]

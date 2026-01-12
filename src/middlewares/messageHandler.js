@@ -1,17 +1,18 @@
 /**
  * Validador de mensajes
  *
- * @author MRX
+ * @author Dev Gui
  */
-const { getContent, compareUserJidWithOtherNumber } = require("../utils");
-const { errorLog } = require("../utils/logger");
-const {
+import { OWNER_LID } from "../config.js";
+import {
   readGroupRestrictions,
   readRestrictedMessageTypes,
-} = require("../utils/database");
-const { BOT_NUMBER, OWNER_NUMBER, OWNER_LID } = require("../config");
+} from "../utils/database.js";
+import { hasDirectMedia } from "../utils/index.js";
+import { errorLog } from "../utils/logger.js";
+import { isAdmin } from "./index.js";
 
-exports.messageHandler = async (socket, webMessage) => {
+export async function messageHandler(socket, webMessage) {
   try {
     if (!webMessage?.key) {
       return;
@@ -23,25 +24,28 @@ exports.messageHandler = async (socket, webMessage) => {
       return;
     }
 
-    const userJid = webMessage.key?.participant;
+    const userLid = webMessage.key?.participant;
 
-    if (!userJid) {
+    if (!userLid) {
       return;
     }
 
-    const isBotOrOwner =
-      compareUserJidWithOtherNumber({ userJid, otherNumber: OWNER_NUMBER }) ||
-      compareUserJidWithOtherNumber({ userJid, otherNumber: BOT_NUMBER }) ||
-      userJid === OWNER_LID;
+    const isBotOrOwner = userLid === OWNER_LID;
 
     if (isBotOrOwner) {
+      return;
+    }
+
+    const userIsAdmin = await isAdmin({ remoteJid, userLid, socket });
+
+    if (userIsAdmin) {
       return;
     }
 
     const antiGroups = readGroupRestrictions();
 
     const messageType = Object.keys(readRestrictedMessageTypes()).find((type) =>
-      getContent(webMessage, type)
+      hasDirectMedia(webMessage, type)
     );
 
     if (!messageType) {
@@ -59,12 +63,12 @@ exports.messageHandler = async (socket, webMessage) => {
         remoteJid,
         fromMe,
         id: messageId,
-        participant: userJid,
+        participant: userLid,
       },
     });
   } catch (error) {
     errorLog(
-      `Error al procesar mensaje restringido. ¡Verifica que esté como admin del grupo! Detalles: ${error.message}`
+      `Error al procesar mensaje restringido. Verifique si estoy como admin del grupo! Detalles: ${error.message}`
     );
   }
-};
+}

@@ -1,15 +1,14 @@
-const { PREFIX } = require(`${BASE_DIR}/config`);
-const { attp } = require(`${BASE_DIR}/services/spider-x-api`);
-const { InvalidParameterError } = require(`${BASE_DIR}/errors`);
+import { PREFIX } from "../../config.js";
+import { InvalidParameterError } from "../../errors/index.js";
+import { attp } from "../../services/spider-x-api.js";
 
-module.exports = {
+export default {
   name: "attp",
-  description: "Crea stickers animados de texto.",
+  description: "Faz figurinhas animadas de texto.",
   commands: ["attp"],
-  usage: `${PREFIX}attp prueba`,
+  usage: `${PREFIX}attp teste`,
   /**
    * @param {CommandHandleProps} props
-   * @returns {Promise<void>}
    */
   handle: async ({
     sendWaitReact,
@@ -20,7 +19,7 @@ module.exports = {
   }) => {
     if (!args.length) {
       throw new InvalidParameterError(
-        "Necesitas ingresar el texto que quieres transformar en sticker."
+        "Necesitas precisa informar o texto que deseja transformar em figurinha."
       );
     }
 
@@ -34,9 +33,9 @@ module.exports = {
       const data = await response.json();
 
       await sendErrorReply(
-        `¡Ocurrió un error al ejecutar una llamada remota a la API de Spider X en el comando attp!
+        `Ocurrió un error ao executar uma chamada remota para a Spider X API no comando attp!
       
-📄 *Detalles*: ${data.message}`
+📄 *Detalhes*: ${data.message}`
       );
       return;
     }

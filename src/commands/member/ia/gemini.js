@@ -1,15 +1,14 @@
-const { PREFIX } = require(`${BASE_DIR}/config`);
-const { gemini } = require(`${BASE_DIR}/services/spider-x-api`);
-const { InvalidParameterError } = require(`${BASE_DIR}/errors`);
+import { PREFIX } from "../../../config.js";
+import { InvalidParameterError } from "../../../errors/index.js";
+import { gemini } from "../../../services/spider-x-api.js";
 
-module.exports = {
+export default {
   name: "gemini",
   description: "¡Usa la inteligencia artificial de Google Gemini!",
   commands: ["gemini", "takeshi"],
-  usage: `${PREFIX}gemini ¿con cuántos palos se hace una canoa?`,
+  usage: `${PREFIX}gemini ¿cómo se hace una canoa?`,
   /**
    * @param {CommandHandleProps} props
-   * @returns {Promise<void>}
    */
   handle: async ({ sendSuccessReply, sendWaitReply, args }) => {
     const text = args[0];

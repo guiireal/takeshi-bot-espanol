@@ -1,16 +1,15 @@
-const { PREFIX } = require(`${BASE_DIR}/config`);
-const { download } = require(`${BASE_DIR}/services/spider-x-api`);
-const { WarningError } = require(`${BASE_DIR}/errors`);
-const { InvalidParameterError } = require(`${BASE_DIR}/errors`);
+import { PREFIX } from "../../../config.js";
+import { InvalidParameterError, WarningError } from "../../../errors/index.js";
+import { download } from "../../../services/spider-x-api.js";
+import { errorLog } from "../../../utils/logger.js";
 
-module.exports = {
+export default {
   name: "yt-mp3",
-  description: "¡Descargo audios de YouTube a través del enlace!",
+  description: "¡Realizo la descarga de audios de YouTube mediante el enlace!",
   commands: ["yt-mp3", "youtube-mp3", "yt-audio", "youtube-audio", "mp3"],
   usage: `${PREFIX}yt-mp3 https://www.youtube.com/watch?v=mW8o_WDL91o`,
   /**
    * @param {CommandHandleProps} props
-   * @returns {Promise<void>}
    */
   handle: async ({
     sendAudioFromURL,
@@ -34,7 +33,7 @@ module.exports = {
       const data = await download("yt-mp3", fullArgs);
 
       if (!data) {
-        await sendErrorReply("¡No se encontraron resultados!");
+        await sendErrorReply("¡No se encontró ningún resultado!");
         return;
       }
 
@@ -51,7 +50,7 @@ module.exports = {
 
       await sendAudioFromURL(data.url);
     } catch (error) {
-      console.log(error);
+      errorLog(JSON.stringify(error, null, 2));
       await sendErrorReply(error.message);
     }
   },

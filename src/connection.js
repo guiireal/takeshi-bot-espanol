@@ -2,43 +2,44 @@
  * Script de
  * inicialización del bot.
  *
- * Este script se
- * encarga de
+ * Este script es
+ * responsable de
  * iniciar la conexión
  * con WhatsApp.
  *
- * No es recomendable modificar
+ * No se recomienda alterar
  * este archivo,
- * a menos que sepas
- * lo que estás haciendo.
+ * a menos que sepa
+ * lo que está haciendo.
  *
  * @author Dev Gui
  */
-const path = require("node:path");
-const { question, onlyNumbers } = require("./utils");
-const {
-  default: makeWASocket,
+import makeWASocket, {
   DisconnectReason,
-  useMultiFileAuthState,
-  fetchLatestBaileysVersion,
   isJidBroadcast,
-  makeCacheableSignalKeyStore,
-  isJidStatusBroadcast,
   isJidNewsletter,
-} = require("baileys");
-const pino = require("pino");
-const { load } = require("./loader");
-const {
-  warningLog,
-  infoLog,
+  isJidStatusBroadcast,
+  useMultiFileAuthState,
+} from "baileys";
+import NodeCache from "node-cache";
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+import pino from "pino";
+import { PREFIX, TEMP_DIR, WAWEB_VERSION } from "./config.js";
+import { load } from "./loader.js";
+import { badMacHandler } from "./utils/badMacHandler.js";
+import { onlyNumbers, question } from "./utils/index.js";
+import {
   errorLog,
+  infoLog,
   sayLog,
   successLog,
-} = require("./utils/logger");
-const NodeCache = require("node-cache");
-const { TEMP_DIR } = require("./config");
-const { badMacHandler } = require("./utils/badMacHandler");
-const fs = require("node:fs");
+  warningLog,
+} from "./utils/logger.js";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 if (!fs.existsSync(TEMP_DIR)) {
   fs.mkdirSync(TEMP_DIR, { recursive: true });
@@ -53,14 +54,7 @@ logger.level = "error";
 
 const msgRetryCounterCache = new NodeCache();
 
-const oneDay = 60 * 60 * 24;
-const groupCache = new NodeCache({ stdTTL: oneDay, checkperiod: 60 });
-
-function updateGroupMetadataCache(jid, metadata) {
-  groupCache.set(jid, metadata);
-}
-
-async function connect() {
+export async function connect() {
   const baileysFolder = path.resolve(
     __dirname,
     "..",
@@ -71,17 +65,12 @@ async function connect() {
 
   const { state, saveCreds } = await useMultiFileAuthState(baileysFolder);
 
-  const { version, isLatest } = await fetchLatestBaileysVersion();
-
   const socket = makeWASocket({
-    version,
+    version: WAWEB_VERSION,
     logger,
     defaultQueryTimeoutMs: undefined,
     retryRequestDelayMs: 5000,
-    auth: {
-      creds: state.creds,
-      keys: makeCacheableSignalKeyStore(state.keys, logger),
-    },
+    auth: state,
     shouldIgnoreJid: (jid) =>
       isJidBroadcast(jid) || isJidStatusBroadcast(jid) || isJidNewsletter(jid),
     connectTimeoutMs: 20_000,
@@ -92,23 +81,22 @@ async function connect() {
     emitOwnEvents: false,
     msgRetryCounterCache,
     shouldSyncHistoryMessage: () => false,
-    cachedGroupMetadata: (jid) => groupCache.get(jid),
   });
 
   if (!socket.authState.creds.registered) {
     warningLog("¡Credenciales aún no configuradas!");
 
     infoLog(
-      'Ingresa el número de teléfono del bot (ejemplo: "5511920202020"):'
+      'Ingrese el número de teléfono del bot (ejemplo: "5511920202020"):'
     );
 
     const phoneNumber = await question(
-      "Ingresa el número de teléfono del bot: "
+      "Ingrese el número de teléfono del bot: "
     );
 
     if (!phoneNumber) {
       errorLog(
-        '¡Número de teléfono inválido! Intenta de nuevo con el comando "npm start".'
+        '¡Número de teléfono inválido! Intente nuevamente con el comando "npm start".'
       );
 
       process.exit(1);
@@ -116,7 +104,7 @@ async function connect() {
 
     const code = await socket.requestPairingCode(onlyNumbers(phoneNumber));
 
-    sayLog(`Código de emparejamiento: ${code}`);
+    sayLog(`Código de vinculación: ${code}`);
   }
 
   socket.ev.on("connection.update", async (update) => {
@@ -135,7 +123,7 @@ async function connect() {
         if (badMacHandler.handleError(error, "connection.update")) {
           if (badMacHandler.hasReachedLimit()) {
             warningLog(
-              "Se ha alcanzado el límite de errores Bad MAC. Limpiando archivos de sesión problemáticos..."
+              "Límite de errores Bad MAC alcanzado. Limpiando archivos de sesión problemáticos..."
             );
             badMacHandler.clearProblematicSessionFiles();
             badMacHandler.resetErrorCount();
@@ -149,7 +137,6 @@ async function connect() {
 
       if (statusCode === DisconnectReason.loggedOut) {
         errorLog("¡Bot desconectado!");
-        badMacErrorCount = 0;
       } else {
         switch (statusCode) {
           case DisconnectReason.badSession:
@@ -159,7 +146,7 @@ async function connect() {
             if (badMacHandler.handleError(sessionError, "badSession")) {
               if (badMacHandler.hasReachedLimit()) {
                 warningLog(
-                  "Se ha alcanzado el límite de errores de sesión. Limpiando archivos de sesión..."
+                  "Límite de errores de sesión alcanzado. Limpiando archivos de sesión..."
                 );
                 badMacHandler.clearProblematicSessionFiles();
                 badMacHandler.resetErrorCount();
@@ -194,11 +181,12 @@ async function connect() {
       }
     } else if (connection === "open") {
       successLog("¡Me he conectado con éxito!");
-      infoLog("Versión de WhatsApp Web: " + version.join("."));
-      infoLog(
-        "¿Es la última versión de WhatsApp Web?: " + (isLatest ? "Sí" : "No")
+      infoLog("Versión de WhatsApp Web: " + WAWEB_VERSION.join("."));
+      successLog(
+        `✅ ¡Estoy listo para usar! 
+Verifica el prefijo escribiendo la palabra "prefixo" en WhatsApp. 
+El prefijo por defecto definido en config.js es ${PREFIX}`
       );
-      badMacErrorCount = 0;
       badMacHandler.resetErrorCount();
     } else {
       infoLog("Actualizando conexión...");
@@ -209,6 +197,3 @@ async function connect() {
 
   return socket;
 }
-
-exports.updateGroupMetadataCache = updateGroupMetadataCache;
-exports.connect = connect;

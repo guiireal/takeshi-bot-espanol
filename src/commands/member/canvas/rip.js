@@ -1,19 +1,18 @@
-const fs = require("node:fs");
-const { PREFIX } = require(`${BASE_DIR}/config`);
-const { InvalidParameterError } = require(`${BASE_DIR}/errors`);
-const { upload } = require(`${BASE_DIR}/services/upload`);
-const { canvas } = require(`${BASE_DIR}/services/spider-x-api`);
-const { getRandomNumber } = require(`${BASE_DIR}/utils`);
+import fs from "node:fs";
+import { PREFIX } from "../../../config.js";
+import { InvalidParameterError } from "../../../errors/index.js";
+import { upload } from "../../../services/linker.js";
+import { canvas } from "../../../services/spider-x-api.js";
+import { getRandomNumber } from "../../../utils/index.js";
 
-module.exports = {
+export default {
   name: "rip",
   description:
-    "Genero una edición estilo tumba de cementerio con la imagen que envíes",
+    "Genero un montaje estilo lápida de cementerio con la imagen que envíes",
   commands: ["rip"],
-  usage: `${PREFIX}rip (marca la imagen) o ${PREFIX}rip (responde la imagen)`,
+  usage: `${PREFIX}rip (menciona la imagen) o ${PREFIX}rip (responde a la imagen)`,
   /**
    * @param {CommandHandleProps} props
-   * @returns {Promise<void>}
    */
   handle: async ({
     isImage,
@@ -21,15 +20,17 @@ module.exports = {
     sendSuccessReact,
     sendWaitReact,
     sendImageFromURL,
+    sendErrorReply,
     webMessage,
   }) => {
     if (!isImage) {
       throw new InvalidParameterError(
-        "¡Necesitas marcar una imagen o responder a una imagen!"
+        "Necesitas mencionar una imagen o responder a una imagen"
       );
     }
 
     await sendWaitReact();
+
     const fileName = getRandomNumber(10_000, 99_999).toString();
     const filePath = await downloadImage(webMessage, fileName);
 
@@ -38,7 +39,7 @@ module.exports = {
 
     if (!link) {
       throw new Error(
-        "Error al subir la imagen, inténtalo de nuevo más tarde."
+        "¡No pude cargar la imagen, inténtalo de nuevo más tarde!"
       );
     }
 
@@ -50,7 +51,7 @@ module.exports = {
       const data = await response.json();
 
       await sendErrorReply(
-        `¡Ocurrió un error al ejecutar una llamada remota a la API de Spider X en el comando rip!
+        `¡Ocurrió un error al ejecutar una llamada remota a la Spider X API en el comando rip!
       
 📄 *Detalles*: ${data.message}`
       );

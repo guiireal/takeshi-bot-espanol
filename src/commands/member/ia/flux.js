@@ -1,15 +1,13 @@
-const { imageAI } = require(`${BASE_DIR}/services/spider-x-api`);
+import { PREFIX } from "../../../config.js";
+import { imageAI } from "../../../services/spider-x-api.js";
 
-const { PREFIX } = require(`${BASE_DIR}/config`);
-
-module.exports = {
+export default {
   name: "flux",
   description: "Crea una imagen usando la IA Flux",
   commands: ["flux"],
   usage: `${PREFIX}flux descripción`,
   /**
    * @param {CommandHandleProps} props
-   * @returns {Promise<void>}
    */
   handle: async ({
     args,
@@ -25,13 +23,13 @@ module.exports = {
       );
     }
 
-    await sendWaitReply("generando imagen...");
+    await sendWaitReply("Generando imagen...");
 
     const data = await imageAI(fullArgs);
 
     if (!data?.image) {
       return sendWarningReply(
-        "¡No fue posible generar la imagen! Intenta nuevamente más tarde."
+        "¡No fue posible generar la imagen! Inténtalo de nuevo más tarde."
       );
     }
 

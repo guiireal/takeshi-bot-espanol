@@ -1,16 +1,14 @@
-const { PREFIX } = require(`${BASE_DIR}/config`);
-const { InvalidParameterError, WarningError } = require(`${BASE_DIR}/errors`);
+import { PREFIX } from "../../../config.js";
+import { InvalidParameterError, WarningError } from "../../../errors/index.js";
+import { search } from "../../../services/spider-x-api.js";
 
-const { search } = require(`${BASE_DIR}/services/spider-x-api`);
-
-module.exports = {
+export default {
   name: "yt-search",
   description: "Consulta YouTube",
-  commands: ["yt-search", "Youtube"],
+  commands: ["yt-search", "youtube-search"],
   usage: `${PREFIX}yt-search MC Hariel`,
   /**
    * @param {CommandHandleProps} props
-   * @returns {Promise<void>}
    */
   handle: async ({ fullArgs, sendSuccessReply }) => {
     if (fullArgs.length <= 1) {
@@ -31,7 +29,7 @@ module.exports = {
 
     if (!data) {
       throw new WarningError(
-        "No se pudieron encontrar resultados para la búsqueda."
+        "No fue posible encontrar resultados para la búsqueda."
       );
     }
 

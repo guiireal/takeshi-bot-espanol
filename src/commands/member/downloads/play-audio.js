@@ -1,15 +1,14 @@
-const { PREFIX } = require(`${BASE_DIR}/config`);
-const { play } = require(`${BASE_DIR}/services/spider-x-api`);
-const { InvalidParameterError } = require(`${BASE_DIR}/errors`);
+import { PREFIX } from "../../../config.js";
+import { InvalidParameterError } from "../../../errors/index.js";
+import { play } from "../../../services/spider-x-api.js";
 
-module.exports = {
+export default {
   name: "play-audio",
-  description: "Descargo música",
+  description: "Realizo la descarga de canciones",
   commands: ["play-audio", "play", "pa"],
   usage: `${PREFIX}play-audio MC Hariel`,
   /**
    * @param {CommandHandleProps} props
-   * @returns {Promise<void>}
    */
   handle: async ({
     sendAudioFromURL,
@@ -20,40 +19,35 @@ module.exports = {
     sendErrorReply,
   }) => {
     if (!fullArgs.length) {
-      throw new InvalidParameterError("¡Necesitas decirme qué quieres buscar!");
+      throw new InvalidParameterError("¡Necesitas decirme qué deseas buscar!");
     }
 
     if (fullArgs.includes("http://") || fullArgs.includes("https://")) {
       throw new InvalidParameterError(
-        `¡No puedes usar enlaces para descargar música! Usa ${PREFIX}yt-mp3 enlace`
+        `¡No puedes usar enlaces para descargar canciones! Usa ${PREFIX}yt-mp3 enlace`
       );
     }
 
     await sendWaitReact();
 
-    try {
-      const data = await play("audio", fullArgs);
+    const data = await play("audio", fullArgs);
 
-      if (!data) {
-        await sendErrorReply("¡No se encontraron resultados!");
-        return;
-      }
+    if (!data) {
+      await sendErrorReply("¡No se encontró ningún resultado!");
+      return;
+    }
 
-      await sendSuccessReact();
+    await sendSuccessReact();
 
-      await sendImageFromURL(
-        data.thumbnail,
-        `*Título*: ${data.title}
+    await sendImageFromURL(
+      data.thumbnail,
+      `*Título*: ${data.title}
         
 *Descripción*: ${data.description}
 *Duración en segundos*: ${data.total_duration_in_seconds}
 *Canal*: ${data.channel.name}`
-      );
+    );
 
-      await sendAudioFromURL(data.url);
-    } catch (error) {
-      console.log(error);
-      await sendErrorReply(error.message);
-    }
+    await sendAudioFromURL(data.url);
   },
 };

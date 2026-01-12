@@ -4,15 +4,13 @@
  *
  * @author Dev Gui
  */
-const { delay } = require("baileys");
+import { delay } from "baileys";
+import path from "node:path";
+import { ASSETS_DIR, PREFIX } from "../../config.js";
+import { DangerError } from "../../errors/index.js";
+import { getRandomNumber } from "../../utils/index.js";
 
-const { getRandomNumber } = require(`${BASE_DIR}/utils`);
-
-const { PREFIX, ASSETS_DIR } = require(`${BASE_DIR}/config`);
-const { DangerError } = require(`${BASE_DIR}/errors`);
-const path = require("node:path");
-
-module.exports = {
+export default {
   name: "dado",
   description:
     "¡Lanza un dado del 1 al 6 e intenta acertar el número para ganar!",

@@ -4,41 +4,42 @@
  *
  * @author Dev Gui
  */
-const {
+import { BOT_EMOJI, ONLY_GROUP_ID } from "../config.js";
+import {
   DangerError,
-  WarningError,
   InvalidParameterError,
-} = require("../errors");
-const { findCommandImport } = require(".");
-const {
-  verifyPrefix,
-  hasTypeAndCommand,
-  isLink,
-  isAdmin,
+  WarningError,
+} from "../errors/index.js";
+import {
   checkPermission,
+  hasTypeAndCommand,
+  isAdmin,
   isBotOwner,
-} = require("../middlewares");
-const {
-  isActiveGroup,
+  isLink,
+  verifyPrefix,
+} from "../middlewares/index.js";
+import { processAutoSticker } from "../services/sticker.js";
+import { badMacHandler } from "./badMacHandler.js";
+import {
   getAutoResponderResponse,
-  isActiveAutoResponderGroup,
-  isActiveAntiLinkGroup,
-  isActiveOnlyAdmins,
   getPrefix,
-} = require("./database");
-const { errorLog } = require("../utils/logger");
-const { ONLY_GROUP_ID, BOT_EMOJI } = require("../config");
-const { badMacHandler } = require("./badMacHandler");
+  isActiveAntiLinkGroup,
+  isActiveAutoResponderGroup,
+  isActiveAutoStickerGroup,
+  isActiveGroup,
+  isActiveOnlyAdmins,
+} from "./database.js";
+import { findCommandImport } from "./index.js";
+import { errorLog } from "./logger.js";
 
 /**
  * @param {CommandHandleProps} paramsHandler
  * @param {number} startProcess
  */
-exports.dynamicCommand = async (paramsHandler, startProcess) => {
+export async function dynamicCommand(paramsHandler, startProcess) {
   const {
     commandName,
     fullMessage,
-    isLid,
     prefix,
     remoteJid,
     sendErrorReply,
@@ -46,22 +47,22 @@ exports.dynamicCommand = async (paramsHandler, startProcess) => {
     sendReply,
     sendWarningReply,
     socket,
-    userJid,
+    userLid,
     webMessage,
   } = paramsHandler;
 
   const activeGroup = isActiveGroup(remoteJid);
 
   if (activeGroup && isActiveAntiLinkGroup(remoteJid) && isLink(fullMessage)) {
-    if (!userJid) {
+    if (!userLid) {
       return;
     }
 
-    if (!(await isAdmin({ remoteJid, userJid, socket }))) {
-      await socket.groupParticipantsUpdate(remoteJid, [userJid], "remove");
+    if (!(await isAdmin({ remoteJid, userLid, socket }))) {
+      await socket.groupParticipantsUpdate(remoteJid, [userLid], "remove");
 
       await sendReply(
-        "¡Anti-link activado! ¡Te he eliminado por enviar un enlace!"
+        "¡Anti-link activado! ¡Has sido eliminado por enviar un enlace!"
       );
 
       await socket.sendMessage(remoteJid, {
@@ -77,7 +78,15 @@ exports.dynamicCommand = async (paramsHandler, startProcess) => {
     }
   }
 
-  const { type, command } = findCommandImport(commandName);
+  if (activeGroup && isActiveAutoStickerGroup(remoteJid)) {
+    const processed = await processAutoSticker(paramsHandler);
+
+    if (processed) {
+      return;
+    }
+  }
+
+  const { type, command } = await findCommandImport(commandName);
 
   if (ONLY_GROUP_ID && ONLY_GROUP_ID !== remoteJid) {
     return;
@@ -96,19 +105,25 @@ exports.dynamicCommand = async (paramsHandler, startProcess) => {
         }
       }
 
+      if (fullMessage.toLocaleLowerCase().includes("prefixo")) {
+        await sendReact(BOT_EMOJI);
+        const groupPrefix = getPrefix(remoteJid);
+        await sendReply(
+          `El prefijo actual es: ${groupPrefix}\n¡Usa ${groupPrefix}menu para ver los comandos disponibles!`
+        );
+      }
+
       return;
     }
 
     if (!(await checkPermission({ type, ...paramsHandler }))) {
-      await sendErrorReply(
-        `¡No tienes permiso para ejecutar este comando!\n\nSi crees que sí, ¡usa el comando ${prefix}refresh para actualizar los datos del grupo!`
-      );
+      await sendErrorReply("¡No tienes permiso para ejecutar este comando!");
       return;
     }
 
     if (
       isActiveOnlyAdmins(remoteJid) &&
-      !(await isAdmin({ remoteJid, userJid, socket }))
+      !(await isAdmin({ remoteJid, userLid, socket }))
     ) {
       await sendWarningReply(
         "¡Solo los administradores pueden ejecutar comandos!"
@@ -117,22 +132,20 @@ exports.dynamicCommand = async (paramsHandler, startProcess) => {
     }
   }
 
-  if (!isBotOwner({ userJid }) && !activeGroup) {
+  if (!isBotOwner({ userLid }) && !activeGroup) {
     if (
       verifyPrefix(prefix, remoteJid) &&
       hasTypeAndCommand({ type, command })
     ) {
       if (command.name !== "on") {
         await sendWarningReply(
-          "¡Este grupo está desactivado! ¡Pídele al dueño del grupo que active el bot!"
+          "¡Este grupo está desactivado! ¡Pide al dueño del grupo que active el bot!"
         );
         return;
       }
 
       if (!(await checkPermission({ type, ...paramsHandler }))) {
-        await sendErrorReply(
-          `¡No tienes permiso para ejecutar este comando!\n\nSi crees que sí, ¡usa el comando ${prefix}refresh para actualizar los datos del grupo!`
-        );
+        await sendErrorReply("¡No tienes permiso para ejecutar este comando!");
         return;
       }
     } else {
@@ -172,7 +185,7 @@ exports.dynamicCommand = async (paramsHandler, startProcess) => {
   } catch (error) {
     if (badMacHandler.handleError(error, `command:${command?.name}`)) {
       await sendWarningReply(
-        "Error temporal de sincronización. Intenta de nuevo en unos segundos."
+        "Error temporal de sincronización. Inténtalo de nuevo en unos segundos."
       );
       return;
     }
@@ -182,7 +195,7 @@ exports.dynamicCommand = async (paramsHandler, startProcess) => {
         `Error de sesión durante la ejecución del comando ${command?.name}: ${error.message}`
       );
       await sendWarningReply(
-        "Error de comunicación. Intenta ejecutar el comando de nuevo."
+        "Error de comunicación. Intenta ejecutar el comando nuevamente."
       );
       return;
     }
@@ -200,7 +213,7 @@ exports.dynamicCommand = async (paramsHandler, startProcess) => {
       const isSpiderAPIError = url.includes("api.spiderx.com.br");
 
       await sendErrorReply(
-        `¡Ocurrió un error al ejecutar una llamada remota a ${
+        `¡Ocurrió un error al realizar una llamada remota a ${
           isSpiderAPIError ? "la Spider X API" : url
         } en el comando ${command.name}!
       
@@ -215,4 +228,4 @@ exports.dynamicCommand = async (paramsHandler, startProcess) => {
       );
     }
   }
-};
+}

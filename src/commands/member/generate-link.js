@@ -1,17 +1,16 @@
-const fs = require("node:fs");
-const { upload } = require(`${BASE_DIR}/services/upload`);
-const { PREFIX } = require(`${BASE_DIR}/config`);
-const { InvalidParameterError } = require(`${BASE_DIR}/errors`);
-const { getRandomNumber } = require(`${BASE_DIR}/utils`);
+import fs from "node:fs";
+import { PREFIX } from "../../config.js";
+import { InvalidParameterError } from "../../errors/index.js";
+import { upload } from "../../services/linker.js";
+import { getRandomNumber } from "../../utils/index.js";
 
-module.exports = {
+export default {
   name: "generate-link",
-  description: "Sube imágenes",
-  commands: ["generate-link", "up", "upload"],
-  usage: `${PREFIX}generate-link (etiqueta la imagen) o ${PREFIX}generar-link (responde a la imagen)`,
+  description: "Realizo la carga de imágenes y genero un enlace",
+  commands: ["to-link", "up", "upload", "gera-link", "gerar-link"],
+  usage: `${PREFIX}gerar-link (menciona la imagen) o .* (responde a la imagen)`,
   /**
    * @param {CommandHandleProps} props
-   * @returns {Promise<void>}
    */
   handle: async ({
     isImage,
@@ -23,7 +22,7 @@ module.exports = {
   }) => {
     if (!isImage) {
       throw new InvalidParameterError(
-        "¡Debes etiquetar o responder una imagen!"
+        "¡Debes mencionar o responder a una imagen!"
       );
     }
 
@@ -38,13 +37,13 @@ module.exports = {
 
     if (!link) {
       throw new Error(
-        "Error al subir la imagen, inténtalo de nuevo más tarde."
+        "Error al cargar la imagen. Inténtalo de nuevo más tarde."
       );
     }
 
     await sendSuccessReact();
 
-    await sendReply(`¡Aquí está el enlace de tu imagen!\n\n- ${link}`);
+    await sendReply(`¡Aquí tienes el enlace de tu imagen!\n\n- ${link}`);
 
     fs.unlinkSync(filePath);
   },

@@ -1,18 +1,18 @@
 /**
- * Desenvolvido por: MRX
- * Refatorado por: Dev Gui
+ * Desarrollado por: MRX
+ * Refactorizado por: Dev Gui
  *
  * @author Dev Gui
  */
-const { PREFIX } = require(`${BASE_DIR}/config`);
-const { InvalidParameterError } = require(`${BASE_DIR}/errors`);
-const Ffmpeg = require(`${BASE_DIR}/services/ffmpeg`);
+import { PREFIX } from "../../../config.js";
+import { InvalidParameterError } from "../../../errors/index.js";
+import { Ffmpeg } from "../../../services/ffmpeg.js";
 
-module.exports = {
-  name: "mirror",
-  description: "Invierte la posición de la imagen que envíes",
-  commands: ["espelhar", "espejar", "mirror"],
-  usage: `${PREFIX}mirror (marca la imagen) o ${PREFIX}mirror (responde la imagen)`,
+export default {
+  name: "espelhar",
+  description: "Invierto la posición de la imagen que envíes",
+  commands: ["espejo", "cambiar-direccion", "mirror", "espelhar"],
+  usage: `${PREFIX}espejo (menciona la imagen) o ${PREFIX}espejo (responde a la imagen)`,
   handle: async ({
     isImage,
     downloadImage,
@@ -23,7 +23,7 @@ module.exports = {
   }) => {
     if (!isImage) {
       throw new InvalidParameterError(
-        "¡Necesitas marcar una imagen o responder a una imagen!"
+        "Necesitas mencionar una imagen o responder a una imagen"
       );
     }
 

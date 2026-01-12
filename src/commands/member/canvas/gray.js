@@ -1,19 +1,19 @@
 /**
- * Desenvolvido por: MRX
- * Refatorado por: Dev Gui
+ * Desarrollado por: MRX
+ * Refactorizado por: Dev Gui
  *
  * @author Dev Gui
  */
-const { PREFIX } = require(`${BASE_DIR}/config`);
-const { InvalidParameterError } = require(`${BASE_DIR}/errors`);
-const Ffmpeg = require(`${BASE_DIR}/services/ffmpeg`);
+import { PREFIX } from "../../../config.js";
+import { InvalidParameterError } from "../../../errors/index.js";
+import { Ffmpeg } from "../../../services/ffmpeg.js";
 
-module.exports = {
+export default {
   name: "gray",
   description:
-    "Genero una edición que convierte la imagen que envíes a blanco y negro",
-  commands: ["gray", "blanco-y-negro", "bn"],
-  usage: `${PREFIX}gray (marca la imagen) o ${PREFIX}gray (responde la imagen)`,
+    "Genero un montaje que convierte la imagen que envíes a blanco y negro",
+  commands: ["gray", "blanco-y-negro", "pb"],
+  usage: `${PREFIX}gray (menciona la imagen) o ${PREFIX}gray (responde a la imagen)`,
   handle: async ({
     isImage,
     downloadImage,
@@ -24,7 +24,7 @@ module.exports = {
   }) => {
     if (!isImage) {
       throw new InvalidParameterError(
-        "¡Necesitas marcar una imagen o responder a una imagen!"
+        "Necesitas mencionar una imagen o responder a una imagen"
       );
     }
 
@@ -38,7 +38,7 @@ module.exports = {
       await sendImageFromFile(outputPath);
     } catch (error) {
       console.error(error);
-      throw new Error("Error al aplicar el efecto blanco y negro");
+      throw new Error("Error al aplicar el efecto de blanco y negro");
     } finally {
       await ffmpeg.cleanup(filePath);
     }

@@ -1,19 +1,17 @@
-const fs = require("node:fs");
-const path = require("node:path");
-const { exec } = require("node:child_process");
+import { exec as execChild } from "node:child_process";
+import fs from "node:fs";
+import path from "node:path";
+import { PREFIX, TEMP_DIR } from "../../../config.js";
+import { imageAI } from "../../../services/spider-x-api.js";
+import { getBuffer, getRandomName } from "../../../utils/index.js";
 
-const { PREFIX, TEMP_DIR } = require(`${BASE_DIR}/config`);
-const { getBuffer, getRandomName } = require(`${BASE_DIR}/utils`);
-const { imageAI } = require(`${BASE_DIR}/services/spider-x-api`);
-
-module.exports = {
+export default {
   name: "ia-sticker",
-  description: "Crea un sticker basado en una descripción",
+  description: "Crea una pegatina basada en una descripción",
   commands: ["ia-sticker", "ia-fig"],
   usage: `${PREFIX}ia-sticker descripción`,
   /**
    * @param {CommandHandleProps} props
-   * @returns {Promise<void>}
    */
   handle: async ({
     args,
@@ -30,7 +28,7 @@ module.exports = {
       );
     }
 
-    await sendWaitReply("generando sticker...");
+    await sendWaitReply("Generando pegatina...");
 
     const data = await imageAI(fullArgs);
 
@@ -44,12 +42,12 @@ module.exports = {
 
       const cmd = `ffmpeg -i "${inputTempPath}" -vf "scale=512:512:force_original_aspect_ratio=decrease" -f webp -quality 90 "${outputTempPath}"`;
 
-      exec(cmd, async (error, _, stderr) => {
+      execChild(cmd, async (error, _, stderr) => {
         if (error) {
-          console.error("Error FFmpeg:", error);
+          console.error("FFmpeg error:", error);
           await sendErrorReply(
-            `Hubo un error al procesar la imagen. ¡Intenta de nuevo más tarde!
-
+            `Hubo un error al procesar la imagen. ¡Inténtalo de nuevo más tarde!
+            
 Detalles: ${stderr}`
           );
         } else {
@@ -61,7 +59,7 @@ Detalles: ${stderr}`
       });
     } else {
       await sendWarningReply(
-        "No fue posible generar el sticker. Intenta de nuevo más tarde."
+        "No fue posible generar la pegatina. Inténtalo de nuevo más tarde."
       );
     }
   },

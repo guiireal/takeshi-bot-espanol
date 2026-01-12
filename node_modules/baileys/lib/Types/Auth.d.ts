@@ -19,6 +19,10 @@ export type SignalIdentity = {
     identifier: ProtocolAddress;
     identifierKey: Uint8Array;
 };
+export type LIDMapping = {
+    pn: string;
+    lid: string;
+};
 export type LTHashState = {
     version: number;
     hash: Buffer;
@@ -59,6 +63,7 @@ export type AuthenticationCreds = SignalCreds & {
     pairingCode: string | undefined;
     lastPropHash: string | undefined;
     routingInfo: Buffer | undefined;
+    additionalData?: any | undefined;
 };
 export type SignalDataTypeMap = {
     'pre-key': KeyPair;
@@ -69,6 +74,12 @@ export type SignalDataTypeMap = {
     };
     'app-state-sync-key': proto.Message.IAppStateSyncKeyData;
     'app-state-sync-version': LTHashState;
+    'lid-mapping': string;
+    'device-list': string[];
+    tctoken: {
+        token: Buffer;
+        timestamp?: string;
+    };
 };
 export type SignalDataSet = {
     [T in keyof SignalDataTypeMap]?: {
@@ -86,7 +97,7 @@ export type SignalKeyStore = {
 };
 export type SignalKeyStoreWithTransaction = SignalKeyStore & {
     isInTransaction: () => boolean;
-    transaction<T>(exec: () => Promise<T>): Promise<T>;
+    transaction<T>(exec: () => Promise<T>, key: string): Promise<T>;
 };
 export type TransactionCapabilityOptions = {
     maxCommitRetries: number;

@@ -1,31 +1,31 @@
-const fs = require("node:fs");
-const { PREFIX } = require(`${BASE_DIR}/config`);
-const { InvalidParameterError } = require(`${BASE_DIR}/errors`);
-const { upload } = require(`${BASE_DIR}/services/upload`);
-const { canvas } = require(`${BASE_DIR}/services/spider-x-api`);
-const { getRandomNumber } = require(`${BASE_DIR}/utils`);
+import fs from "node:fs";
+import { PREFIX } from "../../../config.js";
+import { DangerError, InvalidParameterError } from "../../../errors/index.js";
+import { upload } from "../../../services/linker.js";
+import { canvas } from "../../../services/spider-x-api.js";
+import { getRandomNumber } from "../../../utils/index.js";
 
-module.exports = {
+export default {
   name: "jail",
   description:
-    "Genero una edición como si la persona estuviera en la cárcel con la imagen que envíes",
-  commands: ["carcel", "cadeia", "jail"],
-  usage: `${PREFIX}jail (marca la imagen) o ${PREFIX}jail (responde la imagen)`,
+    "Genero un montaje como si la persona estuviera en la cárcel con la imagen que envíes",
+  commands: ["carcel", "jail", "cadeia"],
+  usage: `${PREFIX}carcel (menciona la imagen) o ${PREFIX}carcel (responde a la imagen)`,
   /**
    * @param {CommandHandleProps} props
-   * @returns {Promise<void>}
    */
   handle: async ({
     isImage,
     downloadImage,
     sendSuccessReact,
     sendWaitReact,
+    sendErrorReply,
     sendImageFromURL,
     webMessage,
   }) => {
     if (!isImage) {
       throw new InvalidParameterError(
-        "¡Necesitas marcar una imagen o responder a una imagen!"
+        "Necesitas mencionar una imagen o responder a una imagen"
       );
     }
 
@@ -38,8 +38,8 @@ module.exports = {
     const link = await upload(buffer, `${fileName}.png`);
 
     if (!link) {
-      throw new Error(
-        "Error al subir la imagen, inténtalo de nuevo más tarde."
+      throw new DangerError(
+        "¡No pude cargar la imagen, inténtalo de nuevo más tarde!"
       );
     }
 
@@ -51,7 +51,7 @@ module.exports = {
       const data = await response.json();
 
       await sendErrorReply(
-        `¡Ocurrió un error al ejecutar una llamada remota a la API de Spider X en el comando jail!
+        `¡Ocurrió un error al ejecutar una llamada remota a la Spider X API en el comando carcel!
       
 📄 *Detalles*: ${data.message}`
       );

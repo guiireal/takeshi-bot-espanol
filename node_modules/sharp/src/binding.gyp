@@ -168,6 +168,7 @@
                 # Ensure runtime linking is relative to sharp.node
                 '-Wl,-rpath,\'@loader_path/../../sharp-libvips-<(platform_and_arch)/lib\'',
                 '-Wl,-rpath,\'@loader_path/../../../sharp-libvips-<(platform_and_arch)/<(sharp_libvips_version)/lib\'',
+                '-Wl,-rpath,\'@loader_path/../node_modules/@img/sharp-libvips-<(platform_and_arch)/lib\'',
                 '-Wl,-rpath,\'@loader_path/../../node_modules/@img/sharp-libvips-<(platform_and_arch)/lib\'',
                 '-Wl,-rpath,\'@loader_path/../../../node_modules/@img/sharp-libvips-<(platform_and_arch)/lib\'',
                 '-Wl,-rpath,\'@loader_path/../../../../../@img-sharp-libvips-<(platform_and_arch)-npm-<(sharp_libvips_version)-<(sharp_libvips_yarn_locator)/node_modules/@img/sharp-libvips-<(platform_and_arch)/lib\''
@@ -208,11 +209,9 @@
                 '-Oz',
                 '-sALLOW_MEMORY_GROWTH',
                 '-sENVIRONMENT=node',
-                '-sEXPORTED_FUNCTIONS=["emnapiInit", "_vips_shutdown", "_uv_library_shutdown"]',
+                '-sEXPORTED_FUNCTIONS=emnapiInit,_vips_shutdown,_uv_library_shutdown',
                 '-sNODERAWFS',
-                '-sTEXTDECODER=0',
-                '-sWASM_ASYNC_COMPILATION=0',
-                '-sWASM_BIGINT'
+                '-sWASM_ASYNC_COMPILATION=0'
               ],
               'libraries': [
                 '<!@(PKG_CONFIG_PATH="<!(node -p "require(\'@img/sharp-libvips-dev-wasm32/lib\')")/pkgconfig" pkg-config --static --libs vips-cpp)'

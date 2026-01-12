@@ -1,14 +1,14 @@
 /**
- * Servicios de procesamiento de imágenes con ffmpeg.
+ * Servicios de procesamiento de imágenes usando ffmpeg.
  *
  * @author MRX
  */
-const fs = require("node:fs");
-const path = require("node:path");
-const { exec } = require("child_process");
-const { getRandomNumber } = require("../utils");
-const { errorLog } = require("../utils/logger");
-const { TEMP_DIR } = require(`${BASE_DIR}/config`);
+import { exec } from "child_process";
+import fs from "node:fs";
+import path from "node:path";
+import { TEMP_DIR } from "../config.js";
+import { getRandomNumber } from "../utils/index.js";
+import { errorLog } from "../utils/logger.js";
 
 class Ffmpeg {
   constructor() {
@@ -19,7 +19,7 @@ class Ffmpeg {
     return new Promise((resolve, reject) => {
       exec(command, (error, stdout, stderr) => {
         if (error) {
-          errorLog(`Command error: ${stderr}`);
+          errorLog(`Error en el comando: ${stderr}`);
           return reject(error);
         }
         resolve(stdout);
@@ -76,4 +76,4 @@ class Ffmpeg {
   }
 }
 
-module.exports = Ffmpeg;
+export { Ffmpeg };

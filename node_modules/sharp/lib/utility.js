@@ -1,7 +1,7 @@
-// Copyright 2013 Lovell Fuller and others.
-// SPDX-License-Identifier: Apache-2.0
-
-'use strict';
+/*!
+  Copyright 2013 Lovell Fuller and others.
+  SPDX-License-Identifier: Apache-2.0
+*/
 
 const events = require('node:events');
 const detectLibc = require('detect-libc');
@@ -57,7 +57,7 @@ const interpolators = {
 let versions = {
   vips: libvipsVersion.semver
 };
-/* istanbul ignore next */
+/* node:coverage ignore next 15 */
 if (!libvipsVersion.isGlobal) {
   if (!libvipsVersion.isWasm) {
     try {
@@ -75,7 +75,7 @@ if (!libvipsVersion.isGlobal) {
 }
 versions.sharp = require('../package.json').version;
 
-/* istanbul ignore next */
+/* node:coverage ignore next 5 */
 if (versions.heif && format.heif) {
   // Prebuilt binaries provide AV1
   format.heif.input.fileSuffix = ['.avif'];
@@ -136,7 +136,7 @@ cache(true);
  * and these are independent of the value set here.
  *
  * :::note
- * Further {@link /performance|control over performance} is available.
+ * Further {@link /performance/ control over performance} is available.
  * :::
  *
  * @example
@@ -150,7 +150,7 @@ cache(true);
 function concurrency (concurrency) {
   return sharp.concurrency(is.integer(concurrency) ? concurrency : null);
 }
-/* istanbul ignore next */
+/* node:coverage ignore next 7 */
 if (detectLibc.familySync() === detectLibc.GLIBC && !sharp._isUsingJemalloc()) {
   // Reduce default concurrency to 1 when using glibc memory allocator
   sharp.concurrency(1);
@@ -277,7 +277,7 @@ function unblock (options) {
  * @module Sharp
  * @private
  */
-module.exports = function (Sharp) {
+module.exports = (Sharp) => {
   Sharp.cache = cache;
   Sharp.concurrency = concurrency;
   Sharp.counters = counters;

@@ -1,22 +1,21 @@
 /**
- * Desenvolvido por: MRX
- * Refatorado por: Dev Gui
+ * Desarrollado por: MRX
+ * Refactorizado por: Dev Gui
  *
  * @author Dev Gui
  */
-const { PREFIX } = require(`${BASE_DIR}/config`);
-const { InvalidParameterError } = require(`${BASE_DIR}/errors`);
-const Ffmpeg = require(`${BASE_DIR}/services/ffmpeg`);
+import { PREFIX } from "../../../config.js";
+import { InvalidParameterError } from "../../../errors/index.js";
+import { Ffmpeg } from "../../../services/ffmpeg.js";
 
-module.exports = {
+export default {
   name: "contrast",
   description:
-    "Genero una edición que ajusta el contraste de la imagen que envíes",
-  commands: ["contrast", "contraste", "contrastear", "hd", "to-hd"],
-  usage: `${PREFIX}contrast (marca la imagen) o ${PREFIX}contraste (responde la imagen)`,
+    "Genero un montaje que ajusta el contraste de la imagen que envíes",
+  commands: ["contraste", "contrast", "mejora", "mejorar", "hd", "to-hd"],
+  usage: `${PREFIX}contraste (menciona la imagen) o ${PREFIX}contraste (responde a la imagen)`,
   /**
    * @param {CommandHandleProps} props
-   * @returns {Promise<void>}
    */
   handle: async ({
     isImage,
@@ -28,7 +27,7 @@ module.exports = {
   }) => {
     if (!isImage) {
       throw new InvalidParameterError(
-        "¡Necesitas marcar una imagen o responder a una imagen!"
+        "Necesitas mencionar una imagen o responder a una imagen"
       );
     }
 

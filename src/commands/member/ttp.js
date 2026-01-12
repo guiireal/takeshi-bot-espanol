@@ -1,15 +1,14 @@
-const { PREFIX } = require(`${BASE_DIR}/config`);
-const { ttp } = require(`${BASE_DIR}/services/spider-x-api`);
-const { InvalidParameterError } = require(`${BASE_DIR}/errors`);
+import { PREFIX } from "../../config.js";
+import { InvalidParameterError } from "../../errors/index.js";
+import { ttp } from "../../services/spider-x-api.js";
 
-module.exports = {
+export default {
   name: "ttp",
-  description: "Crea stickers de texto.",
+  description: "Faz figurinhas de texto.",
   commands: ["ttp"],
-  usage: `${PREFIX}ttp prueba`,
+  usage: `${PREFIX}ttp teste`,
   /**
    * @param {CommandHandleProps} props
-   * @returns {Promise<void>}
    */
   handle: async ({
     sendWaitReact,
@@ -19,7 +18,7 @@ module.exports = {
   }) => {
     if (!args.length) {
       throw new InvalidParameterError(
-        "Necesitas ingresar el texto que quieres transformar en sticker."
+        "Necesitas precisa informar o texto que deseja transformar em figurinha."
       );
     }
 
@@ -33,9 +32,9 @@ module.exports = {
       const data = await response.json();
 
       await sendErrorReply(
-        `¡Ocurrió un error al ejecutar una llamada remota a la API de Spider X en el comando ttp!
+        `Ocurrió un error ao executar uma chamada remota para a Spider X API no comando ttp!
       
-📄 *Detalles*: ${data.message}`
+📄 *Detalhes*: ${data.message}`
       );
       return;
     }

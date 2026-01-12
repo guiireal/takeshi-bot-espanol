@@ -1,15 +1,15 @@
-const { PREFIX } = require(`${BASE_DIR}/config`);
-const { play } = require(`${BASE_DIR}/services/spider-x-api`);
-const { InvalidParameterError } = require(`${BASE_DIR}/errors`);
+import { PREFIX } from "../../../config.js";
+import { InvalidParameterError } from "../../../errors/index.js";
+import { play } from "../../../services/spider-x-api.js";
+import { errorLog } from "../../../utils/logger.js";
 
-module.exports = {
+export default {
   name: "play-video",
-  description: "Descargo videos",
+  description: "Realizo la descarga de videos",
   commands: ["play-video", "pv"],
   usage: `${PREFIX}play-video MC Hariel`,
   /**
    * @param {CommandHandleProps} props
-   * @returns {Promise<void>}
    */
   handle: async ({
     sendVideoFromURL,
@@ -20,7 +20,7 @@ module.exports = {
     sendErrorReply,
   }) => {
     if (!fullArgs.length) {
-      throw new InvalidParameterError("¡Necesitas decirme qué quieres buscar!");
+      throw new InvalidParameterError("¡Necesitas decirme qué deseas buscar!");
     }
 
     if (fullArgs.includes("http://") || fullArgs.includes("https://")) {
@@ -35,7 +35,7 @@ module.exports = {
       const data = await play("video", fullArgs);
 
       if (!data) {
-        await sendErrorReply("¡No se encontraron resultados!");
+        await sendErrorReply("¡No se encontró ningún resultado!");
         return;
       }
 
@@ -52,7 +52,7 @@ module.exports = {
 
       await sendVideoFromURL(data.url);
     } catch (error) {
-      console.log(error);
+      errorLog(JSON.stringify(error, null, 2));
       await sendErrorReply(JSON.stringify(error.message));
     }
   },

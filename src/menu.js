@@ -3,12 +3,12 @@
  *
  * @author Dev Gui
  */
-const { BOT_NAME } = require("./config");
-const packageInfo = require("../package.json");
-const { readMore } = require("./utils");
-const { getPrefix } = require("./utils/database");
+import pkg from "../package.json" with { type: "json" };
+import { BOT_NAME } from "./config.js";
+import { getPrefix } from "./utils/database.js";
+import { readMore } from "./utils/index.js";
 
-exports.menuMessage = (groupJid) => {
+export function menuMessage(groupJid) {
   const date = new Date();
 
   const prefix = getPrefix(groupJid);
@@ -19,18 +19,19 @@ exports.menuMessage = (groupJid) => {
 ▢ • Fecha: ${date.toLocaleDateString("es-es")}
 ▢ • Hora: ${date.toLocaleTimeString("es-es")}
 ▢ • Prefijo: ${prefix}
-▢ • Versión: ${packageInfo.version}
+▢ • Versión: ${pkg.version}
 ▢
 ╰━━─「🪐」─━━
 
 ╭━━⪩ DUEÑO ⪨━━
 ▢
 ▢ • ${prefix}exec
-▢ • ${prefix}get-id
+▢ • ${prefix}get-group-id
 ▢ • ${prefix}off
 ▢ • ${prefix}on
 ▢ • ${prefix}set-menu-image
 ▢ • ${prefix}set-prefix
+▢ • ${prefix}set-spider-api-token
 ▢
 ╰━━─「🌌」─━━
 
@@ -46,6 +47,7 @@ exports.menuMessage = (groupJid) => {
 ▢ • ${prefix}anti-sticker (1/0)
 ▢ • ${prefix}anti-video (1/0)
 ▢ • ${prefix}auto-responder (1/0)
+▢ • ${prefix}auto-sticker (1/0)
 ▢ • ${prefix}balance
 ▢ • ${prefix}ban
 ▢ • ${prefix}clear
@@ -63,6 +65,8 @@ exports.menuMessage = (groupJid) => {
 ▢ • ${prefix}promote
 ▢ • ${prefix}reveal
 ▢ • ${prefix}schedule-message
+▢ • ${prefix}set-name
+▢ • ${prefix}set-proxy
 ▢ • ${prefix}unmute
 ▢ • ${prefix}welcome (1/0)
 ▢
@@ -73,16 +77,16 @@ exports.menuMessage = (groupJid) => {
 ▢ • ${prefix}attp
 ▢ • ${prefix}fake-chat
 ▢ • ${prefix}generate-link
-▢ • ${prefix}get-lid
-▢ • ${prefix}google-search
-▢ • ${prefix}perfil
+▢ • ${prefix}my-lid
+▢ • ${prefix}ping
 ▢ • ${prefix}profile
 ▢ • ${prefix}raw-message
-▢ • ${prefix}refresh
 ▢ • ${prefix}rename
 ▢ • ${prefix}samples-of-messages
 ▢ • ${prefix}sticker
+▢ • ${prefix}to-gif
 ▢ • ${prefix}to-image
+▢ • ${prefix}to-mp3
 ▢ • ${prefix}ttp
 ▢ • ${prefix}yt-search
 ▢
@@ -90,6 +94,7 @@ exports.menuMessage = (groupJid) => {
 
 ╭━━⪩ DESCARGAS ⪨━━
 ▢
+▢ • ${prefix}instagram
 ▢ • ${prefix}play-audio
 ▢ • ${prefix}play-video
 ▢ • ${prefix}tik-tok
@@ -98,7 +103,7 @@ exports.menuMessage = (groupJid) => {
 ▢
 ╰━━─「🎶」─━━
 
-╭━━⪩ JUEGOS ⪨━━
+╭━━⪩ DIVERSIÓN ⪨━━
 ▢
 ▢ • ${prefix}abrazar
 ▢ • ${prefix}besar
@@ -115,14 +120,15 @@ exports.menuMessage = (groupJid) => {
 ▢
 ▢ • ${prefix}flux
 ▢ • ${prefix}gemini
+▢ • ${prefix}gpt-5-mini
 ▢ • ${prefix}ia-sticker
 ▢
 ╰━━─「🚀」─━━
 
-╭━━⪩ LIENZO ⪨━━
+╭━━⪩ EDICIÓN / CANVAS ⪨━━
 ▢
 ▢ • ${prefix}blur
-▢ • ${prefix}contrast
+▢ • ${prefix}contraste
 ▢ • ${prefix}gray
 ▢ • ${prefix}invert
 ▢ • ${prefix}jail

@@ -1,113 +1,96 @@
 # 🤖 Takeshi Bot
 
-<div align="center">
-    <img src="./assets/images/takeshi-bot.png" width="500">
-</div>
+![Takeshi Bot](./assets/images/takeshi-bot.png)
 
-<br />
+[![Version](https://img.shields.io/badge/Versión-7.4.0-blue)](https://github.com/guiireal/takeshi-bot)
+[![Tests](https://github.com/guiireal/takeshi-bot-private/actions/workflows/test.yml/badge.svg)](https://github.com/guiireal/takeshi-bot-private/actions/workflows/test.yml)
 
-<div align="center">
-    <a href="https://github.com/guiireal/takeshi-bot">
-        <img alt="Version" src="https://img.shields.io/badge/Vers%C3%A3o-6.4.2-blue">
-    </a>
-</div>
-
-<br />
-
-> Boters de WhatsApp multifuncionales con varios comandos listos.
+> Base para bots de WhatsApp multifuncional con diversos comandos listos.
 
 [![Node.js](https://img.shields.io/badge/Node.js-22.19-green?logo=node.js)](https://nodejs.org/en)
-[![Axios](https://img.shields.io/badge/Axios-1.10-blue?logo=axios)](https://axios-http.com/ptbr/docs/intro)
-[![Baileys](https://img.shields.io/badge/Baileys-6.7.19-purple?logo=whatsapp)](https://github.com/WhiskeySockets/Baileys)
+[![Axios](https://img.shields.io/badge/Axios-1.13-blue?logo=axios)](https://axios-http.com/ptbr/docs/intro)
+[![Baileys](https://img.shields.io/badge/Baileys-7.0.0.9-purple?logo=whatsapp)](https://github.com/WhiskeySockets/Baileys)
 [![FFMPEG](https://img.shields.io/badge/FFMPEG-Latest-orange?logo=ffmpeg)](https://ffmpeg.org/)
 [![Spider X API](https://img.shields.io/badge/Spider_X-API-green?logo=api)](https://api.spiderx.com.br)
 
-## Desarrollado desde cero, en el video:
+## Desarrollado desde cero, en el vídeo
 
 [CREANDO UN BOT DE WHATSAPP DESDE CERO (GUÍA DEFINITIVA) - BASE COMPLETA + 6 COMANDOS - JAVASCRIPT](https://youtu.be/6zr2NYIYIyc)
 
 ![Logger](./assets/images/logger.png)
 
-## 📋 Índice
+## 📋 Sumario
 
-1. [Idiomas disponibles](#-accede-a-takeshi-bot-en-otros-idiomas)
-2. [Atención - soporte](#-atención)
-3. [Sobre el proyecto](#sobre-este-proyecto)
-4. [Instalación](#instalación)
-   - [Instalación en Termux](#instalación-en-termux)
-   - [Instalación en las principales hosts de Brasil](#instalación-en-las-principales-hosts-de-brasil)
-   - [Instalación en VPS (Debian/Ubuntu)](#instalación-en-vps-debianubuntu)
-5. [Configuración de API](#algunos-comandos-requieren-api)
-6. [Funcionalidades](#funcionalidades)
-   - [Funcionalidades generales](#funcionalidades-generales)
-   - [Funcionalidades de envío](#funcionalidades-de-envío-ejemplos)
-7. [Auto respuesta](#auto-respuesta)
-8. [Personalización](#personalización)
-    - [Menú del Bot](#dónde-está-el-menú-del-bot)
-    - [Mensajes de bienvenida](#dónde-modifico-el-mensaje-de-bienvenida-y-cuándo-alguien-abandona-el-grupo)
-9. [Implementación técnica](#implementación-técnica-de-los-ejemplos)
-10. [Estructura de carpetas](#estructura-de-carpetas)
-11. [Errores comunes](#errores-comunes)
-12. [Canal de YouTube](#suscríbete-al-canal)
-13. [Contribuyendo al proyecto](#contribuyendo-al-proyecto)
-14. [Licencia](#licencia)
-15. [Descargo de responsabilidad](#-descargo-de-responsabilidad)
+1. [🌐 Idiomas Disponibles](#-accede-al-takeshi-bot-en-otros-idiomas)
+2. [⚠️ Atención](#-atención)
+3. [📖 Sobre el Proyecto](#sobre-este-proyecto)
+4. [🚀 Instalación](#instalación-en-termux)
+    - [En Termux](#instalación-en-termux)
+    - [En las principales hosts de Brasil](#instalación-en-las-principales-hosts-de-brasil)
+    - [En VPS (Debian/Ubuntu)](#instalación-en-vps-debianubuntu)
+5. [📊 Diagrama de conexión](#diagrama-de-conexión)
+6. [⚙️ Algunos comandos necesitan API](#algunos-comandos-necesitan-api)
+7. [🛠️ Funcionalidades](#funcionalidades-generales)
+    - [Funcionalidades generales](#funcionalidades-generales)
+    - [Funcionalidades de envío (Ejemplos)](#funcionalidades-de-envío-ejemplos)
+8. [🤖 Auto responder](#auto-responder)
+    - [Menú del bot](#dónde-está-el-menú-del-bot)
+    - [Mensajes de bienvenidas](#dónde-modifico-el-mensaje-de-bienvenidas-y-cuando-alguien-sale-del-grupo)
+9. [📊 Diagrama de cómo funcionan los comandos](#diagrama-de-cómo-funcionan-los-comandos)
+10. [📊 Diagrama de cómo funcionan los middlewares](#diagrama-de-cómo-funcionan-los-middlewares-interceptores-de-recepción-y-salida)
+11. [💻 Custom Middleware - Personaliza el bot sin modificar archivos principales](#custom-middleware---personaliza-el-bot-sin-modificar-archivos-principales)
+12. [🛠️ Implementación técnica de los ejemplos](#implementación-técnica-de-los-ejemplos)
+13. [📁 Estructura de carpetas](#estructura-de-carpetas)
+14. [🔄 Actualizar el bot](#actualizar-el-bot)
+15. [🧪 Tests](#tests)
+16. [❓ Errores comunes](#errores-comunes)
+17. [📺 Suscríbete al canal](#suscribete-al-canal)
+18. [🤝 Contribuyendo con el proyecto](#contribuyendo-con-el-proyecto)
+19. [⚖️ Licencia y Disclaimer](#licencia)
 
-## 🌐 Accede a Takeshi Bot en otros idiomas
+## 🌐 Accede al Takeshi Bot en otros idiomas
 
-<ul style="list-style: none; padding-left: 0;">
-  <li>
-    <img src="https://flagcdn.com/w40/br.png" width="24" alt="Português (BR)">
-    <strong>Português (BR)</strong> — <a href="https://github.com/guiireal/takeshi-bot">clique aqui</a>
-  </li>
-  <li>
-    <img src="https://flagcdn.com/w40/us.png" width="24" alt="English">
-    <strong>English</strong> — <a href="https://github.com/guiireal/takeshi-bot-english">click here</a>
-  </li>
-  <li>
-    <img src="https://flagcdn.com/w40/id.png" width="24" alt="Bahasa Indonesia">
-    <strong>Bahasa Indonesia</strong> — <a href="https://github.com/guiireal/takeshi-bot-bahasa-indonesia">klik disini</a>
-  </li>
-</ul>
+- 🇧🇷 [**Portuguese version**](https://github.com/guiireal/takeshi-bot)
 
-## ⚠ Atención
+## ⚠️ Atención
 
-No brindamos soporte gratuito en caso de que hayas adquirido esta base con terceros y hayas pagado por ello.<br/>
-Este bot siempre fue y siempre será **gratuito**.<br/>
-En caso de que hayas pagado para utilizar este bot, tal como está hoy, debes saber que **fuiste engañado**.<br/>
-No tenemos ningún vínculo con terceros y no nos responsabilizamos por ello, tampoco brindamos soporte bajo esas condiciones.<br/>
-Los únicos recursos pagos de este bot pertenecen a https://api.spiderx.com.br, nuestra API oficial.
+No prestamos soporte gratuito si adquiriste esta base con terceros y pagaste por ella.
+Este bot siempre ha sido y siempre será **gratuito**.
+Si pagaste para utilizar este bot, del modo que está hoy, sabe que **fuiste engañado**.
+No tenemos vínculo ninguno con terceros y no nos responsabilizamos por eso, tampoco prestamos soporte en esas condiciones.
+Los únicos recursos pagos de este bot pertenecen a [https://api.spiderx.com.br](https://api.spiderx.com.br), nuestra API oficial.
 
 ## Sobre este proyecto
 
-Este proyecto no tiene ningún vínculo oficial con WhatsApp. Fue desarrollado de forma independiente para interacciones automatizadas a través de la plataforma.
+Este proyecto no posee ningún vínculo oficial con WhatsApp. Fue desarrollado de forma independiente para interacciones automatizadas por medio de la plataforma.
 
-No nos hacemos responsables de cualquier uso indebido de este bot. Es responsabilidad exclusiva del usuario garantizar que su utilización cumpla con los términos de uso de WhatsApp y la legislación vigente.
+No nos responsabilizamos por ningún uso indebido de este bot. Es de responsabilidad exclusiva del usuario garantizar que su utilización esté en conformidad con los términos de uso de WhatsApp y la legislación vigente.
 
 ## Instalación en Termux
 
-1 - Abre Termux y ejecuta los siguientes comandos.
-_¿No tienes Termux? [Haz clic aquí para descargar la última versión](https://www.mediafire.com/file/wxpygdb9bcb5npb/Termux_0.118.3_Dev_Gui.apk) o [haz clic aquí para descargar la versión de Play Store](https://play.google.com/store/apps/details?id=com.termux) si la versión de MediaFire anterior no funciona._
+1 - Abre Termux y ejecuta los comandos abajo.
+_No tienes Termux? [Haz clic aquí y descarga la última versión](https://www.mediafire.com/file/wxpygdb9bcb5npb/Termux_0.118.3_Dev_Gui.apk) o [haz clic aquí y descarga versión de Play Store](https://play.google.com/store/apps/details?id=com.termux) si la versión de MediaFire anterior no funciona._
 
 ```sh
 pkg upgrade -y && pkg update -y && pkg install git -y && pkg install nodejs-lts -y && pkg install ffmpeg -y
-````
+```
 
-2 - Habilita el acceso a la carpeta storage en Termux.
+2 - Habilita el acceso a la carpeta storage en termux.
 
 ```sh
 termux-setup-storage
 ```
 
-3 - Elija una carpeta de su elección para colocar los archivos del bot.
+3 - Elige una carpeta de tu preferencia para colocar los archivos del bot.
 
-Carpetas más usadas:
+Carpetas más utilizadas:
 
 - /sdcard
 - /storage/emulated/0
-- /storage/emulated/0/Download (muito comum quando você baixa o bot pelo .zip)
+- /storage/emulated/0/Download (muy común cuando descargas el bot por .zip)
 
 En nuestro ejemplo, vamos a `/sdcard`
+
 ```sh
 cd /sdcard
 ```
@@ -115,16 +98,16 @@ cd /sdcard
 4 - Clona el repositorio.
 
 ```sh
-git clone https://github.com/guiireal/takeshi-bot-espanol.git
+git clone https://github.com/guiireal/takeshi-bot.git
 ```
 
-5 - Entra en la carpeta clonada.
+5 - Entra en la carpeta que fue clonada.
 
 ```sh
 cd takeshi-bot
 ```
 
-6 - Habilita permisos de lectura y escritura (haz este paso solo 1 vez).
+6 - Habilita permisos de lectura y escritura (haz solo 1x este paso).
 
 ```sh
 chmod -R 755 ./*
@@ -138,174 +121,175 @@ npm start
 
 8 - Inserta el número de teléfono y presiona `enter`.
 
-9 - Informa el código que aparece en Termux en tu WhatsApp, [mira aquí si no encuentras esta opción](https://youtu.be/6zr2NYIYIyc?t=5395).
+9 - Informa el código que aparece en termux en tu WhatsApp, [mira aquí si no encuentras esa opción](https://youtu.be/6zr2NYIYIyc?t=5395).
 
-10 - Espera 10 segundos, luego escribe `CTRL + C` para detener el bot.
+10 - Espera 10 segundos, después digita `CTRL + C` para parar el bot.
 
-11 - Configura el archivo `config.js` que se encuentra dentro de la carpeta `src`.
+Después, configura el archivo `config.js` que está dentro de la carpeta `src`.
 
 ```js
-// Prefijo de los comandos
-exports.PREFIX = "/";
+// Prefijo predeterminado de los comandos.
+export const PREFIX = "/";
 
-// Emoji del bot (cambia si lo prefieres).
-exports.BOT_EMOJI = "🤖";
+// Emoji del bot (cambia si prefieres).
+export const BOT_EMOJI = "🤖";
 
-// Nombre del bot (cambia si lo prefieres).
-exports.BOT_NAME = "Takeshi Bot";
+// Nombre del bot (cambia si prefieres).
+export const BOT_NAME = "Takeshi Bot";
 
-// Número del bot. Coloca el número del bot
-// (solo números, exactamente como está en WhatsApp).
-exports.BOT_NUMBER = "558112345678";
-
-// Número del dueño del bot. Coloca el número del dueño del bot
-// (solo números, exactamente como está en WhatsApp).
-exports.OWNER_NUMBER = "5521950502020";
+// LID del bot.
+// Para obtener el LID del bot, usa el comando <prefijo>lid respondiendo encima de un mensaje del número del bot
+// Cambia el <prefijo> por el prefijo del bot (ej: /lid).
+export const BOT_LID = "12345678901234567890@lid";
 
 // LID del dueño del bot.
-// Para obtener el LID del dueño del bot, usa el comando <prefijo>get-lid @mencionar o +teléfono del dueño.
-exports.OWNER_LID = "219999999999999@lid";
+// Para obtener el LID del dueño del bot, usa el comando <prefijo>meu-lid
+// Cambia el <prefijo> por el prefijo del bot (ej: /meu-lid).
+export const OWNER_LID = "12345678901234567890@lid";
 ```
 
-12 - Inicia el bot nuevamente.
+11 - Inicia el bot nuevamente.
 
 ```sh
 npm start
 ```
 
-## Instalación en las principales hosts de Brasil
+## Instalação nas principais hosts do Brasil
 
-Las principales hosts ya ofrecen Takeshi como **bot por defecto**, ¡no siendo necesaria ninguna instalación manual!
+As principais hosts já oferecem o Takeshi como **bot padrão**, não sendo necessário nenhuma instalação manual!
 
-**Hosts compatibles**:
+**Hosts suportadas**:
 
-| Bronxys | Nexfuture |
-|---------|-----------|
-| [Grupo oficial](https://chat.whatsapp.com/J5OewHvweK1Kf7RGXAwIYM) | [Grupo oficial](https://chat.whatsapp.com/Fl5FzZQC00J5CZp07AZVwQ?mode=r_c) |
-| [![Bronxys](./assets/images/bronxys.png)](https://bronxyshost.com/) | [![Nexfuture](./assets/images/nexfuture.png)](https://nexfuture.com.br/) |
+| Bronxys | Nexfuture | Speed Cloud |
+|---------|-----------|-------------|
+| [Grupo oficial](https://chat.whatsapp.com/J5OewHvweK1Kf7RGXAwIYM) | [Grupo oficial](https://chat.whatsapp.com/Fl5FzZQC00J5CZp07AZVwQ?mode=r_c) | [Grupo oficial](https://chat.whatsapp.com/HsZDn6DJrx34z5lbNbNB2M) |
+| [![Bronxys](./assets/images/bronxys.png)](https://bronxyshost.com/) | [![Nexfuture](./assets/images/nexfuture.png)](https://nexfuture.com.br/) | [![Speed Cloud](./assets/images/speed-cloud.png)](https://speedhosting.cloud/) |
 
-| Speed Cloud | SpeedMaster |
-|-------------| ------------ |
-| [Grupo oficial](https://chat.whatsapp.com/HsZDn6DJrx34z5lbNbNB2M) | [Grupo oficial](https://chat.whatsapp.com/H48GLkKeh3YAWGQRSActa2?mode=ac_t) |
-| [![Speed Cloud](./assets/images/speed-cloud.png)](https://speedhosting.cloud/) | [![Speed Master](./assets/images/speed-master.png)](https://speedmasterx.shop/) |
+| Bores Host | TED Host | Lume |
+|------------|----------| ---- |
+| [Grupo oficial](https://chat.whatsapp.com/Ho2Zs63uKWuFwBwUdjV0cU) | [Grupo oficial](https://chat.whatsapp.com/DVDE1TCtHrKFatUKrlepjZ) | [Grupo oficial](https://chat.whatsapp.com/I5Vd7Ail01T8qK2xdrHXix?mode=wwt) |
+| [![Bores Host](./assets/images/bores-host.png)](https://loja.botbores.shop/) | [![TED Host](./assets/images/ted-host.png)](https://app.tedzinho.com.br/) | [![Lume](./assets/images/lume.png)](https://lumecloud.site/) |
 
-| Bores Host |
-|-------------|
-| [Grupo oficial](https://chat.whatsapp.com/JDciDHplLDhKkgyTCoYhs0) |
-| [![Bores Host](./assets/images/bores-host.png)](https://loja.botbores.shop/) |
+| Galax Host | Nodz Host |
+| ---------- | --------- |
+| [Grupo oficial](https://chat.whatsapp.com/Jhiaw6uRdwc6knaitKBaV4) | [Grupo oficial](https://chat.whatsapp.com/I5d5tCyZsV4J7Cjn51IkbV) |
+| [![Galax Host](./assets/images/galax.png)](https://galaxhost.com) | [![Nodz Host](./assets/images/nodz.png)](loja.nodzhostinger.com.br) |
 
-## Instalación en VPS (Debian/Ubuntu)
 
-1 - Abre una nueva terminal y ejecuta los siguientes comandos.
+## Instalação em VPS (Debian/Ubuntu)
+
+1 - Abra um novo terminal e execute os seguintes comandos.
 
 ```sh
 sudo apt update && sudo apt upgrade && sudo apt-get update && sudo apt-get upgrade && sudo apt install ffmpeg
 ```
 
-2 - Instala `curl` si no lo tienes.
+2 - Instale o `curl` se não tiver.
 
 ```sh
 sudo apt install curl
 ```
 
-3 - Instala `git` si no lo tienes.
+3 - Instale o `git` se não tiver.
 
 ```sh
 sudo apt install git
 ```
 
-4 - Instala NVM.
+4 - Instale o NVM.
 
 ```sh
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
 ```
 
-5 - Actualiza el source de tu entorno.
+5 - Atualize o source do seu ambiente
 
 ```sh
 source ~/.bashrc
 ```
 
-6 - Instala la versión 22 más reciente de Node.js.
+6 - Instale a versão 22 mais recente do node.js.
 
 ```sh
 nvm install 22
 ```
 
-7 - Verifica si la versión fue instalada y está activa.
+7 - Verifique se a versão foi instalada e está ativa.
 
 ```sh
-node -v # Debe mostrar la versión 22
+node -v # Deve exibir a versão 22
 ```
 
-8 - Verifica si npm fue instalado junto.
+8 - Verifique se o npm foi instalado junto.
 
 ```sh
-npm -v # Deberá mostrar la versión de npm
+npm -v # Deverá exibir a versão do npm
 ```
 
-9 - Instala PM2 (recomendado).
+9 - Instale o PM2 (recomendado).
 
 ```sh
 npm install pm2 -g
 ```
 
-10 - Clona el repositorio del bot donde desees.
+10 - Clone o repositório do bot onde você desejar.
 
 ```sh
-git clone https://github.com/guiireal/takeshi-bot-espanol.git
+git clone https://github.com/guiireal/takeshi-bot.git
 ```
 
-11 - Entra en la carpeta clonada.
+11 - Entre na pasta clonada.
 
 ```sh
 cd takeshi-bot
 ```
 
-12 - Escribe el siguiente comando.
+12 - Digite o seguinte comando.
 
 ```sh
 npm start
 ```
 
-13 - El bot te pedirá que ingreses tu número de teléfono.
-Ingresa **exactamente** como está en WhatsApp y solo números.
+13 - O bot vai solicitar que você digite seu número de telefone.
+Digite **exatamente** como está no WhatsApp e apenas números.
+
+Não adicione o 9º dígito em números que não sejam de SP ou RJ.
 
 ![tutorial-vps-1](./assets/images/tutorial-vps-1.png)
 
-14 - Conecta el bot a PM2.
+14 - Conecte o bot no PM2
 
 ```sh
 pm2 start npm --name "takeshi-bot" -- start
 ```
 
-15 - El bot mostrará un **código de emparejamiento** que debe colocarse en `dispositivos vinculados` en tu WhatsApp.
+15 - O bot exibirá um **código de pareamento** que deve ser colocado em `dispositivos conectados` no seu WhatsApp.
 
 ![tutorial-vps-2](./assets/images/tutorial-vps-2.png)
 
-16 - Ve a `dispositivos vinculados` en tu WhatsApp.
+16 - Vá em `dispositivos conectados` no seu WhatsApp.
 
 ![tutorial-vps-3](./assets/images/tutorial-vps-3.png)
 
-17 - Haz clic en `Vincular un dispositivo`.
+17 - Clique em `conectar dispositivo`
 
 ![tutorial-vps-4](./assets/images/tutorial-vps-4.png)
 
-18 - En la esquina inferior, haz clic en `Vincular con número de teléfono`.
+18 - No canto inferior, clique em `Conectar com número de telefone`
 
 ![tutorial-vps-5](./assets/images/tutorial-vps-5.png)
 
-19 - Coloca el **código de emparejamiento** que recibiste en la terminal, que se generó en el paso `15`.
+19 - Coloque o **código de pareamento** que você recebeu no terminal, que foi feito no passo `15`.
 
 ![tutorial-vps-6](./assets/images/tutorial-vps-6.png)
 
-20 - Después de esto, en la terminal que quedó detenida, debería mostrar que **se conectó con éxito**.
+20 - Após isso, no terminal que ficou parado, ele deve exibir que **foi conectado com sucesso**
 
 ![tutorial-vps-7](./assets/images/tutorial-vps-7.png)
 
-21 - Escribe `CTRL + C` para detener el bot.
+21 - Digite `CTRL + C` para parar o bot.
 
-22 - Ahora, inícialo con `PM2`, ejecutando el siguiente código.
+22 - Agora inicie ele pelo `PM2`, executando o seguinte código abaixo.
 
 ```sh
 pm2 start npm --name "takeshi-bot" -- start
@@ -313,448 +297,594 @@ pm2 start npm --name "takeshi-bot" -- start
 
 ![tutorial-vps-8](./assets/images/tutorial-vps-8.png)
 
-23 - Configura el archivo `config.js` que se encuentra dentro de la carpeta `src`.
+23 - Aguarde 10 segundos, depois digite `CTRL + C` para parar o bot.
+
+Depois, Configure o arquivo `config.js` que está dentro da pasta `src`.
 
 ```js
-// Prefijo de los comandos
-exports.PREFIX = "/";
+// Prefixo padrão dos comandos.
+export const PREFIX = "/";
 
-// Emoji del bot (cambia si lo prefieres).
-exports.BOT_EMOJI = "🤖";
+// Emoji do bot (mude se preferir).
+export const BOT_EMOJI = "🤖";
 
-// Nombre del bot (cambia si lo prefieres).
-exports.BOT_NAME = "Takeshi Bot";
+// Nome do bot (mude se preferir).
+export const BOT_NAME = "Takeshi Bot";
 
-// Número del bot. Coloca el número del bot (solo números).
-exports.BOT_NUMBER = "5511920202020";
+// LID do bot (no caso, o que você rodará o bot).
+// Para obter o LID do bot, use o comando <prefixo>lid respondendo em cima de uma mensagem do número do bot
+// Troque o <prefixo> pelo prefixo do bot (ex: /lid).
+export const BOT_LID = "12345678901234567890@lid";
 
-// Número del dueño del bot. Coloca el número del dueño del bot (solo números).
-exports.OWNER_NUMBER = "5511999999999";
+// LID do dono do bot (no caso, o seu!).
+// Para obter o LID do dono do bot, use o comando <prefixo>meu-lid
+// Troque o <prefixo> pelo prefixo do bot (ex: /meu-lid).
+export const OWNER_LID = "12345678901234567890@lid";
 ```
 
-24 - Finalmente, ¡prueba el bot!
+Lembre-se de trocar os números acima pelos seus números, obviamente e tbm ver se o seu prefixo é a barra /.
+
+24 - Por fim, teste o bot!
 
 ![tutorial-vps-9](./assets/images/tutorial-vps-9.png)
 
-## Algunos comandos requieren API
+## Diagrama de conexão
 
-Edita el archivo `config.js` que se encuentra dentro de la carpeta `src` y pega tu clave API de la plataforma Spider X API, según el código a continuación.
-Para obtener tu token, accede a: [https://api.spiderx.com.br](https://api.spiderx.com.br) ¡y crea tu cuenta gratuitamente!
+[![diagram](https://mermaid.ink/img/pako:eNqdVc1u1DAQfpWpJSSQtqX7k_2JoChse-hh26qtWlTtxZtMs4bEXhxnVVpV4gDcOLQUDgipQnBAiBs3OO6b8AR9BMbJZvu3BYQPVmx_M558M9_4gPkqQOayBJ-mKH1cFDzUPO5KoMFTo2Qa91Dn6wHXRvhiwKWBRRwCT-Ds9OjLr-evz06Pf8KW8kdfryMfKpMjP7-DTf4Ek76we9eB216OO_4G231uEm8w6MoctqIMghqitveWtj2XYO-fQ1vFCtTEq68k-oaDVBMHDwoPt27B_cmAtfXlztLyugdbSzsX9nOoJiegw97tSnW-BJWanRznTn54UzSv3sKaFjEKzWGI-6BVwGVgo-sV_2rH-ReZzi4sEBEuyEEMiSEmzk9pn04J40KXLYpQ2BtBjn7EqBUEmVd7NNWf45TLrWJMuzv3bgNfwwDBH30PREhu0eYDeYzSqHP0tjdbeF5Ho7TkE4vbuOdCuVKtzTr1RvPO1PjPTk-OoKMSoyd2F2ymhXeJXxe8Hlmep9Sm18cojbi-19N3F7ZGHwFj4sKzwUd9lVBdZIUQqKTLMkw7ElTfOWx8qKHAjzETloufi7OYA3Vz9iyDvz68hPbYggpwV-iYbC4EeYnIMY82hr3RJ5VJTIt9HvCZq-RlwA0eDYk2TWmSvuAi-TNfmY2N6OHqJrRXV5bam97i6kz2f16oiEeMEIZ8opWcQhtFzEmIWeoREowHGvMLUAY3aWj05tFyx9uwIlra-IOMxgrKtPQXGZ28gBVqAgM9-r4nYvoiLWHyv_rJueZaY3iJREgsrck0QYyrA65QMlUNWeqLUpv5x8ysra-ubI5TYlvjY1u-iaFZyUhIzA4QeJhynbcQCiDhIU0XEgJTByuxUIuAuUanWGLUK2Jul-zAWnSZ6WOMXWYbR4C7PI2M7SCHZEYNeEepuLDUKg37zN3lUUKrdBBwUzwNk11NgaBuq1Qa5pZbzUrmhbkHbI_WzfpcrdGq1eabTtNpVSrVEnvG3Mb8XKPpVKpVakx1p1FvHpbYfnZvea5RL9drjfK8UynXW80Sw0CQNjr5-5Q9U4e_ARz-Fnw?type=png)](https://mermaid.live/edit#pako:eNqdVc1u1DAQfpWpJSSQtqX7k_2JoChse-hh26qtWlTtxZtMs4bEXhxnVVpV4gDcOLQUDgipQnBAiBs3OO6b8AR9BMbJZvu3BYQPVmx_M558M9_4gPkqQOayBJ-mKH1cFDzUPO5KoMFTo2Qa91Dn6wHXRvhiwKWBRRwCT-Ds9OjLr-evz06Pf8KW8kdfryMfKpMjP7-DTf4Ek76we9eB216OO_4G231uEm8w6MoctqIMghqitveWtj2XYO-fQ1vFCtTEq68k-oaDVBMHDwoPt27B_cmAtfXlztLyugdbSzsX9nOoJiegw97tSnW-BJWanRznTn54UzSv3sKaFjEKzWGI-6BVwGVgo-sV_2rH-ReZzi4sEBEuyEEMiSEmzk9pn04J40KXLYpQ2BtBjn7EqBUEmVd7NNWf45TLrWJMuzv3bgNfwwDBH30PREhu0eYDeYzSqHP0tjdbeF5Ho7TkE4vbuOdCuVKtzTr1RvPO1PjPTk-OoKMSoyd2F2ymhXeJXxe8Hlmep9Sm18cojbi-19N3F7ZGHwFj4sKzwUd9lVBdZIUQqKTLMkw7ElTfOWx8qKHAjzETloufi7OYA3Vz9iyDvz68hPbYggpwV-iYbC4EeYnIMY82hr3RJ5VJTIt9HvCZq-RlwA0eDYk2TWmSvuAi-TNfmY2N6OHqJrRXV5bam97i6kz2f16oiEeMEIZ8opWcQhtFzEmIWeoREowHGvMLUAY3aWj05tFyx9uwIlra-IOMxgrKtPQXGZ28gBVqAgM9-r4nYvoiLWHyv_rJueZaY3iJREgsrck0QYyrA65QMlUNWeqLUpv5x8ysra-ubI5TYlvjY1u-iaFZyUhIzA4QeJhynbcQCiDhIU0XEgJTByuxUIuAuUanWGLUK2Jul-zAWnSZ6WOMXWYbR4C7PI2M7SCHZEYNeEepuLDUKg37zN3lUUKrdBBwUzwNk11NgaBuq1Qa5pZbzUrmhbkHbI_WzfpcrdGq1eabTtNpVSrVEnvG3Mb8XKPpVKpVakx1p1FvHpbYfnZvea5RL9drjfK8UynXW80Sw0CQNjr5-5Q9U4e_ARz-Fnw)
+
+## Alguns comandos necessitam de API
+
+Edite o arquivo `config.js` que está dentro da pasta `src` e cole sua api key da plataforma Spider X API, conforme o código abaixo.
+Para obter seu token, acesse: [https://api.spiderx.com.br](https://api.spiderx.com.br) e crie sua conta gratuitamente!
 
 ```js
-exports.SPIDER_API_TOKEN = "tu_token_aqui";
+export const SPIDER_API_TOKEN = "seu_token_aqui";
 ```
 
-## Funcionalidades generales
+Para comandos de **canvas** e **gerar-link**, é necessário configurar a API do **Linker**:
 
-| Función | Contexto | ¿Requiere Spider X API?
-| ------------ | --- | ---
-| Apagar el bot en el grupo | Dueño | ❌
-| Cambiar imagen del bot | Dueño | ❌
-| Ejecutar comandos de infraestructura | Dueño | ❌
-| Encender el bot en el grupo | Dueño | ❌
-| Modificar el prefijo por grupo | Dueño | ❌ |
-| Obtener el ID del grupo | Dueño | ❌
-| Abrir grupo | Admin | ❌
-| Activar/desactivar auto-respuesta | Admin | ❌
-| Activar/desactivar bienvenida | Admin | ❌
-| Activar/desactivar salida de grupo | Admin | ❌
-| Anti audio | Admin | ❌
-| Anti documento | Admin | ❌
-| Anti evento | Admin | ❌
-| Anti imagen | Admin | ❌
-| Anti producto | Admin | ❌
-| Anti sticker | Admin | ❌
-| Anti video | Admin | ❌
-| Anti-enlace | Admin | ❌
-| Banear miembros | Admin | ❌
-| Cambiar nombre del grupo | Admin | ❌
-| Cerrar grupo | Admin | ❌
-| Eliminar mensajes | Admin | ❌
-| Gestão de mensagens do auto-responder | Admin | ❌
-| Limpiar chat | Admin | ❌
-| Mencionar a todos | Admin | ❌
-| Programar mensaje | Admin | ❌
-| Revelar | Admin | ❌
-| Silenciar/desmutear | Admin | ❌
-| Solo administradores | Admin | ❌
-| Veja saldo | Admin | 
-| Chat falso | Miembro | ❌
-| Comandos de diversión/juegos | Miembro |❌
-| Descarga de video TikTok | Miembro | ✅
-| Difuminar imagen | Miembro | ❌
-| Espejar imagen | Miembro | ❌
-| Generación de imágenes con IA | Miembro | ✅
-| Generar enlace | Miembro | ❌
-| Google Gemini | Miembro | ✅
-| Google Search | Miembro | ✅
-| Imagen blanco/negro | Miembro | ❌
-| Imagen con contraste | Miembro | ❌
-| Imagen IA Flux | Miembro | ✅
-| Imagen pixelada | Miembro | ❌
-| Lienzo cárcel | Miembro | ✅
-| Lienzo invertir | Miembro | ✅
-| Lienzo RIP | Miembro | ✅
-| Ping | Miembro | ❌
-| Renombrar sticker | Miembro | ❌
-| Reproducir audio | Miembro | ✅
-| Reproducir video | Miembro | ✅
-| Sticker | Miembro | ❌
-| Sticker a imagen | Miembro | ❌
-| Sticker de texto animado | Miembro | ✅
-| Sticker IA  | Miembro | ✅
-| YT MP3 | Miembro | ✅
-| YT MP4 | Miembro | ✅
-| YT Search | Miembro | ✅
+```js
+export const LINKER_BASE_URL = "https://linker.devgui.dev/api";
+export const LINKER_API_KEY = "seu_token_aqui";
+```
 
-## Funcionalidades de envío (Ejemplos)
+Obtenha sua API Key em: [https://linker.devgui.dev](https://linker.devgui.dev)
 
-### 🎵 Ejemplos de audio
+## Funcionalidades gerais
 
-| Comando | Función | Descripción | Características |
+| Função | Contexto | Requer a Spider X API? |
+| ------------ | --- | --- |
+| Alterar imagem do bot | Dono | ❌ |
+| Desligar o bot no grupo | Dono | ❌ |
+| Executar comandos de infra | Dono | ❌ |
+| Ligar o bot no grupo | Dono | ❌ |
+| Modificar o prefixo por grupo | Dono | ❌ |
+| Obter o ID do grupo | Dono | ❌ |
+| Abrir grupo | Admin | ❌ |
+| Agendar mensagem | Admin | ❌ |
+| Anti audio | Admin | ❌ |
+| Anti documento | Admin | ❌ |
+| Anti evento | Admin | ❌ |
+| Anti imagem | Admin | ❌ |
+| Anti link | Admin | ❌ |
+| Anti produto | Admin | ❌ |
+| Anti sticker | Admin | ❌ |
+| Anti video | Admin | ❌ |
+| Banir membros | Admin | ❌ |
+| Excluir mensagens | Admin | ❌ |
+| Fechar grupo | Admin | ❌ |
+| Gestão de mensagens do auto-responder | Admin | ❌ |
+| Ligar/desligar auto responder | Admin | ❌ |
+| Ligar/desligar boas vindas | Admin | ❌ |
+| Ligar/desligar saída de grupo | Admin | ❌ |
+| Limpar chat | Admin | ❌ |
+| Marcar todos | Admin | ❌ |
+| Mudar nome do grupo | Admin | ❌ |
+| Mute/unmute | Admin | ❌ |
+| Obter o link do grupo | Admin | ❌ |
+| Revelar | Admin | ❌ |
+| Somente admins | Admin | ❌ |
+| Ver saldo | Admin | ❌ |
+| Borrar imagem | Membro | ❌ |
+| Busca CEP | Membro | ❌ |
+| Canvas Bolsonaro | Membro | ✅ |
+| Canvas cadeia | Membro | ✅ |
+| Canvas inverter | Membro | ✅ |
+| Canvas RIP | Membro | ✅ |
+| Comandos de diversão/brincadeiras | Membro |❌ |
+| Espelhar imagem | Membro | ❌ |
+| Fake chat | Membro | ❌ |
+| Figurinha animada para GIF | Membro | ✅ |
+| Figurinha de texto animada | Membro | ✅ |
+| Geração de imagens com IA | Membro | ✅ |
+| Gerar link | Membro | ❌ |
+| Google Gemini | Membro | ✅ |
+| Google search | Membro | ✅ |
+| GPT-5 Mini | Membro | ✅ |
+| Imagem com contraste | Membro | ❌ |
+| Imagem IA Flux | Membro | ✅ |
+| Imagem pixelada | Membro | ❌ |
+| Imagem preto/branco | Membro | ❌ |
+| Instagram download | Membro | ✅ |
+| Ping | Membro | ❌ |
+| Play áudio | Membro | ✅ |
+| Play vídeo | Membro | ✅ |
+| Renomear figurinha | Membro | ❌ |
+| Sticker | Membro | ❌ |
+| Sticker IA  | Membro | ✅ |
+| Sticker para imagem | Membro | ❌ |
+| TikTok video download | Membro | ✅ |
+| YT MP3 | Membro | ✅ |
+| YT MP4 | Membro | ✅ |
+| YT search | Membro | ✅ |
+
+## Funcionalidades de envio (Exemplos)
+
+### 🎵 Exemplos de áudio
+
+| Comando | Função | Descrição | Características |
 |---------|---------|-----------|-----------------|
-| `/send-audio-from-file` | Enviar audio desde archivo | Demuestra el envío de archivos de audio desde el almacenamiento local | Opción de mensaje de voz, respuesta citada |
-| `/send-audio-from-url` | Enviar audio desde URL | Demuestra el envío de archivos de audio desde URLs externas | Opción de mensaje de voz, respuesta citada |
-| `/send-audio-from-buffer` | Enviar audio desde buffer | Demuestra el envío de archivos de audio desde buffers de memoria | Opción de mensaje de voz, respuesta citada, buffer de archivo o URL |
+| `/enviar-audio-de-arquivo` | Enviar áudio de arquivo | Demonstra envio de arquivos de áudio do armazenamento local | Opção de mensagem de voz, resposta citada |
+| `/enviar-audio-de-url` | Enviar áudio de URL | Demonstra envio de arquivos de áudio de URLs externas | Opção de mensagem de voz, resposta citada |
+| `/enviar-audio-de-buffer` | Enviar áudio de buffer | Demonstra envio de arquivos de áudio de buffers de memória | Opção de mensagem de voz, resposta citada, buffer de arquivo ou URL |
 
-### 🖼️ Ejemplos de imagen
+### 🖼️ Exemplos de imagem
 
-| Comando | Función | Descripción | Características |
+| Comando | Função | Descrição | Características |
 |---------|---------|-----------|-----------------|
-| `/send-image-from-file` | Enviar imagen desde archivo | Demuestra el envío de archivos de imagen desde el almacenamiento local | Soporte para subtítulo personalizado, menciones, respuesta citada |
-| `/send-image-from-url` | Enviar imagen desde URL | Demuestra el envío de archivos de imagen desde URLs externas | Envío directo desde URL, soporte para menciones, respuesta citada |
-| `/send-image-from-buffer` | Enviar imagen desde buffer | Demuestra el envío de archivos de imagen desde buffers de memoria | Buffer de archivo o URL, subtítulo opcional, menciones, respuesta citada |
+| `/enviar-imagem-de-arquivo` | Enviar imagem de arquivo | Demonstra envio de arquivos de imagem do armazenamento local | Suporte a legenda personalizada, menções, resposta citada |
+| `/enviar-imagem-de-url` | Enviar imagem de URL | Demonstra envio de arquivos de imagem de URLs externas | Envio direto de URL, suporte a menções, resposta citada |
+| `/enviar-imagem-de-buffer` | Enviar imagem de buffer | Demonstra envio de arquivos de imagem de buffers de memória | Buffer de arquivo ou URL, legenda opcional, menções, resposta citada |
 
-### 🎬 Ejemplos de video
+### 🎬 Exemplos de vídeo
 
-| Comando | Función | Descripción | Características |
+| Comando | Função | Descrição | Características |
 |---------|---------|-----------|-----------------|
-| `/send-video-from-file` | Enviar video desde archivo | Demuestra el envío de archivos de video desde el almacenamiento local | Soporte para subtítulo personalizado, menciones, respuesta citada |
-| `/send-video-from-url` | Enviar video desde URL | Demuestra el envío de archivos de video desde URLs externas | Envío directo desde URL, soporte para menciones, respuesta citada |
-| `/send-video-from-buffer` | Enviar video desde buffer | Demuestra el envío de archivos de video desde buffers de memoria | Buffer de archivo o URL, subtítulo opcional, menciones, respuesta citada |
+| `/enviar-video-de-arquivo` | Enviar vídeo de arquivo | Demonstra envio de arquivos de vídeo do armazenamento local | Suporte a legenda personalizada, menções, resposta citada |
+| `/enviar-video-de-url` | Enviar vídeo de URL | Demonstra envio de arquivos de vídeo de URLs externas | Envio direto de URL, suporte a menções, resposta citada |
+| `/enviar-video-de-buffer` | Enviar vídeo de buffer | Demonstra envio de arquivos de vídeo de buffers de memória | Buffer de arquivo ou URL, legenda opcional, menções, resposta citada |
 
-### 🎞️ Ejemplos de GIF
+### 🎞️ Exemplos de GIF
 
-| Comando | Función | Descripción | Características |
+| Comando | Função | Descrição | Características |
 |---------|---------|-----------|-----------------|
-| `/send-gif-from-file` | Enviar GIF desde archivo | Demuestra el envío de archivos GIF desde el almacenamiento local | Soporte para subtítulo, menciones, respuesta citada |
-| `/send-gif-from-url` | Enviar GIF desde URL | Demuestra el envío de archivos GIF desde URLs externas | Soporte para subtítulo, menciones, respuesta citada |
-| `/send-gif-from-buffer` | Enviar GIF desde buffer | Demuestra el envío de archivos GIF desde buffers de memoria | Buffer de archivo o URL, subtítulo, menciones, respuesta citada |
+| `/enviar-gif-de-arquivo` | Enviar GIF de arquivo | Demonstra envio de arquivos GIF do armazenamento local | Suporte a legenda, menções, resposta citada |
+| `/enviar-gif-de-url` | Enviar GIF de URL | Demonstra envio de arquivos GIF de URLs externas | Suporte a legenda, menções, resposta citada |
+| `/enviar-gif-de-buffer` | Enviar GIF de buffer | Demonstra envio de arquivos GIF de buffers de memória | Buffer de arquivo ou URL, legenda, menções, resposta citada |
 
-### 🎭 Ejemplos de sticker
+### 🎭 Exemplos de sticker
 
-| Comando | Función | Descripción | Características |
+| Comando | Função | Descrição | Características |
+|---------|--------|-----------|-----------------|
+| `/enviar-sticker-de-arquivo` | Enviar sticker de arquivo | Demonstra envio de arquivos sticker do armazenamento local | Formato WebP |
+| `/enviar-sticker-de-url` | Enviar sticker de URL | Demonstra envio de arquivos sticker de URLs externas | Formato WebP |
+| `/enviar-sticker-de-buffer` | Enviar sticker de buffer | Demonstra envio de arquivos sticker de buffers de memória | Buffer de arquivo ou URL |
+
+### 📊 Exemplos de enquete/votação
+
+| Comando | Função | Descrição | Características |
+|---------|--------|-----------|-----------------|
+| `/enviar-enquete` | Enviar enquete | Demonstra como criar e enviar enquetes/votações em grupos | Suporte a escolha única ou múltipla escolha |
+
+### 📍 Exemplos de localização
+
+| Comando | Função | Descrição | Características |
 |---------|---------|-----------|-----------------|
-| `/send-sticker-from-file` | Enviar sticker desde archivo | Demuestra el envío de archivos de sticker desde el almacenamiento local | Formato WebP |
-| `/send-sticker-from-url` | Enviar sticker desde URL | Demuestra el envío de archivos de sticker desde URLs externas | Formato WebP |
-| `/send-sticker-from-buffer` | Enviar sticker desde buffer | Demuestra el envío de archivos de sticker desde buffers de memoria | Buffer de archivo o URL |
+| `/enviar-localizacao` | Enviar localização | Demonstra como enviar localizações, com latitude e longitude | Suporte a latitude e longitude de qualquer lugar do mundo |
 
-### 📊 Ejemplos de encuesta/votación
+### 📲 Exemplos de contatos
 
-| Comando | Función | Descripción | Características |
+| Comando | Função | Descrição | Características |
 |---------|---------|-----------|-----------------|
-| `/send-poll` | Enviar encuesta | Demuestra cómo crear y enviar encuestas/votaciones en grupos | Soporte para selección única o múltiple |
+| `/enviar-contato` | Enviar contato | Demonstra como enviar contatos | Os contatos podem ser chamados ou adicionados à lista dos seus contatos |
 
-### 📄 Ejemplos de documento
+### 📄 Exemplos de documento
 
-| Comando | Función | Descripción | Características |
+| Comando | Função | Descrição | Características |
 |---------|---------|-----------|-----------------|
-| `/send-document-from-file` | Enviar documento desde archivo | Demuestra el envío de archivos de documento desde el almacenamiento local | Especificación de tipo MIME, nombre de archivo personalizado |
-| `/send-document-from-url` | Enviar documento desde URL | Demuestra el envío de archivos de documento desde URLs externas | Especificación de tipo MIME, nombre de archivo personalizado |
-| `/send-document-from-buffer` | Enviar documento desde buffer | Demuestra el envío de archivos de documento desde buffers de memoria | Buffer de archivo o URL, tipo MIME, nombre de archivo personalizado |
+| `/enviar-documento-de-arquivo` | Enviar documento de arquivo | Demonstra envio de arquivos de documento do armazenamento local | Especificação de tipo MIME, nome de arquivo personalizado |
+| `/enviar-documento-de-url` | Enviar documento de URL | Demonstra envio de arquivos de documento de URLs externas | Especificação de tipo MIME, nome de arquivo personalizado |
+| `/enviar-documento-de-buffer` | Enviar documento de buffer | Demonstra envio de arquivos de documento de buffers de memória | Buffer de arquivo ou URL, tipo MIME, nome de arquivo personalizado |
 
-### 💬 Ejemplos de mensaje
+### 💬 Exemplos de mensagem
 
-| Comando | Función | Descripción | Características |
+| Comando | Função | Descrição | Características |
 |---------|---------|-----------|-----------------|
-| `/send-text` | Enviar texto | Demuestra el envío de mensajes de texto simples | Soporte para menciones |
-| `/send-quoted` | Enviar respuesta | Demuestra el envío de mensajes de respuesta | Respuestas de éxito/error/advertencia |
-| `/send-reaction` | Enviar reacciones | Demuestra el envío de emojis de reacción | Varias reacciones emoji, reacciones de éxito/error/advertencia |
+| `/enviar-texto` | Enviar texto | Demonstra envio de mensagens de texto simples | Suporte a menções |
+| `/enviar-resposta` | Enviar resposta | Demonstra envio de mensagens de resposta | Respostas de sucesso/erro/aviso |
+| `/enviar-reacoes` | Enviar reações | Demonstra envio de emojis de reação | Várias reações emoji, reações de sucesso/erro/aviso |
+| `/enviar-mensagem-editada` | Enviar mensagem editada | Demonstra envio de mensagens editadas | Pode editar mensagens enviadas de forma direta ou respondendo alguém |
 
-### 📊 Ejemplos de metadatos
+### 📊 Exemplos de metadados
 
-| Comando | Función | Descripción | Características |
+| Comando | Função | Descrição | Características |
 |---------|---------|-----------|-----------------|
-| `/get-message-data` | Obtener metadatos del mensaje | Demuestra la extracción avanzada de metadatos de mensaje o mensaje citado | Análisis detallado, soporte para respuesta de mensajes, información técnica, menciones automáticas |
-| `/get-group-data` | Obtener datos del grupo | Demuestra la extracción de información del grupo | Metadatos del grupo, lista de participantes, información de administrador |
-| `/group-functions` | Funciones del grupo | Demuestra el uso de funciones de utilidad del grupo | Extracción de nombre, dueño, administradores, participantes del grupo |
+| `/obter-metadados-mensagem` | Obter metadados da mensagem | Demonstra extração avançada de metadados de mensagem ou mensagem citada | Análise detalhada, suporte a resposta de mensagens, informações técnicas, menções automáticas |
+| `/obter-dados-grupo` | Obter dados do grupo | Demonstra extração de informações do grupo | Metadados do grupo, lista de participantes, informações de admin |
+| `/funcoes-grupo` | Funções do grupo | Demonstra uso de funções utilitárias do grupo | Extração de nome, dono, admins, participantes do grupo |
 
-### 🎯 Centro de ejemplos
+### 🎯 Central de exemplos
 
-| Comando | Función | Descripción | Características |
+| Comando | Função | Descrição | Características |
 |---------|---------|-----------|-----------------|
-| `/samples-of-messages` | Centro de ejemplos | Centro con lista de todos los ejemplos disponibles | Menú interactivo, acceso directo a todos los ejemplos |
+| `/exemplos-de-mensagens` | Central de exemplos | Central com lista de todos os exemplos disponíveis | Menu interativo, acesso direto a todos os exemplos |
 
-## Auto-respuesta
+## Auto responder
 
-Takeshi Bot tiene un auto-respondedor incorporado, edita el archivo en `./database/auto-responder.json`:
+O Takeshi Bot possui um auto-responder embutido, edite o arquivo em `./database/auto-responder.json`:
 
 ```json
 [
     {
-        "match": "Hola",
-        "answer": "¿Hola, cómo estás?"
+        "match": "Oi",
+        "answer": "Olá, tudo bem?"
     },
     {
-        "match": "Todo bien",
-        "answer": "Estoy bien, gracias por preguntar"
+        "match": "Tudo bem",
+        "answer": "Estou bem, obrigado por perguntar"
     },
     {
-        "match": "¿Cuál es tu nombre?",
-        "answer": "Mi nombre es Takeshi Bot"
+        "match": "Qual seu nome",
+        "answer": "Meu nome é Takeshi Bot"
     }
 ]
 ```
 
-## ¿Dónde está el menú del bot?
+## Auto figurinha / Auto sticker
 
-El menú del bot se encuentra en la carpeta `src`, dentro del archivo `menu.js`.
+O Takeshi Bot possui um recurso de auto-figurinha que converte automaticamente imagens e vídeos enviados em figurinhas:
 
-## ¿Dónde modifico el mensaje de bienvenida y cuándo alguien abandona el grupo?
+| Comando | Função | Descrição |
+|---------|---------|-----------|
+| `/auto-stick 1` | Ativar | Ativa a conversão automática no grupo |
+| `/auto-stick 0` | Desativar | Desativa a conversão automática no grupo |
 
-Los mensajes se encuentran en la carpeta `src`, dentro del archivo `messages.js`.
+**Nota:** O recurso suporta imagens e vídeos de até 10 segundos.
 
-## Implementación técnica de los ejemplos
+## Onde fica o menu do bot?
 
-### 📁 Ubicación de los comandos de ejemplo
+O menu do bot fica dentro da pasta `src` no arquivo chamado `menu.js`
 
-Todos los comandos de ejemplo se encuentran en: `src/commands/member/samples/`
+## Onde modifico a mensagem de boas vindas e quando alguém sai do grupo?
 
-### 🛠️ Funciones disponibles
+As mensagens ficam dentro da pasta `src` no arquivo chamado `messages.js`
 
-Todos los comandos de ejemplo utilizan funciones de `src/utils/loadCommonFunctions.js`:
+## Diagrama de como os comandos funcionam
 
-#### Funciones de audio
+[![diagram](https://mermaid.ink/img/pako:eNqNVltrG0cU_isnCwGJqJJ2tZKtpTE4GwUMteVYlinFL6Pd0Xpb7Y48F9eJMeRCX_pSSqEPJRDSBAp9K6HQ9_0n_gPtT-iZ2YscW7KiBzGz831nznduuxdWwEJqeZagp4qmAX0ck4iT5DgF_BElWaqSCeX5fk64jIN4TlIJY0E5EAH_vf35A25U9o7H7DbsEZM56sOvcEi-o-Ik1s9uA_0kzIG_vIJtfqriMwYhA58lJA3RcM7YY5ICO8Or9f0NJHlI-e0FPB1v7z0ewtHQz36EXVxvw3gX_KFeDkv2_fvwsPrBeDTOXh7sDGGwd7Szfe0kB3MaSODRpOZ02g1wXP3X7dbzwyW-oCoP7H__-enq9fsqIEDTs5hAUKoouZrxxdaW4bQSmqplZs2pDiC6QicUCCBSkIgW6aFpuFzZo-Eh7B8M_cFodJeuQpIRV1_pgFNI0o7gw3gaBwQozDkLFCfAbotbrJBTqjwqqQKNQ8TVHIMjZPYOiMRcfwZnzuk0Pi9ZAeOcSga1Vn0pd_-mf3BsmUBbyxy9GXQltMjE-3LCW1tYky9B8KCFlrQp0WLfp5S3VhySMInTVYcJ1e3UWhOsqzc_wCANWCo5Ux4UJO1-81uxNlRnLMj-BEkTmFOexEJk79lniN6vwDAhgpKQQEqwR4UkeRyuXvwOuXJ4CCL7iP2ZmiadMFkBcvUIMAuhj02yK0AhBhGnisxw6nBQ6wq66GMYfD3wx4d31bQp564u7M7Kms7HRqeo68E5DZTUhUIWY2dtTRsT_glJTFN-mpZl1xr8sLqi4JSdLVWo6xvzzRahFhiOAzqfPYOamSIc0WLOMB31TzA7CY6EChPrXbJAEB4JqOG_wjslE9fULUAUEhIL6LYfwFSl2R_Z31Tk_hBxb5kwlFMG4avsY6QLb2HXqPNWRsFugk-weSNSOAsFxbjjNGFX34v5kPRcGqOlYWEQnSb2hp6qBftBDlztpqnuKlJPOEuexDNay-mNnF1fU4EHg9H-cHS49jVh6u-O0tOD3wP32kw1SU1DerPCciROkL8KuXmQVr1_8qFxZFq_el-UBXOvUmc1rIjHoeVJrmgDJyLHzOPWutCQY0ue0IQeWx4uQzolaib1wLxEGr6lv2EsKZk4mKITy5uSmcCdmodElh8P1VOOF1LuM5VKy3PaTs9YsbwL6xz3bq_Z6fW7tuM6G92O7XQb1jPLs-1e0-72-z27t9F3Hdu-bFjPzb120-1vbvZdt9tpu5sbbbRGw1gyvpt_wpgvmcv_AYwQ1RY?type=png)](https://mermaid.live/edit#pako:eNqNVltrG0cU_isnCwGJqJJ2tZKtpTE4GwUMteVYlinFL6Pd0Xpb7Y48F9eJMeRCX_pSSqEPJRDSBAp9K6HQ9_0n_gPtT-iZ2YscW7KiBzGz831nznduuxdWwEJqeZagp4qmAX0ck4iT5DgF_BElWaqSCeX5fk64jIN4TlIJY0E5EAH_vf35A25U9o7H7DbsEZM56sOvcEi-o-Ik1s9uA_0kzIG_vIJtfqriMwYhA58lJA3RcM7YY5ICO8Or9f0NJHlI-e0FPB1v7z0ewtHQz36EXVxvw3gX_KFeDkv2_fvwsPrBeDTOXh7sDGGwd7Szfe0kB3MaSODRpOZ02g1wXP3X7dbzwyW-oCoP7H__-enq9fsqIEDTs5hAUKoouZrxxdaW4bQSmqplZs2pDiC6QicUCCBSkIgW6aFpuFzZo-Eh7B8M_cFodJeuQpIRV1_pgFNI0o7gw3gaBwQozDkLFCfAbotbrJBTqjwqqQKNQ8TVHIMjZPYOiMRcfwZnzuk0Pi9ZAeOcSga1Vn0pd_-mf3BsmUBbyxy9GXQltMjE-3LCW1tYky9B8KCFlrQp0WLfp5S3VhySMInTVYcJ1e3UWhOsqzc_wCANWCo5Ux4UJO1-81uxNlRnLMj-BEkTmFOexEJk79lniN6vwDAhgpKQQEqwR4UkeRyuXvwOuXJ4CCL7iP2ZmiadMFkBcvUIMAuhj02yK0AhBhGnisxw6nBQ6wq66GMYfD3wx4d31bQp564u7M7Kms7HRqeo68E5DZTUhUIWY2dtTRsT_glJTFN-mpZl1xr8sLqi4JSdLVWo6xvzzRahFhiOAzqfPYOamSIc0WLOMB31TzA7CY6EChPrXbJAEB4JqOG_wjslE9fULUAUEhIL6LYfwFSl2R_Z31Tk_hBxb5kwlFMG4avsY6QLb2HXqPNWRsFugk-weSNSOAsFxbjjNGFX34v5kPRcGqOlYWEQnSb2hp6qBftBDlztpqnuKlJPOEuexDNay-mNnF1fU4EHg9H-cHS49jVh6u-O0tOD3wP32kw1SU1DerPCciROkL8KuXmQVr1_8qFxZFq_el-UBXOvUmc1rIjHoeVJrmgDJyLHzOPWutCQY0ue0IQeWx4uQzolaib1wLxEGr6lv2EsKZk4mKITy5uSmcCdmodElh8P1VOOF1LuM5VKy3PaTs9YsbwL6xz3bq_Z6fW7tuM6G92O7XQb1jPLs-1e0-72-z27t9F3Hdu-bFjPzb120-1vbvZdt9tpu5sbbbRGw1gyvpt_wpgvmcv_AYwQ1RY)
 
-  - `sendAudioFromFile(filePath, asVoice, quoted)`
-  - `sendAudioFromURL(url, asVoice, quoted)`
-  - `sendAudioFromBuffer(buffer, asVoice, quoted)`
+## Diagrama de como funcionam os middlewares (interceptadores) de recepção e saída
 
-#### Funciones de imagen
+[![diagram](https://mermaid.ink/img/pako:eNqtld9qE0EUxl_lOFBoIW2TzV8WrU2tFKVJa9uAltycZE_TwexMnJ2NtaXghQqiIPXCC1FELIgXeq3XeZO-gD6Cs7NJtmmTBsG9CDsz5zvn7De_yRyxpvSIuSygRyGJJq1ybCn06wLMg6GWIvQbpOJxB5XmTd5BoaHs-VwABvDn08mPeHQ5aEXqOOT0HezgQwr2eTR3ObAWkOonO4Wq7EqokN9Qst5PWpWaQHZNkK2UiuJdE_3-KdyrlaurG1BeX6v1XlbgdnVnqwwbNdgu3wEzv7ZV29wYpJmZgRvD54IkWYhjFTU1qFZj1smmU-Dkop98fi5enNzT2YfnUG63wt43H0hohSAktFTYkYkyebPK-aUlY4prBsYOKRCW78reFwl4SWjCBsGrpE2DCGbbAM_Vk-G4OueEKxKD-S4XnrGbAt37DKh5Fz28eb2hFpdmm9JH4UkXFh9T2wzMN4q5cTmxrUeS9dMkARcKb1ILwScRYIt88AgaiXhUlDhrhdthI9Bch9y1HR4J09QxnL14C9aneNI6Fc9Wo6a9S-Yl7QzoOXkFdbZCvm1CwqjrcP_B7rU6m9RZstsWV9_iGkFDDRp-ZSKmdkAjbnkUjDXswrefPfv1--cbqEad7eEhiBEBCS8e2JerGI9Ow2TC-3BbzKcT_vH1kPAA-RinJ_C9Rb5JBssVVBzHyKbQbWpNY7tyjq4Ae989nII4HXB9Fd9jEv4z5manO-TxKRs9GXJr179Dbq0fUh57Hlk4FEWAT-a7L48AX7PRfbSF1HyPN7H31SB5ge8xbv1fzCdu_Dr3O6YYejI6WecsmzVtUdtigF2zL6E2mVNAujk3PDnAUqyluMdcrUJKMZ-Uj9GQHUUxdab3yac6c82rR3sYtnXk27GRmctrV0p_oDT_vq195u6hcSPFwo6HenCjDmeVqUjqlgyFZq6TLuVsFuYesQPmZorFhYKTzWSK6Wwpn8s4ZvUJc-cLhYVizsmWSvlC2kk72exxih3awpmFfM4pFLJ5s54pFfMpZljTUlXie91e78d_AUVrgqU?type=png)](https://mermaid.live/edit#pako:eNqtld9qE0EUxl_lOFBoIW2TzV8WrU2tFKVJa9uAltycZE_TwexMnJ2NtaXghQqiIPXCC1FELIgXeq3XeZO-gD6Cs7NJtmmTBsG9CDsz5zvn7De_yRyxpvSIuSygRyGJJq1ybCn06wLMg6GWIvQbpOJxB5XmTd5BoaHs-VwABvDn08mPeHQ5aEXqOOT0HezgQwr2eTR3ObAWkOonO4Wq7EqokN9Qst5PWpWaQHZNkK2UiuJdE_3-KdyrlaurG1BeX6v1XlbgdnVnqwwbNdgu3wEzv7ZV29wYpJmZgRvD54IkWYhjFTU1qFZj1smmU-Dkop98fi5enNzT2YfnUG63wt43H0hohSAktFTYkYkyebPK-aUlY4prBsYOKRCW78reFwl4SWjCBsGrpE2DCGbbAM_Vk-G4OueEKxKD-S4XnrGbAt37DKh5Fz28eb2hFpdmm9JH4UkXFh9T2wzMN4q5cTmxrUeS9dMkARcKb1ILwScRYIt88AgaiXhUlDhrhdthI9Bch9y1HR4J09QxnL14C9aneNI6Fc9Wo6a9S-Yl7QzoOXkFdbZCvm1CwqjrcP_B7rU6m9RZstsWV9_iGkFDDRp-ZSKmdkAjbnkUjDXswrefPfv1--cbqEad7eEhiBEBCS8e2JerGI9Ow2TC-3BbzKcT_vH1kPAA-RinJ_C9Rb5JBssVVBzHyKbQbWpNY7tyjq4Ae989nII4HXB9Fd9jEv4z5manO-TxKRs9GXJr179Dbq0fUh57Hlk4FEWAT-a7L48AX7PRfbSF1HyPN7H31SB5ge8xbv1fzCdu_Dr3O6YYejI6WecsmzVtUdtigF2zL6E2mVNAujk3PDnAUqyluMdcrUJKMZ-Uj9GQHUUxdab3yac6c82rR3sYtnXk27GRmctrV0p_oDT_vq195u6hcSPFwo6HenCjDmeVqUjqlgyFZq6TLuVsFuYesQPmZorFhYKTzWSK6Wwpn8s4ZvUJc-cLhYVizsmWSvlC2kk72exxih3awpmFfM4pFLJ5s54pFfMpZljTUlXie91e78d_AUVrgqU)
 
-  - `sendImageFromFile(filePath, caption, mentions, quoted)`
-  - `sendImageFromURL(url, caption, mentions, quoted)`
-  - `sendImageFromBuffer(buffer, caption, mentions, quoted)`
+## Custom Middleware - Personalize o bot sem modificar arquivos principais
 
-#### Funciones de video
+O arquivo `src/middlewares/customMiddleware.js` permite adicionar lógica personalizada sem mexer nos arquivos core do bot.
 
-  - `sendVideoFromFile(filePath, caption, mentions, quoted)`
-  - `sendVideoFromURL(url, caption, mentions, quoted)`
-  - `sendVideoFromBuffer(buffer, caption, mentions, quoted)`
+### Quando usar?
 
-#### Funciones de GIF
+- ✅ Adicionar comportamentos personalizados
+- ✅ Criar logs customizados
+- ✅ Implementar lógica específica por grupo
+- ✅ Reagir a eventos automáticos
 
-  - `sendGifFromFile(file, caption, mentions, quoted)`
-  - `sendGifFromURL(url, caption, mentions, quoted)`
-  - `sendGifFromBuffer(buffer, caption, mentions, quoted)`
+### Exemplos práticos
 
-#### Funciones de sticker
-
-  - `sendStickerFromFile(filePath, quoted)`
-  - `sendStickerFromURL(url, quoted)`
-  - `sendStickerFromBuffer(buffer, quoted)`
-
-#### Funciones de documento
-
-  - `sendDocumentFromFile(filePath, mimetype, fileName, quoted)`
-  - `sendDocumentFromURL(url, mimetype, fileName, quoted)`
-  - `sendDocumentFromBuffer(buffer, mimetype, fileName, quoted)`
-
-#### Funciones de mensaje
-
-  - `sendText(text, mentions)`
-  - `sendReply(text, mentions)`
-  - `sendReact(emoji)`
-  - `sendSuccessReply(text, mentions)`, `sendErrorReply(text, mentions)`, `sendWarningReply(text, mentions)`, `sendWaitReply(text, mentions)`
-  - `sendSuccessReact()`, `sendErrorReact()`, `sendWarningReact()`, `sendWaitReact()`
-
-#### Funciones de utilidad de grupo
-
-  - `getGroupMetadata()` - Obtener metadatos completos del grupo
-  - `getGroupName()` - Obtener solo el nombre del grupo
-  - `getGroupOwner()` - Obtener información del dueño del grupo
-  - `getGroupParticipants()` - Obtener todos los participantes del grupo
-  - `getGroupAdmins()` - Obtener administradores del grupo
-
-### 🎯 Ejemplos de uso con menciones
-
-#### Enviar imagen con menciones
+#### Exemplo 1: Reagir automaticamente a mensagens
 
 ```javascript
-await sendImageFromFile("./assets/image.jpg", "¡Hola @5511999999999!", ["5511999999999@s.whatsapp.net"]);
+export async function customMiddleware({ socket, webMessage, type, commonFunctions }) {
+  if (type === "message" && commonFunctions) {
+    const { userMessageText } = commonFunctions;
+    if (userMessageText?.toLowerCase() === "oi") {
+      await socket.sendMessage(webMessage.key.remoteJid, {
+        react: { text: "👋", key: webMessage.key }
+      });
+    }
+  }
+}
+```
 
-await sendImageFromURL("https://exemplo.com/imagem.png", 
-  "¡Hola @5511999999999 y @5511888888888!", 
-  ["5511999999999@s.whatsapp.net", "5511888888888@s.whatsapp.net"]
+#### Exemplo 2: Log quando alguém entra no grupo
+
+```javascript
+export async function customMiddleware({ webMessage, type, action }) {
+  if (type === "participant" && action === "add") {
+    console.log("Novo membro:", webMessage.messageStubParameters[0]);
+  }
+}
+```
+
+#### Exemplo 3: Mensagem personalizada em grupo específico
+
+```javascript
+export async function customMiddleware({ type, action, commonFunctions }) {
+  const grupoVIP = "120363123456789012@g.us";
+  
+  if (type === "participant" && action === "add" && commonFunctions?.remoteJid === grupoVIP) {
+    const { sendReply } = commonFunctions;
+    await sendReply("🎉 Bem-vindo ao grupo VIP!");
+  }
+}
+```
+
+#### Exemplo 4: Usar funções avançadas do bot
+
+```javascript
+export async function customMiddleware({ type, commonFunctions }) {
+  if (type === "message" && commonFunctions) {
+    const {
+      sendReply,
+      sendSuccessReply,
+      args,
+      userMessageText,
+      isImage,
+      downloadImage,
+    } = commonFunctions;
+    
+    // Sua lógica personalizada aqui
+  }
+}
+```
+
+### Parâmetros disponíveis
+
+| Parâmetro | Tipo | Descrição |
+|-----------|------|----------|
+| `socket` | Object | Socket do Baileys para enviar mensagens |
+| `webMessage` | Object | Mensagem completa do WhatsApp |
+| `type` | String | "message" ou "participant" |
+| `commonFunctions` | Object/null | Todas as funções do bot (null para eventos de participantes) |
+| `action` | String | "add" ou "remove" (apenas em eventos de participantes) |
+| `data` | String | Dados do participante (apenas em eventos de participantes) |
+
+## Implementação técnica dos exemplos
+
+### 📁 Localização dos comandos de exemplo
+
+Todos os comandos de exemplo estão localizados em: `src/commands/member/exemplos/`
+
+### 🛠️ Funções disponíveis
+
+Todos os comandos de exemplo utilizam funções de `src/utils/loadCommonFunctions.js`:
+
+#### Funções de áudio
+
+- `sendAudioFromFile(filePath, asVoice, quoted)`
+- `sendAudioFromURL(url, asVoice, quoted)`
+- `sendAudioFromBuffer(buffer, asVoice, quoted)`
+
+#### Funções de imagem
+
+- `sendImageFromFile(filePath, caption, mentions, quoted)`
+- `sendImageFromURL(url, caption, mentions, quoted)`
+- `sendImageFromBuffer(buffer, caption, mentions, quoted)`
+
+#### Funções de Vídeo
+
+- `sendVideoFromFile(filePath, caption, mentions, quoted)`
+- `sendVideoFromURL(url, caption, mentions, quoted)`
+- `sendVideoFromBuffer(buffer, caption, mentions, quoted)`
+
+#### Funções de GIF
+
+- `sendGifFromFile(file, caption, mentions, quoted)`
+- `sendGifFromURL(url, caption, mentions, quoted)`
+- `sendGifFromBuffer(buffer, caption, mentions, quoted)`
+
+#### Funções de sticker
+
+- `sendStickerFromFile(filePath, quoted)`
+- `sendStickerFromURL(url, quoted)`
+- `sendStickerFromBuffer(buffer, quoted)`
+
+#### Funções de documento
+
+- `sendDocumentFromFile(filePath, mimetype, fileName, quoted)`
+- `sendDocumentFromURL(url, mimetype, fileName, quoted)`
+- `sendDocumentFromBuffer(buffer, mimetype, fileName, quoted)`
+
+#### Funções de mensagem
+
+- `sendText(text, mentions)`
+- `sendReply(text, mentions)`
+- `sendReact(emoji)`
+- `sendSuccessReply(text, mentions)`, `sendErrorReply(text, mentions)`, `sendWarningReply(text, mentions)`, `sendWaitReply(text, mentions)`
+- `sendSuccessReact()`, `sendErrorReact()`, `sendWarningReact()`, `sendWaitReact()`
+
+#### Funções utilitárias de grupo
+
+- `getGroupMetadata()` - Obter metadados completos do grupo
+- `getGroupName()` - Obter apenas o nome do grupo
+- `getGroupOwner()` - Obter informações do dono do grupo
+- `getGroupParticipants()` - Obter todos os participantes do grupo
+- `getGroupAdmins()` - Obter administradores do grupo
+
+### 🎯 Exemplos de uso com menções
+
+#### Enviar imagem com menções
+
+```javascript
+await sendImageFromFile("./assets/image.jpg", "Olá @5511999999999!", ["5511999999999@s.whatsapp.net"]);
+
+await sendImageFromURL(
+  "https://exemplo.com/imagem.png", 
+  "Olá @5511999999999 e @5511888888888!", 
+  ["5511999999999@s.whatsapp.net", "5511888888888@s.whatsapp.net"]
 );
 ```
 
-#### Enviar video con menciones
+#### Enviar vídeo com menções
 
 ```javascript
-await sendVideoFromFile("./assets/video.mp4", "¡Mira este video @5511999999999!", ["5511999999999@s.whatsapp.net"]);
+await sendVideoFromFile("./assets/video.mp4", "Confira este vídeo @5511999999999!", ["5511999999999@s.whatsapp.net"]);
 
 const buffer = fs.readFileSync("./video.mp4");
 await sendVideoFromBuffer(
-  buffer, 
-  "¡Video especial para @5511999999999 y @5511888888888!", 
-  ["5511999999999@s.whatsapp.net", "5511888888888@s.whatsapp.net"]
+  buffer, 
+  "Vídeo especial para @5511999999999 e @5511888888888!", 
+  ["5511999999999@s.whatsapp.net", "5511888888888@s.whatsapp.net"]
 );
 ```
 
-#### Enviar GIF con menciones
+#### Enviar GIF com menções
 
 ```javascript
 await sendGifFromFile(
-  "./assets/gif.mp4", 
-  "¡Aquí tienes @5511999999999!", 
-  ["5511999999999@s.whatsapp.net"]
+  "./assets/gif.mp4", 
+  "Tá ai @5511999999999!", 
+  ["5511999999999@s.whatsapp.net"]
 );
 ```
 
-### 🎯 Soporte TypeScript
+### 🎯 Suporte TypeScript
 
-Definiciones completas de TypeScript están disponibles en `src/@types/index.d.ts` con:
+Definições completas do TypeScript estão disponíveis em `src/@types/index.d.ts` com:
 
-  - Firmas de función detalladas
-  - Descripciones de parámetros
-  - Ejemplos de uso
-  - Especificaciones de tipo de retorno
+- Assinaturas de função detalhadas
+- Descrições de parâmetros
+- Exemplos de uso
+- Especificações de tipo de retorno
 
-### 📁 Archivos de ejemplo
+### 📁 Arquivos de exemplo
 
-Todos los archivos de ejemplo se almacenan en `assets/samples/`:
+Todos os arquivos de exemplo são armazenados em `assets/samples/`:
 
-  - `sample-audio.mp3` - Archivo de audio para prueba
-  - `sample-document.pdf` - Documento PDF para prueba
-  - `sample-document.txt` - Documento de texto para prueba
-  - `sample-image.jpg` - Archivo de imagen para prueba
-  - `sample-sticker.webp` - Archivo de sticker para prueba
-  - `sample-video.mp4` - Archivo de video para prueba
+- `sample-audio.mp3` - Arquivo de áudio para teste
+- `sample-document.pdf` - Documento PDF para teste
+- `sample-document.txt` - Documento de texto para teste
+- `sample-image.jpg` - Arquivo de imagem para teste
+- `sample-sticker.webp` - Arquivo de sticker para teste
+- `sample-video.mp4` - Arquivo de vídeo para teste
 
-## Estructura de carpetas
+## Estrutura de pastas
 
-- 📁 assets ➔ _archivos multimedia_
-    - 📁 auth ➔ _archivos de conexión de bots_
-    - 📁 images ➔ _archivos de imagen_
-        - 📁 funny ➔ _GIFs divertidos de comandos_
-    - 📁 samples ➔ _archivos de muestra para pruebas_
-    - 📁 temp ➔ _archivos temporales_
-- 📁 database ➔ _archivos de datos_
-- 📁 node_modules ➔ _módulos de Node.js_
-- 📁 src ➔ _código fuente del bot (normalmente aquí es donde más te meterás)_
-    - 📁 @types ➔ _carpeta donde se encuentran las definiciones de tipo_
-    - 📁 commands ➔ _carpeta donde se encuentran los comandos_
-        - 📁 admin ➔ _carpeta donde se encuentran los comandos administrativos_
-        - 📁 member ➔ _carpeta donde se encuentran los comandos generales (todos pueden usarlos)_
-            - 📁 samples ➔ _carpeta con comandos de ejemplo_
-        - 📁 owner ➔ _carpeta donde están los comandos del propietario (grupo y bot)_
-        - 📝🤖-como-criar-comandos.js ➔ _archivo de ejemplo de cómo crear un comando_
-    - 📁 errors ➔ _clases de error utilizadas en comandos_
-    - 📁 middlewares ➔ _interceptores de solicitudes_
-    - 📁 services ➔ _servicios varios_
-    - 📁 utils ➔ _utilidades_
-    - 📝 config.js ➔ _archivo de configuración del robot_
-    - 📝 connection.js ➔ _script de conexión de bot con la biblioteca Baileys_
-    - 📝 index.js ➔ _script de punto de entrada de bot_
-    - 📝 loader.js ➔ _script de carga de función_
-    - 📝 menu.js ➔ _menú de robots_
-    - 📝 messages.js ➔ _archivos de mensajes de bienvenida y despedida_
-    - 📝 test.js ➔ _guión de prueba_
-- 📝 ⚡-cases-estan-aqui.js ➔ _easter egg_ 
-- 📝 index.js ➔ _script de punto de entrada de bot para alojamiento_
-- 📝 .gitignore ➔ _archivo para no cargar ciertas carpetas a GitHub_
-- 📝 LICENSE ➔ _archivo de licencia_
-- 📝 package-lock.json ➔ _archivo de caché de dependencias del bot_
-- 📝 package.json ➔ _archivo de definición de dependencias del bot_
-- 📝 README.md ➔ _esta documentación_
-- 📝 reset-qr-auth.sh ➔ _archivo para eliminar las credenciales de bot_
-- 📝 update.sh ➔ _archivo de actualización del bot_
+- 📁 .github ➔ _workflows de CI/CD e arquivo para o agente copilot_
+- 📁 assets ➔ _arquivos de mídia_
+  - 📁 auth ➔ _arquivos da conexão do bot_
+  - 📁 images ➔ _arquivos de imagem_
+    - 📁 funny ➔ _gifs de comandos de diversão_
+  - 📁 samples ➔ _arquivos de exemplo para testes_
+  - 📁 temp ➔ _arquivos temporários_
+- 📁 database ➔ _arquivos de dados_
+- 📁 diagrams ➔ _diagramas de fluxos de dados e execução do Bot_
+- 📁 node_modules ➔ _módulos do Node.js_
+- 📁 src ➔ _código fonte do bot (geralmente você mexerá mais aqui)_
+  - 📁 @types ➔ _pasta onde fica as definições de tipos_
+  - 📁 commands ➔ _pasta onde ficam os comandos_
+    - 📁 admin ➔ _pasta onde ficam os comandos administrativos_
+    - 📁 member ➔ _pasta onde ficam os comandos gerais (todos poderão utilizar)_
+      - 📁 exemplos ➔ _pasta com 24 comandos de exemplo_
+    - 📁 owner ➔ _pasta onde ficam os comandos de dono (grupo e bot)_
+    - 📝🤖-como-criar-comandos.js ➔ _arquivo de exemplo de como criar um comando_
+  - 📁 errors ➔ _classes de erros usadas nos comandos_
+  - 📁 middlewares ➔ _interceptadores de requisições_
+  - 📁 services ➔ _serviços diversos_
+  - 📁 utils ➔ _utilitários_
+  - 📝 config.js ➔ _arquivo de configurações do bot_
+  - 📝 connection.js ➔ _script de conexão do bot com a biblioteca Baileys_
+  - 📝 index.js ➔ _script ponto de entrada do bot_
+  - 📝 loader.js ➔ _script de carga de funções_
+  - 📝 menu.js ➔ _menu do bot_
+  - 📝 messages.js ➔ _arquivos de mensagens de boas vindas e saída_
+  - 📝 test.js ➔ _script de testes_
+- 📝 .gitignore ➔ _arquivo para não subir certas pastas no GitHub_
+- 📝 ⚡-cases-estao-aqui.js ➔ _easter egg_
+- 📝 CLAUDE.md ➔ _arquivo de instruções para o Claude Code_
+- 📝 CONTRIBUTING.md ➔ _eguia de contribuição_
+- 📝 LICENSE ➔ _arquivo de licença_
+- 📝 package-lock.json ➔ _arquivo de cache das dependências do bot_
+- 📝 package.json ➔ _arquivo de definição das dependências do bot_
+- 📝 README.md ➔ _esta documentação_
+- 📝 reset-qr-auth.sh ➔ _arquivo para excluir as credenciais do bot_
+- 📝 update.sh ➔ _arquivo de atualização do bot_
 
-## Actualizar el bot
+## Atualizar o bot
 
-Ejecuta `bash update.sh`
+Execute `bash update.sh`
 
-## Errores comunes
+## Testes
 
-### 📁 Operación denegada al extraer la carpeta
+Execute `npm run test:all`
 
-El error de abajo ocurre cuando se descarga el archivo ZIP directamente en el celular en algunas versiones de la apk ZArchiver y también en celulares sin root.
+## Erros comuns
 
-Para resolver, sigue el [tutorial de instalación vía git clone](#termux-new-setup).
+### 📁 Operação negada ao extrair a pasta
 
-![error común 1](./assets/images/erro-comum-1.jpg)
+O erro abaixo acontece quando é feito o download do arquivo ZIP direto no celular em algumas versões do apk ZArchiver e também de celulares sem root.
 
-### 🔄 Eliminación de los archivos de sesión y conectar nuevamente
+Para resolver, siga o [tutorial de instalação via git clone](#instalação-no-termux).
 
-En caso de que dé algún error en la conexión, escriba el siguiente comando:
+![erro comum 1](./assets/images/erro-comum-1.jpg)
+
+### 🔄 Remoção dos arquivos de sessão e conectar novamente
+
+Caso dê algum erro na conexão, digite o seguinte comando:
 
 ```sh
 bash reset-qr-auth.sh
 ```
 
-Después, elimine el dispositivo de WhatsApp yendo a las configuraciones de WhatsApp en "dispositivos conectados" y repita
-el procedimiento de iniciar el bot con `npm start`.
+Depois, remova o dispositivo do WhatsApp indo nas configurações do WhatsApp em "dispositivos conectados" e repita
+o procedimento de iniciar o bot com `npm start`.
 
-### 🔐 Permission denied (permiso denegado) al acceder `cd /sdcard`
+### 🔐 Permission denied (permissão negada) ao acessar `cd /sdcard`
 
-<br/>
+![erro comum 2](./assets/images/erro-comum-2.png)
 
-![error común 2](./assets/images/erro-comum-2.png)
+Abra o termux, digite `termux-setup-storage` e depois, aceite as permissões
 
-Abra el termux, escriba `termux-setup-storage` y después, acepte los permisos
+### ⚙️ Você configura o token da Spider API, prefixo, etc e o bot não reconhece
 
-### ⚙️ Configuras el token de la Spider API, prefijo, etc y el bot no lo reconoce
+Verifique se você não tem dois Takeshi's rodando no seu celular, muitas pessoas baixam o zip e seguem o tutorial, porém, **o tutorial não explica pelo zip, e sim, pelo git clone**.
 
-Verifique si no tiene dos Takeshi's ejecutándose en su celular, muchas personas descargan el zip y siguen el tutorial, sin embargo, **el tutorial no explica por el zip, sino por el git clone**.
+Geralmente as pessoas que cometem esse erro, ficam com dois bots:
 
-Generalmente las personas que cometen este error, se quedan con dos bots:
+1. O primeiro dentro da `/sdcard`
+2. O segundo na pasta `/storage/emulated/0/Download`, que no zip fica como `takeshi-bot-main`
 
-1. El primero dentro de `/sdcard`
-2. El segundo en la carpeta `/storage/emulated/0/Download`, que en el zip queda como `takeshi-bot-main`
+Você deve apagar um dos bots e tanto configurar quanto executar **apenas um**
 
-Debe eliminar uno de los bots y tanto configurar como ejecutar **solo uno**
+## Inscreva-se no canal
 
-## ¡Suscríbete al canal!
+[![YouTube](https://img.shields.io/badge/YouTube-FF0000?style=for-the-badge&logo=youtube&logoColor=white)](https://www.youtube.com/@devgui_?sub_confirmation=1)
 
-<a href="https://www.youtube.com/@devgui_?sub_confirmation=1" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/badge/YouTube-FF0000?style=for-the-badge&logo=youtube&logoColor=white" alt="YouTube"></a>
+## Contribuindo com o projeto
 
-## Contribuyendo al proyecto
+O Takeshi Bot é um projeto **open source** e sua contribuição é muito bem-vinda!
 
-El Takeshi Bot es un proyecto **open source** ¡y tu contribución es muy bienvenida! 
+### 🚀 Como contribuir
 
-### 🚀 Cómo contribuir
-
-- 🐛 **Reportar bugs** a través de los [Issues](https://github.com/guiireal/takeshi-bot-espanol/issues)
-- ✨ **Sugerir nuevas funcionalidades** 
-- 🔧 **Contribuir con código** (nuevos comandos, correcciones, mejoras)
-- ⭐ **Dar una estrella** al repositorio
+- 🐛 **Reportar bugs** através das [Issues](https://github.com/guiireal/takeshi-bot/issues)
+- ✨ **Sugerir novas funcionalidades**
+- 🔧 **Contribuir com código** (novos comandos, correções, melhorias)
+- ⭐ **Dar uma estrela** no repositório
 
 ### 📖 Antes de contribuir
 
-1. Lee nuestra **[Guía de Contribución](CONTRIBUTING.md)** completa
-2. Verifica los [Issues abiertos](https://github.com/guiireal/takeshi-bot-espanol/issues) 
-3. Sigue el template obligatorio para Pull Requests
+1. Leia nosso **[Guia de Contribuição](CONTRIBUTING.md)** completo
+2. Verifique as [Issues abertas](https://github.com/guiireal/takeshi-bot/issues)
+3. Siga o template obrigatório para Pull Requests
 
-## Licencia
+## Licença
 
 [GPL-3.0](https://github.com/guiireal/takeshi-bot/blob/main/LICENSE)
 
-Este proyecto está licenciado bajo la Licencia Pública General GNU (GPL-3.0).<br/>
-Esto significa que:
+Este projeto está licenciado sob a Licença Pública Geral GNU (GPL-3.0).
+Isso significa que:
 
-- Puedes usar este código como quieras, sea para proyectos personales o comerciales.
-- Puedes modificar el código para adaptarlo a tus necesidades.
-- Puedes compartir o vender el código, incluso modificado, pero necesitas:
-    - Mantener los créditos al autor original (Guilherme França - Dev Gui).
-    - Hacer disponible el código modificado bajo la misma licencia GPL-3.0.
+- Você pode usar este código como quiser, seja para projetos pessoais ou comerciais.
+- Você pode modificar o código para adaptá-lo às suas necessidades.
+- Você pode compartilhar ou vender o código, mesmo modificado, mas precisa:
+  - Manter os créditos ao autor original (Guilherme França - Dev Gui).
+  - Tornar o código modificado disponível sob a mesma licença GPL-3.0.
 
-Lo que no puedes hacer:
+O que você não pode fazer:
 
-- No puedes transformar este código en algo propietario (cerrado) e impedir que otras personas lo accedan o lo usen.
+- Não pode transformar este código em algo proprietário (fechado) e impedir outras pessoas de acessá-lo ou usá-lo.
 
-Esta licencia garantiza que todos tengan acceso al código fuente y puedan colaborar libremente, promoviendo el intercambio y el mejoramiento del proyecto.
+Esta licença garante que todos tenham acesso ao código-fonte e podem colaborar livremente, promovendo o compartilhamento e o aprimoramento do projeto.
 
 ## ⚠ Disclaimer
 
-En este proyecto, necesité hospedar el node_modules, para ayudar a quien está ejecutando el bot por el celular, ya que muchos de ellos pueden no ejecutar el `npm install` por el termux correctamente.
+Neste projeto, precisei hospedar a node_modules, para auxiliar quem está rodando o bot pelo celular, pois muitos deles podem não rodar o `npm install` pelo termux corretamente.

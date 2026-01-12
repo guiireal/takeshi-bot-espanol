@@ -1,26 +1,26 @@
 /**
- * Evento que se activa cuando un mensaje
- * se envía al grupo de WhatsApp
+ * Evento llamado cuando un mensaje
+ * es enviado al grupo de WhatsApp
  *
  * @author Dev Gui
  */
-const {
-  isAtLeastMinutesInPast,
+import { DEVELOPER_MODE } from "../config.js";
+import { badMacHandler } from "../utils/badMacHandler.js";
+import { checkIfMemberIsMuted } from "../utils/database.js";
+import { dynamicCommand } from "../utils/dynamicCommand.js";
+import {
   GROUP_PARTICIPANT_ADD,
   GROUP_PARTICIPANT_LEAVE,
   isAddOrLeave,
-} = require("../utils");
-const { DEVELOPER_MODE } = require("../config");
-const { dynamicCommand } = require("../utils/dynamicCommand");
-const { loadCommonFunctions } = require("../utils/loadCommonFunctions");
-const { onGroupParticipantsUpdate } = require("./onGroupParticipantsUpdate");
-const { errorLog, infoLog } = require("../utils/logger");
-const { badMacHandler } = require("../utils/badMacHandler");
-const { checkIfMemberIsMuted } = require("../utils/database");
-const { messageHandler } = require("./messageHandler");
-const connection = require("../connection");
+  isAtLeastMinutesInPast,
+} from "../utils/index.js";
+import { loadCommonFunctions } from "../utils/loadCommonFunctions.js";
+import { errorLog, infoLog } from "../utils/logger.js";
+import { customMiddleware } from "./customMiddleware.js";
+import { messageHandler } from "./messageHandler.js";
+import { onGroupParticipantsUpdate } from "./onGroupParticipantsUpdate.js";
 
-exports.onMessagesUpsert = async ({ socket, messages, startProcess }) => {
+export async function onMessagesUpsert({ socket, messages, startProcess }) {
   if (!messages.length) {
     return;
   }
@@ -51,81 +51,83 @@ exports.onMessagesUpsert = async ({ socket, messages, startProcess }) => {
         let action = "";
         if (webMessage.messageStubType === GROUP_PARTICIPANT_ADD) {
           action = "add";
-          const randomTimeout = Math.floor(Math.random() * 10000) + 1000;
-          setTimeout(async () => {
-            try {
-              const remoteJid = webMessage?.key?.remoteJid;
-              if (!remoteJid) {
-                return;
-              }
-              const data = await socket.groupMetadata(remoteJid);
-              connection.updateGroupMetadataCache(remoteJid, data);
-            } catch (error) {
-              errorLog(
-                `Error al actualizar metadatos del grupo: ${error.message}`
-              );
-            }
-          }, randomTimeout);
         } else if (webMessage.messageStubType === GROUP_PARTICIPANT_LEAVE) {
           action = "remove";
         }
 
+        await customMiddleware({
+          socket,
+          webMessage,
+          type: "participant",
+          action,
+          data: webMessage.messageStubParameters[0],
+          commonFunctions: null,
+        });
+
         await onGroupParticipantsUpdate({
-          userJid: webMessage.messageStubParameters[0],
+          data: webMessage.messageStubParameters[0],
           remoteJid: webMessage.key.remoteJid,
           socket,
           action,
         });
-      } else {
-        if (
-          checkIfMemberIsMuted(
-            webMessage?.key?.remoteJid,
-            webMessage?.key?.participant?.replace(/:[0-9][0-9]|:[0-9]/g, "")
-          )
-        ) {
-          try {
-            const { id, remoteJid, participant } = webMessage.key;
 
-            const deleteKey = {
-              remoteJid,
-              fromMe: false,
-              id,
-              participant,
-            };
-
-            await socket.sendMessage(remoteJid, { delete: deleteKey });
-          } catch (error) {
-            errorLog(
-              `Error al eliminar mensaje de miembro silenciado, ¡probablemente no soy administrador del grupo! ${error.message}`
-            );
-          }
-
-          return;
-        }
-
-        const commonFunctions = loadCommonFunctions({ socket, webMessage });
-
-        if (!commonFunctions) {
-          continue;
-        }
-
-        await dynamicCommand(commonFunctions, startProcess);
+        return;
       }
+      if (
+        checkIfMemberIsMuted(
+          webMessage?.key?.remoteJid,
+          webMessage?.key?.participant?.replace(/:[0-9][0-9]|:[0-9]/g, "")
+        )
+      ) {
+        try {
+          const { id, remoteJid, participant } = webMessage.key;
+
+          const deleteKey = {
+            remoteJid,
+            fromMe: false,
+            id,
+            participant,
+          };
+
+          await socket.sendMessage(remoteJid, { delete: deleteKey });
+        } catch (error) {
+          errorLog(
+            `Erro ao deletar mensagem de membro silenciado, provavelmente eu não sou administrador do grupo! ${error.message}`
+          );
+        }
+
+        return;
+      }
+
+      const commonFunctions = loadCommonFunctions({ socket, webMessage });
+
+      if (!commonFunctions) {
+        continue;
+      }
+
+      await customMiddleware({
+        socket,
+        webMessage,
+        type: "message",
+        commonFunctions,
+      });
+
+      await dynamicCommand(commonFunctions, startProcess);
     } catch (error) {
       if (badMacHandler.handleError(error, "message-processing")) {
         continue;
       }
 
       if (badMacHandler.isSessionError(error)) {
-        errorLog(`Error de sesión al procesar mensaje: ${error.message}`);
+        errorLog(`Erro de sessão ao processar mensagem: ${error.message}`);
         continue;
       }
 
       errorLog(
-        `Error al procesar mensaje: ${error.message} | Stack: ${error.stack}`
+        `Erro ao processar mensagem: ${error.message} | Stack: ${error.stack}`
       );
 
       continue;
     }
   }
-};
+}

@@ -1,7 +1,7 @@
-// Copyright 2013 Lovell Fuller and others.
-// SPDX-License-Identifier: Apache-2.0
-
-'use strict';
+/*!
+  Copyright 2013 Lovell Fuller and others.
+  SPDX-License-Identifier: Apache-2.0
+*/
 
 const path = require('node:path');
 const is = require('./is');
@@ -43,7 +43,7 @@ const bitdepthFromColourCount = (colours) => 1 << 31 - Math.clz32(Math.ceil(Math
  * Note that raw pixel data is only supported for buffer output.
  *
  * By default all metadata will be removed, which includes EXIF-based orientation.
- * See {@link #withmetadata|withMetadata} for control over this.
+ * See {@link #withmetadata withMetadata} for control over this.
  *
  * The caller is responsible for ensuring directory structures and permissions exist.
  *
@@ -97,12 +97,12 @@ function toFile (fileOut, callback) {
  * Write output to a Buffer.
  * JPEG, PNG, WebP, AVIF, TIFF, GIF and raw pixel data output are supported.
  *
- * Use {@link #toformat|toFormat} or one of the format-specific functions such as {@link jpeg}, {@link png} etc. to set the output format.
+ * Use {@link #toformat toFormat} or one of the format-specific functions such as {@link #jpeg jpeg}, {@link #png png} etc. to set the output format.
  *
  * If no explicit format is set, the output format will match the input image, except SVG input which becomes PNG output.
  *
  * By default all metadata will be removed, which includes EXIF-based orientation.
- * See {@link #withmetadata|withMetadata} for control over this.
+ * See {@link #withmetadata withMetadata} for control over this.
  *
  * `callback`, if present, gets three arguments `(err, data, info)` where:
  * - `err` is an error, if any.
@@ -256,12 +256,19 @@ function withExifMerge (exif) {
 /**
  * Keep ICC profile from the input image in the output image.
  *
- * Where necessary, will attempt to convert the output colour space to match the profile.
+ * When input and output colour spaces differ, use with {@link /api-colour/#tocolourspace toColourspace} and optionally {@link /api-colour/#pipelinecolourspace pipelineColourspace}.
  *
  * @since 0.33.0
  *
  * @example
  * const outputWithIccProfile = await sharp(inputWithIccProfile)
+ *   .keepIccProfile()
+ *   .toBuffer();
+ *
+ * @example
+ * const cmykOutputWithIccProfile = await sharp(cmykInputWithIccProfile)
+ *   .pipelineColourspace('cmyk')
+ *   .toColourspace('cmyk')
  *   .keepIccProfile()
  *   .toBuffer();
  *
@@ -565,7 +572,7 @@ function jpeg (options) {
  * Set `palette` to `true` for slower, indexed PNG output.
  *
  * For 16 bits per pixel output, convert to `rgb16` via
- * {@link /api-colour#tocolourspace|toColourspace}.
+ * {@link /api-colour/#tocolourspace toColourspace}.
  *
  * @example
  * // Convert any input to full colour PNG output
@@ -845,13 +852,12 @@ function gif (options) {
   return this._updateFormatOut('gif', options);
 }
 
-/* istanbul ignore next */
 /**
  * Use these JP2 options for output image.
  *
  * Requires libvips compiled with support for OpenJPEG.
  * The prebuilt binaries do not include this - see
- * {@link https://sharp.pixelplumbing.com/install#custom-libvips installing a custom libvips}.
+ * {@link /install#custom-libvips installing a custom libvips}.
  *
  * @example
  * // Convert any input to lossless JP2 output
@@ -880,6 +886,7 @@ function gif (options) {
  * @throws {Error} Invalid options
  */
 function jp2 (options) {
+  /* node:coverage ignore next 41 */
   if (!this.constructor.format.jp2k.output.buffer) {
     throw errJp2Save();
   }
@@ -959,7 +966,7 @@ function trySetAnimationOptions (source, target) {
 /**
  * Use these TIFF options for output image.
  *
- * The `density` can be set in pixels/inch via {@link #withmetadata|withMetadata}
+ * The `density` can be set in pixels/inch via {@link #withmetadata withMetadata}
  * instead of providing `xres` and `yres` in pixels/mm.
  *
  * @example
@@ -976,6 +983,7 @@ function trySetAnimationOptions (source, target) {
  * @param {number} [options.quality=80] - quality, integer 1-100
  * @param {boolean} [options.force=true] - force TIFF output, otherwise attempt to use input format
  * @param {string} [options.compression='jpeg'] - compression options: none, jpeg, deflate, packbits, ccittfax4, lzw, webp, zstd, jp2k
+ * @param {boolean} [options.bigtiff=false] - use BigTIFF variant (has no effect when compression is none)
  * @param {string} [options.predictor='horizontal'] - compression predictor options: none, horizontal, float
  * @param {boolean} [options.pyramid=false] - write an image pyramid
  * @param {boolean} [options.tile=false] - write a tiled tiff
@@ -1053,6 +1061,10 @@ function tiff (options) {
       } else {
         throw is.invalidParameterError('compression', 'one of: none, jpeg, deflate, packbits, ccittfax4, lzw, webp, zstd, jp2k', options.compression);
       }
+    }
+    // bigtiff
+    if (is.defined(options.bigtiff)) {
+      this._setBooleanOption('tiffBigtiff', options.bigtiff);
     }
     // predictor
     if (is.defined(options.predictor)) {
@@ -1189,7 +1201,7 @@ function heif (options) {
  *
  * Requires libvips compiled with support for libjxl.
  * The prebuilt binaries do not include this - see
- * {@link https://sharp.pixelplumbing.com/install#custom-libvips installing a custom libvips}.
+ * {@link /install/#custom-libvips installing a custom libvips}.
  *
  * @since 0.31.3
  *
@@ -1502,7 +1514,6 @@ function _setBooleanOption (key, val) {
  * @private
  */
 function _read () {
-  /* istanbul ignore else */
   if (!this.options.streamOut) {
     this.options.streamOut = true;
     const stack = Error();
@@ -1619,7 +1630,7 @@ function _pipeline (callback, stack) {
  * @module Sharp
  * @private
  */
-module.exports = function (Sharp) {
+module.exports = (Sharp) => {
   Object.assign(Sharp.prototype, {
     // Public
     toFile,
