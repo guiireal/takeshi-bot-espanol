@@ -733,7 +733,7 @@ export async function customMiddleware({ type, commonFunctions }) {
 
 ### 📁 Localización de los comandos de ejemplo
 
-Todos los comandos de ejemplo están localizados en: `src/commands/member/exemplos/`
+Todos los comandos de ejemplo están localizados en: `src/commands/member/samples/`
 
 ### 🛠️ Funciones disponibles
 
@@ -865,7 +865,7 @@ Todos los archivos de ejemplo son almacenados en `assets/samples/`:
   - 📁 commands ➔ _carpeta donde están los comandos_
     - 📁 admin ➔ _carpeta donde están los comandos administrativos_
     - 📁 member ➔ _carpeta donde están los comandos generales (todos podrán utilizar)_
-      - 📁 exemplos ➔ _carpeta con 24 comandos de ejemplo_
+      - 📁 samples ➔ _carpeta con los comandos de ejemplo_
     - 📁 owner ➔ _carpeta donde están los comandos de dueño (grupo y bot)_
     - 📝🤖-como-criar-comandos.js ➔ _archivo de ejemplo de cómo crear un comando_
   - 📁 errors ➔ _clases de errores usadas en los comandos_

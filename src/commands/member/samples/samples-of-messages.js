@@ -107,7 +107,7 @@ export default {
       "*🎯 CÓMO USAR:*\n\n" +
         "1️⃣ Ejecuta cualquier comando de la lista anterior\n" +
         "2️⃣ Observa el comportamiento práctico\n" +
-        "3️⃣ Revisa el código fuente en `/src/commands/member/exemplos/`\n" +
+        "3️⃣ Revisa el código fuente en `/src/commands/member/samples/`\n" +
         "4️⃣ Úsalo como base para tus propios comandos\n\n" +
         "*💡 Consejo:* ¡Todos los ejemplos incluyen explicaciones detalladas y casos de uso!",
     );
