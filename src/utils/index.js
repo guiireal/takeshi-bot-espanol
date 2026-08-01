@@ -549,7 +549,7 @@ export function normalizeWhatsAppCodeBlocks(text) {
 
 export function removeUnsolicitedFollowUps(text) {
   const continuationPattern =
-    /(?:^|\s)(?:se\s+quiser|se\s+preferir|caso\s+queira)[,:]?\s*(?:eu\s+)?(?:posso|te\s+(?:passo|envio|mostro|explico|ajudo)|lhe\s+(?:passo|envio|mostro|explico)|preparo|forneço)\b|^\s*(?:posso\s+(?:também\s+)?(?:te|lhe)\s+(?:passar|enviar|mostrar|explicar)|quer\s+que\s+eu\s+(?:te\s+)?(?:passe|envie|mostre|explique))/i;
+    /(?:^|\s)(?:si\s+quieres|si\s+prefieres|en\s+caso\s+de\s+que\s+quieras)[,:]?\s*(?:puedo|te\s+(?:paso|envío|muestro|explico|ayudo)|preparo|proporciono)\b|^\s*(?:puedo\s+(?:también\s+)?(?:pasarte|enviarte|mostrarte|explicarte)|quieres\s+que\s+(?:te\s+)?(?:pase|envíe|muestre|explique))/i;
 
   let insideCodeBlock = false;
 

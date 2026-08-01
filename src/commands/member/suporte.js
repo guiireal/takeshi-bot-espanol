@@ -1,4 +1,6 @@
 import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 import OpenAI from "openai";
 import { BOT_EMOJI, OPENAI_API_KEY, PREFIX } from "../../config.js";
 import { DangerError, WarningError } from "../../errors/index.js";
@@ -15,6 +17,7 @@ export default {
   usage: `${PREFIX}suporte cómo instalar Takeshi en Termux?`,
   handle: async ({
     fullArgs,
+    args,
     replyText,
     sendReply,
     sendWaitReply,
@@ -37,7 +40,8 @@ export default {
       );
     }
 
-    const text = fullArgs.trim() || replyText;
+    const doubleContext = args.length > 0 && replyText;
+    const text = args.length > 0 ? fullArgs : replyText;
 
     if (!text && !isImage) {
       await sendReact(BOT_EMOJI);
@@ -55,27 +59,81 @@ export default {
       );
     }
 
+    const rootDir = path.resolve(
+      path.dirname(fileURLToPath(import.meta.url)),
+      "../../..",
+    );
+
     let imagePath = null;
     try {
       if (isImage) {
         imagePath = await downloadImage(webMessage, getRandomName());
       }
 
+      const finalText = doubleContext
+        ? `Contexto anterior: ${replyText}\n\nNueva pregunta: ${text}`
+        : text;
+
+      if (finalText && (finalText.length < 5 || finalText.length > 2048)) {
+        throw new DangerError(
+          "La pregunta debe tener entre 5 y 2048 caracteres.",
+        );
+      }
+
       const messages = [
         {
           role: "system",
-          content: `Eres un asistente especializado en soporte técnico del Takeshi Bot. Responde solo sobre tecnología, programación, bots, IA o Takeshi Bot. Responde en español claro y directo. No uses frases de apertura o cierre innecesarias. No uses guiones largos para estructurar ideas. En WhatsApp, nunca pongas el lenguaje después de las tres comillas de un bloque de código. Usa el README del proyecto como referencia:\n\n${fs.readFileSync("README.md", "utf8")}`,
+          content: `Eres un asistente especializado en soporte técnico del Takeshi Bot.
+
+Responde solo sobre tecnología, programación, desarrollo de bots, inteligencia artificial, machine learning o asuntos relacionados con Takeshi Bot.
+Responde en español claro y directo. No uses frases de apertura o cierre innecesarias ni guiones largos para estructurar ideas.
+En WhatsApp, nunca escribas el lenguaje después de las tres comillas de un bloque de código.
+La parte en prosa debe tener como máximo 3 párrafos cortos o 150 palabras, salvo que el usuario pida una explicación más profunda.
+Entrega solamente lo solicitado y termina la respuesta sin ofrecer ayuda adicional.
+
+Usa los archivos del proyecto enviados como contexto técnico.`,
         },
       ];
 
+      const contextFiles = [
+        "README.md",
+        "CONTRIBUTING.md",
+        "package.json",
+        "src/menu.js",
+        "src/connection.js",
+        "src/loader.js",
+        "src/@types/index.d.ts",
+      ];
+
+      for (const relativePath of contextFiles) {
+        const contextPath = path.join(rootDir, relativePath);
+        if (fs.existsSync(contextPath)) {
+          messages.push({
+            role: "system",
+            content: fs.readFileSync(contextPath, "utf8"),
+          });
+        }
+      }
+
       const userContent = [];
-      if (text) userContent.push({ type: "text", text });
+      if (finalText) userContent.push({ type: "text", text: finalText });
 
       if (imagePath && fs.existsSync(imagePath)) {
-        const base64 = fs.readFileSync(imagePath).toString("base64");
+        const buffer = fs.readFileSync(imagePath);
+        const base64 = buffer.toString("base64");
+        const extension = path.extname(imagePath).toLowerCase();
+        const mimeType =
+          extension === ".png"
+            ? "image/png"
+            : extension === ".webp"
+              ? "image/webp"
+              : extension === ".gif"
+                ? "image/gif"
+                : "image/jpeg";
+
         userContent.push({
           type: "image_url",
-          image_url: { url: `data:image/jpeg;base64,${base64}`, detail: "low" },
+          image_url: { url: `data:${mimeType};base64,${base64}`, detail: "low" },
         });
       }
 
