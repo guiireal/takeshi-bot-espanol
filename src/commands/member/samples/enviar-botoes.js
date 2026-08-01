@@ -4,7 +4,7 @@ import { PREFIX } from "../../../config.js";
 export default {
   name: "enviar-botoes",
   description: "Ejemplo de como enviar mensajes com botones",
-  commands: ["enviar-botoes", "enviar-botao", "botoes-ejemplo"],
+  commands: ["enviar-botoes", "enviar-botao", "botoes-ejemplo", "botoes-exemplo"],
   usage: `${PREFIX}enviar-botoes`,
   /**
    * @param {CommandHandleProps} props

@@ -12,6 +12,12 @@ export default {
     "ejemplo-de-mensajes",
     "enviar-ejemplos",
     "enviar-ejemplo",
+    "exemplos-de-mensagens",
+    "help-exemplos",
+    "exemplo-de-mensagem",
+    "exemplo-de-mensagens",
+    "enviar-exemplos",
+    "enviar-exemplo",
   ],
   usage: `${PREFIX}ejemplos-de-mensajes`,
   /**

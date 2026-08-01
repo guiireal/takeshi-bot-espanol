@@ -63,7 +63,7 @@ function normalizeTrigger(value) {
 export default {
   name: "ejemplo-gatilho",
   description: "Mostra qual botón ou item de lista acionou o comando",
-  commands: ["ejemplo-gatilho", "gatilho-ejemplo"],
+  commands: ["ejemplo-gatilho", "gatilho-ejemplo", "exemplo-gatilho", "gatilho-exemplo"],
   usage: `${PREFIX}ejemplo-gatilho <parâmetro>`,
   /**
    * @param {CommandHandleProps} props

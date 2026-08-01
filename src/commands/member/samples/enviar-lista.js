@@ -4,7 +4,7 @@ import { PREFIX } from "../../../config.js";
 export default {
   name: "enviar-lista",
   description: "Ejemplo de como enviar mensajes em formato de lista",
-  commands: ["enviar-lista", "lista-ejemplo", "enviar-list"],
+  commands: ["enviar-lista", "lista-ejemplo", "lista-exemplo", "enviar-list"],
   usage: `${PREFIX}enviar-lista`,
   /**
    * @param {CommandHandleProps} props

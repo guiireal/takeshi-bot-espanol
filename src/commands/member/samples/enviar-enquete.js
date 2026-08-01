@@ -4,7 +4,7 @@ import { PREFIX } from "../../../config.js";
 export default {
   name: "enviar-enquete",
   description: "Ejemplo de como enviar enquetes/votações em grupos",
-  commands: ["enviar-enquete", "poll-example", "ejemplo-poll"],
+  commands: ["enviar-enquete", "poll-example", "ejemplo-poll", "exemplo-poll"],
   usage: `${PREFIX}enviar-enquete`,
   /**
    * @param {CommandHandleProps} props
