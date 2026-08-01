@@ -35,19 +35,20 @@
     - [Funcionalidades generales](#funcionalidades-generales)
     - [Funcionalidades de envío (Ejemplos)](#funcionalidades-de-envío-ejemplos)
 8. [🤖 Auto responder](#auto-responder)
-    - [Menú del bot](#dónde-está-el-menú-del-bot)
-    - [Mensajes de bienvenidas](#dónde-modifico-el-mensaje-de-bienvenidas-y-cuando-alguien-sale-del-grupo)
-9. [📊 Diagrama de cómo funcionan los comandos](#diagrama-de-cómo-funcionan-los-comandos)
-10. [📊 Diagrama de cómo funcionan los middlewares](#diagrama-de-cómo-funcionan-los-middlewares-interceptores-de-recepción-y-salida)
-11. [💻 Custom Middleware - Personaliza el bot sin modificar archivos principales](#custom-middleware---personaliza-el-bot-sin-modificar-archivos-principales)
-12. [🛠️ Implementación técnica de los ejemplos](#implementación-técnica-de-los-ejemplos)
-13. [📁 Estructura de carpetas](#estructura-de-carpetas)
-14. [🔄 Actualizar el bot](#actualizar-el-bot)
-15. [🧪 Tests](#tests)
-16. [❓ Errores comunes](#errores-comunes)
-17. [📺 Suscríbete al canal](#suscribete-al-canal)
-18. [🤝 Contribuyendo con el proyecto](#contribuyendo-con-el-proyecto)
-19. [⚖️ Licencia y Disclaimer](#licencia)
+9. [🎭 Sticker automático](#sticker-automático)
+10. [📋 Menú del bot](#dónde-está-el-menú-del-bot)
+11. [💬 Mensaje de bienvenida](#dónde-modifico-el-mensaje-de-bienvenida-y-cuando-alguien-sale-del-grupo)
+12. [📊 Diagrama de cómo funcionan los comandos](#diagrama-de-cómo-funcionan-los-comandos)
+13. [📊 Diagrama de cómo funcionan los middlewares](#diagrama-de-cómo-funcionan-los-middlewares-interceptores-de-recepción-y-salida)
+14. [💻 Custom Middleware](#custom-middleware---personaliza-el-bot-sin-modificar-archivos-principales)
+15. [🛠️ Implementación técnica de los ejemplos](#implementación-técnica-de-los-ejemplos)
+16. [📁 Estructura de carpetas](#estructura-de-carpetas)
+17. [🔄 Actualizar el bot](#actualizar-el-bot)
+18. [🧪 Pruebas](#pruebas)
+19. [❓ Errores comunes](#errores-comunes)
+20. [📺 Suscríbete al canal](#suscríbete-al-canal)
+21. [🤝 Contribuyendo con el proyecto](#contribuyendo-con-el-proyecto)
+22. [⚖️ Licencia y Disclaimer](#licencia)
 
 ## 🌐 Accede al Takeshi Bot en otros idiomas
 
@@ -67,7 +68,9 @@ Este proyecto no posee ningún vínculo oficial con WhatsApp. Fue desarrollado d
 
 No nos responsabilizamos por ningún uso indebido de este bot. Es de responsabilidad exclusiva del usuario garantizar que su utilización esté en conformidad con los términos de uso de WhatsApp y la legislación vigente.
 
-## Instalación en Termux (nuevo vídeo tutorial: [https://youtu.be/-yjn1Xe3ltg](https://youtu.be/-yjn1Xe3ltg))
+## Instalación en Termux
+
+Nuevo vídeo tutorial: [https://youtu.be/-yjn1Xe3ltg](https://youtu.be/-yjn1Xe3ltg)
 
 1 - Abre Termux y ejecuta los comandos abajo.
 _No tienes Termux? [Haz clic aquí y descarga la última versión](https://www.mediafire.com/file/wxpygdb9bcb5npb/Termux_0.118.3_Dev_Gui.apk) o [haz clic aquí y descarga versión de Play Store](https://play.google.com/store/apps/details?id=com.termux) si la versión de MediaFire anterior no funciona._
@@ -163,15 +166,17 @@ Las principales hosts ya ofrecen Takeshi como **bot predeterminado**, no siendo 
 
 | Bronxys | Nexfuture | Speed Cloud |
 |---------|-----------|-------------|
-| [Grupo oficial](https://chat.whatsapp.com/J5OewHvweK1Kf7RGXAwIYM) | [Grupo oficial](https://chat.whatsapp.com/Fl5FzZQC00J5CZp07AZVwQ?mode=r_c) | [Grupo oficial](https://chat.whatsapp.com/HsZDn6DJrx34z5lbNbNB2M) |
+| [Grupo oficial](https://chat.whatsapp.com/HWeFfnUNR2mBGEw3F9GF5G) | [Grupo oficial](https://chat.whatsapp.com/Fl5FzZQC00J5CZp07AZVwQ?mode=r_c) | [Grupo oficial](https://chat.whatsapp.com/HsZDn6DJrx34z5lbNbNB2M) |
 | [![Bronxys](./assets/images/bronxys.png)](https://bronxyshost.com/) | [![Nexfuture](./assets/images/nexfuture.png)](https://nexfuture.com.br/) | [![Speed Cloud](./assets/images/speed-cloud.png)](https://speedhosting.cloud/) |
 
 | TED Host | Cebolinha Host | Lumina Cloud |
 |----------|----------------|--------------|
+| [Grupo oficial](https://chat.whatsapp.com/I4EpMkbeaxCI4z4gQ3Pdif) | [Grupo oficial](https://chat.whatsapp.com/CCf2Pw9guan12orwGg0TqC?mode=gi_t) | [Grupo oficial](https://chat.whatsapp.com/DRfvf9SfekaAAFCIR8lGbj) |
 | [![TED Host](./assets/images/ted-host.png)](https://loja.tedhost.com.br/) | [![Cebolinha Host](./assets/images/cebolinha-host.jpeg)](https://dash.cebolinhahost.com) | [![Lumina Cloud](./assets/images/lumina-logo.png)](https://loja.luminacloud.space/) |
 
 | Raikken Host | LordeHost | Jexa for Developers |
 |--------------|----------|-------------------|
+| [Grupo oficial](https://chat.whatsapp.com/BzSDYUHbjHGF6gQmJfh2C7?mode=gi_t) | [Grupo oficial](https://chat.whatsapp.com/JOgMrUJCMQ3BVQnIRtfTnc) | [Grupo oficial](https://chat.whatsapp.com/EDWFGZVri3gEaW2HJxK4YV) |
 | [![Raikken](./assets/images/raikken-host.png)](https://painel.raikken.com.br) | [![LordeHost](./assets/images/lordehost.jpeg)](https://lordehost.com.br) | [![Jexa for Developers](./assets/images/jexa-for-developers.png)](https://devs.jexa.lat/) |
 
 ## Instalación en Windows
@@ -399,7 +404,7 @@ Recuerda cambiar los números arriba por los tuyos, obviamente y también ver si
 
 ![tutorial-vps-9](./assets/images/tutorial-vps-9.png)
 
-## Diagrama de conexão
+## Diagrama de conexión
 
 [![diagram](https://mermaid.ink/img/pako:eNqdVc1u1DAQfpWpJSSQtqX7k_2JoChse-hh26qtWlTtxZtMs4bEXhxnVVpV4gDcOLQUDgipQnBAiBs3OO6b8AR9BMbJZvu3BYQPVmx_M558M9_4gPkqQOayBJ-mKH1cFDzUPO5KoMFTo2Qa91Dn6wHXRvhiwKWBRRwCT-Ds9OjLr-evz06Pf8KW8kdfryMfKpMjP7-DTf4Ek76we9eB216OO_4G231uEm8w6MoctqIMghqitveWtj2XYO-fQ1vFCtTEq68k-oaDVBMHDwoPt27B_cmAtfXlztLyugdbSzsX9nOoJiegw97tSnW-BJWanRznTn54UzSv3sKaFjEKzWGI-6BVwGVgo-sV_2rH-ReZzi4sEBEuyEEMiSEmzk9pn04J40KXLYpQ2BtBjn7EqBUEmVd7NNWf45TLrWJMuzv3bgNfwwDBH30PREhu0eYDeYzSqHP0tjdbeF5Ho7TkE4vbuOdCuVKtzTr1RvPO1PjPTk-OoKMSoyd2F2ymhXeJXxe8Hlmep9Sm18cojbi-19N3F7ZGHwFj4sKzwUd9lVBdZIUQqKTLMkw7ElTfOWx8qKHAjzETloufi7OYA3Vz9iyDvz68hPbYggpwV-iYbC4EeYnIMY82hr3RJ5VJTIt9HvCZq-RlwA0eDYk2TWmSvuAi-TNfmY2N6OHqJrRXV5bam97i6kz2f16oiEeMEIZ8opWcQhtFzEmIWeoREowHGvMLUAY3aWj05tFyx9uwIlra-IOMxgrKtPQXGZ28gBVqAgM9-r4nYvoiLWHyv_rJueZaY3iJREgsrck0QYyrA65QMlUNWeqLUpv5x8ysra-ubI5TYlvjY1u-iaFZyUhIzA4QeJhynbcQCiDhIU0XEgJTByuxUIuAuUanWGLUK2Jul-zAWnSZ6WOMXWYbR4C7PI2M7SCHZEYNeEepuLDUKg37zN3lUUKrdBBwUzwNk11NgaBuq1Qa5pZbzUrmhbkHbI_WzfpcrdGq1eabTtNpVSrVEnvG3Mb8XKPpVKpVakx1p1FvHpbYfnZvea5RL9drjfK8UynXW80Sw0CQNjr5-5Q9U4e_ARz-Fnw?type=png)](https://mermaid.live/edit#pako:eNqdVc1u1DAQfpWpJSSQtqX7k_2JoChse-hh26qtWlTtxZtMs4bEXhxnVVpV4gDcOLQUDgipQnBAiBs3OO6b8AR9BMbJZvu3BYQPVmx_M558M9_4gPkqQOayBJ-mKH1cFDzUPO5KoMFTo2Qa91Dn6wHXRvhiwKWBRRwCT-Ds9OjLr-evz06Pf8KW8kdfryMfKpMjP7-DTf4Ek76we9eB216OO_4G231uEm8w6MoctqIMghqitveWtj2XYO-fQ1vFCtTEq68k-oaDVBMHDwoPt27B_cmAtfXlztLyugdbSzsX9nOoJiegw97tSnW-BJWanRznTn54UzSv3sKaFjEKzWGI-6BVwGVgo-sV_2rH-ReZzi4sEBEuyEEMiSEmzk9pn04J40KXLYpQ2BtBjn7EqBUEmVd7NNWf45TLrWJMuzv3bgNfwwDBH30PREhu0eYDeYzSqHP0tjdbeF5Ho7TkE4vbuOdCuVKtzTr1RvPO1PjPTk-OoKMSoyd2F2ymhXeJXxe8Hlmep9Sm18cojbi-19N3F7ZGHwFj4sKzwUd9lVBdZIUQqKTLMkw7ElTfOWx8qKHAjzETloufi7OYA3Vz9iyDvz68hPbYggpwV-iYbC4EeYnIMY82hr3RJ5VJTIt9HvCZq-RlwA0eDYk2TWmSvuAi-TNfmY2N6OHqJrRXV5bam97i6kz2f16oiEeMEIZ8opWcQhtFzEmIWeoREowHGvMLUAY3aWj05tFyx9uwIlra-IOMxgrKtPQXGZ28gBVqAgM9-r4nYvoiLWHyv_rJueZaY3iJREgsrck0QYyrA65QMlUNWeqLUpv5x8ysra-ubI5TYlvjY1u-iaFZyUhIzA4QeJhynbcQCiDhIU0XEgJTByuxUIuAuUanWGLUK2Jul-zAWnSZ6WOMXWYbR4C7PI2M7SCHZEYNeEepuLDUKg37zN3lUUKrdBBwUzwNk11NgaBuq1Qa5pZbzUrmhbkHbI_WzfpcrdGq1eabTtNpVSrVEnvG3Mb8XKPpVKpVakx1p1FvHpbYfnZvea5RL9drjfK8UynXW80Sw0CQNjr5-5Q9U4e_ARz-Fnw)
 
@@ -432,16 +437,22 @@ Obtén tu API Key en: [https://linker.devgui.dev](https://linker.devgui.dev)
 | Modificar el prefijo por grupo | Dueño | ❌ |
 | Obtener el ID del grupo | Dueño | ❌ |
 | Abrir grupo | Admin | ❌ |
+| Advertir | Admin | ❌ |
 | Programar mensaje | Admin | ❌ |
 | Anti audio | Admin | ❌ |
 | Anti documento | Admin | ❌ |
 | Anti evento | Admin | ❌ |
+| Anti llamada | Admin | ❌ |
 | Anti imagen | Admin | ❌ |
 | Anti link | Admin | ❌ |
+| Anti sticker Lottie | Admin | ❌ |
+| Anti pago | Admin | ❌ |
 | Anti producto | Admin | ❌ |
+| Anti estado de grupo | Admin | ❌ |
 | Anti sticker | Admin | ❌ |
 | Anti video | Admin | ❌ |
 | Banear miembros | Admin | ❌ |
+| Bloquear número en WhatsApp | Admin | ❌ |
 | Eliminar mensajes | Admin | ❌ |
 | Cerrar grupo | Admin | ❌ |
 | Gestión de mensajes del auto-responder | Admin | ❌ |
@@ -449,14 +460,19 @@ Obtén tu API Key en: [https://linker.devgui.dev](https://linker.devgui.dev)
 | Activar/desactivar bienvenidas | Admin | ❌ |
 | Activar/desactivar salida de grupo | Admin | ❌ |
 | Limpiar chat | Admin | ❌ |
+| Marcar ausencia (AFK) | Admin | ❌ |
 | Marcar todos | Admin | ❌ |
 | Cambiar nombre del grupo | Admin | ❌ |
 | Mute/unmute | Admin | ❌ |
 | Obtener el link del grupo | Admin | ❌ |
+| Reactivar advertencia | Admin | ❌ |
+| Quitar advertencia | Admin | ❌ |
 | Revelar | Admin | ❌ |
 | Solo admins | Admin | ❌ |
-| Ver saldo | Admin | ❌ |
+| Ver saldo de Spider X API | Admin | ❌ |
 | Borrar imagen | Miembro | ❌ |
+| Brat (imagen con texto) | Miembro | ✅ |
+| Bratvid (sticker animado estilo Brat) | Miembro | ✅ |
 | Buscar CEP | Miembro | ❌ |
 | Enviar botones | Miembro | ✅ |
 | Enviar lista | Miembro | ✅ |
@@ -466,7 +482,9 @@ Obtén tu API Key en: [https://linker.devgui.dev](https://linker.devgui.dev)
 | Canvas invertir | Miembro | ✅ |
 | Canvas RIP | Miembro | ✅ |
 | Comandos de diversión/juegos | Miembro |❌ |
+| Deepseek V4 Flash | Miembro | ✅ |
 | Espejar imagen | Miembro | ❌ |
+| Descarga de Facebook | Miembro | ✅ |
 | Fake chat | Miembro | ❌ |
 | Sticker animado para GIF | Miembro | ✅ |
 | Sticker de texto animado | Miembro | ✅ |
@@ -479,20 +497,27 @@ Obtén tu API Key en: [https://linker.devgui.dev](https://linker.devgui.dev)
 | Imagen IA Flux | Miembro | ✅ |
 | Imagen pixelada | Miembro | ❌ |
 | Imagen blanco/negro | Miembro | ❌ |
+| Información de un comando | Miembro | ❌ |
 | Descarga Instagram | Miembro | ✅ |
 | Ping | Miembro | ❌ |
+| Descarga de Pinterest (carrusel) | Miembro | ✅ |
 | Reproducir audio | Miembro | ✅ |
 | Reproducir vídeo | Miembro | ✅ |
 | Renombrar sticker | Miembro | ❌ |
+| Eliminar fondo de imagen | Miembro | ✅ |
 | Sticker | Miembro | ❌ |
 | Sticker IA  | Miembro | ✅ |
 | Sticker a imagen | Miembro | ❌ |
+| Descarga de audio de TikTok | Miembro | ✅ |
 | Descarga vídeo TikTok | Miembro | ✅ |
+| Transcribir audio | Miembro | ✅ |
+| TTS (texto a audio) | Miembro | ✅ |
+| Descarga de X/Twitter | Miembro | ✅ |
 | YT MP3 | Miembro | ✅ |
 | YT MP4 | Miembro | ✅ |
 | Búsqueda YT | Miembro | ✅ |
 
-## Funcionalidades de envio (Exemplos)
+## Funcionalidades de envío (Ejemplos)
 
 ### 🔘 Ejemplos de botones
 
@@ -587,11 +612,11 @@ Obtén tu API Key en: [https://linker.devgui.dev](https://linker.devgui.dev)
 | `/enviar-reacoes` | Enviar reacciones | Demuestra envío de emojis de reacción | Varias reacciones emoji, reacciones de éxito/error/aviso |
 | `/enviar-mensagem-editada` | Enviar mensaje editado | Demuestra envío de mensajes editados | Puede editar mensajes enviados de forma directa o respondiendo a alguien |
 
-### 📊 Exemplos de metadados
+### 📊 Ejemplos de metadatos
 
 | Comando | Función | Descripción | Características |
 |---------|---------|-------------|-----------------|
-| `/obter-metadados-mensagem` | Obtener metadados del mensaje | Demuestra extracción avanzada de metadados de mensaje o mensaje citado | Análisis detallado, soporte a respuesta de mensajes, información técnica, menciones automáticas |
+| `/obter-metadados-mensagem` | Obtener metadatos del mensaje | Demuestra extracción avanzada de metadatos de mensaje o mensaje citado | Análisis detallado, soporte a respuesta de mensajes, información técnica, menciones automáticas |
 | `/obter-dados-grupo` | Obtener datos del grupo | Demuestra extracción de información del grupo | Metadatos del grupo, lista de participantes, información de admin |
 | `/funcoes-grupo` | Funciones del grupo | Demuestra uso de funciones utilitarias del grupo | Extracción de nombre, dueño, admins, participantes del grupo |
 
@@ -622,9 +647,9 @@ El Takeshi Bot posee un auto-responder integrado, edita el archivo en `./databas
 ]
 ```
 
-## Auto figurinha / Auto sticker
+## Sticker automático
 
-El Takeshi Bot posee un recurso de auto-figurinha que convierte automáticamente imágenes y vídeos enviados en figurinhas:
+Takeshi Bot puede convertir automáticamente las imágenes y los vídeos enviados en stickers:
 
 | Comando | Función | Descripción |
 |---------|---------|-------------|
@@ -637,7 +662,7 @@ El Takeshi Bot posee un recurso de auto-figurinha que convierte automáticamente
 
 El menú del bot está dentro de la carpeta `src` en el archivo llamado `menu.js`
 
-## ¿Dónde modifico la mensaje de bienvenidas y cuando alguien sale del grupo?
+## ¿Dónde modifico el mensaje de bienvenida y cuando alguien sale del grupo?
 
 Los mensajes están dentro de la carpeta `src` en el archivo llamado `messages.js`
 
@@ -645,7 +670,7 @@ Los mensajes están dentro de la carpeta `src` en el archivo llamado `messages.j
 
 [![diagram](https://mermaid.ink/img/pako:eNqNVltrG0cU_isnCwGJqJJ2tZKtpTE4GwUMteVYlinFL6Pd0Xpb7Y48F9eJMeRCX_pSSqEPJRDSBAp9K6HQ9_0n_gPtT-iZ2YscW7KiBzGz831nznduuxdWwEJqeZagp4qmAX0ck4iT5DgF_BElWaqSCeX5fk64jIN4TlIJY0E5EAH_vf35A25U9o7H7DbsEZM56sOvcEi-o-Ik1s9uA_0kzIG_vIJtfqriMwYhA58lJA3RcM7YY5ICO8Or9f0NJHlI-e0FPB1v7z0ewtHQz36EXVxvw3gX_KFeDkv2_fvwsPrBeDTOXh7sDGGwd7Szfe0kB3MaSODRpOZ02g1wXP3X7dbzwyW-oCoP7H__-enq9fsqIEDTs5hAUKoouZrxxdaW4bQSmqplZs2pDiC6QicUCCBSkIgW6aFpuFzZo-Eh7B8M_cFodJeuQpIRV1_pgFNI0o7gw3gaBwQozDkLFCfAbotbrJBTqjwqqQKNQ8TVHIMjZPYOiMRcfwZnzuk0Pi9ZAeOcSga1Vn0pd_-mf3BsmUBbyxy9GXQltMjE-3LCW1tYky9B8KCFlrQp0WLfp5S3VhySMInTVYcJ1e3UWhOsqzc_wCANWCo5Ux4UJO1-81uxNlRnLMj-BEkTmFOexEJk79lniN6vwDAhgpKQQEqwR4UkeRyuXvwOuXJ4CCL7iP2ZmiadMFkBcvUIMAuhj02yK0AhBhGnisxw6nBQ6wq66GMYfD3wx4d31bQp564u7M7Kms7HRqeo68E5DZTUhUIWY2dtTRsT_glJTFN-mpZl1xr8sLqi4JSdLVWo6xvzzRahFhiOAzqfPYOamSIc0WLOMB31TzA7CY6EChPrXbJAEB4JqOG_wjslE9fULUAUEhIL6LYfwFSl2R_Z31Tk_hBxb5kwlFMG4avsY6QLb2HXqPNWRsFugk-weSNSOAsFxbjjNGFX34v5kPRcGqOlYWEQnSb2hp6qBftBDlztpqnuKlJPOEuexDNay-mNnF1fU4EHg9H-cHS49jVh6u-O0tOD3wP32kw1SU1DerPCciROkL8KuXmQVr1_8qFxZFq_el-UBXOvUmc1rIjHoeVJrmgDJyLHzOPWutCQY0ue0IQeWx4uQzolaib1wLxEGr6lv2EsKZk4mKITy5uSmcCdmodElh8P1VOOF1LuM5VKy3PaTs9YsbwL6xz3bq_Z6fW7tuM6G92O7XQb1jPLs-1e0-72-z27t9F3Hdu-bFjPzb120-1vbvZdt9tpu5sbbbRGw1gyvpt_wpgvmcv_AYwQ1RY?type=png)](https://mermaid.live/edit#pako:eNqNVltrG0cU_isnCwGJqJJ2tZKtpTE4GwUMteVYlinFL6Pd0Xpb7Y48F9eJMeRCX_pSSqEPJRDSBAp9K6HQ9_0n_gPtT-iZ2YscW7KiBzGz831nznduuxdWwEJqeZagp4qmAX0ck4iT5DgF_BElWaqSCeX5fk64jIN4TlIJY0E5EAH_vf35A25U9o7H7DbsEZM56sOvcEi-o-Ik1s9uA_0kzIG_vIJtfqriMwYhA58lJA3RcM7YY5ICO8Or9f0NJHlI-e0FPB1v7z0ewtHQz36EXVxvw3gX_KFeDkv2_fvwsPrBeDTOXh7sDGGwd7Szfe0kB3MaSODRpOZ02g1wXP3X7dbzwyW-oCoP7H__-enq9fsqIEDTs5hAUKoouZrxxdaW4bQSmqplZs2pDiC6QicUCCBSkIgW6aFpuFzZo-Eh7B8M_cFodJeuQpIRV1_pgFNI0o7gw3gaBwQozDkLFCfAbotbrJBTqjwqqQKNQ8TVHIMjZPYOiMRcfwZnzuk0Pi9ZAeOcSga1Vn0pd_-mf3BsmUBbyxy9GXQltMjE-3LCW1tYky9B8KCFlrQp0WLfp5S3VhySMInTVYcJ1e3UWhOsqzc_wCANWCo5Ux4UJO1-81uxNlRnLMj-BEkTmFOexEJk79lniN6vwDAhgpKQQEqwR4UkeRyuXvwOuXJ4CCL7iP2ZmiadMFkBcvUIMAuhj02yK0AhBhGnisxw6nBQ6wq66GMYfD3wx4d31bQp564u7M7Kms7HRqeo68E5DZTUhUIWY2dtTRsT_glJTFN-mpZl1xr8sLqi4JSdLVWo6xvzzRahFhiOAzqfPYOamSIc0WLOMB31TzA7CY6EChPrXbJAEB4JqOG_wjslE9fULUAUEhIL6LYfwFSl2R_Z31Tk_hBxb5kwlFMG4avsY6QLb2HXqPNWRsFugk-weSNSOAsFxbjjNGFX34v5kPRcGqOlYWEQnSb2hp6qBftBDlztpqnuKlJPOEuexDNay-mNnF1fU4EHg9H-cHS49jVh6u-O0tOD3wP32kw1SU1DerPCciROkL8KuXmQVr1_8qFxZFq_el-UBXOvUmc1rIjHoeVJrmgDJyLHzOPWutCQY0ue0IQeWx4uQzolaib1wLxEGr6lv2EsKZk4mKITy5uSmcCdmodElh8P1VOOF1LuM5VKy3PaTs9YsbwL6xz3bq_Z6fW7tuM6G92O7XQb1jPLs-1e0-72-z27t9F3Hdu-bFjPzb120-1vbvZdt9tpu5sbbbRGw1gyvpt_wpgvmcv_AYwQ1RY)
 
-## Diagrama de cómo funcionan los middlewares (interceptadores) de recepción y salida
+## Diagrama de cómo funcionan los middlewares (interceptores) de recepción y salida
 
 [![diagram](https://mermaid.ink/img/pako:eNqtld9qE0EUxl_lOFBoIW2TzV8WrU2tFKVJa9uAltycZE_TwexMnJ2NtaXghQqiIPXCC1FELIgXeq3XeZO-gD6Cs7NJtmmTBsG9CDsz5zvn7De_yRyxpvSIuSygRyGJJq1ybCn06wLMg6GWIvQbpOJxB5XmTd5BoaHs-VwABvDn08mPeHQ5aEXqOOT0HezgQwr2eTR3ObAWkOonO4Wq7EqokN9Qst5PWpWaQHZNkK2UiuJdE_3-KdyrlaurG1BeX6v1XlbgdnVnqwwbNdgu3wEzv7ZV29wYpJmZgRvD54IkWYhjFTU1qFZj1smmU-Dkop98fi5enNzT2YfnUG63wt43H0hohSAktFTYkYkyebPK-aUlY4prBsYOKRCW78reFwl4SWjCBsGrpE2DCGbbAM_Vk-G4OueEKxKD-S4XnrGbAt37DKh5Fz28eb2hFpdmm9JH4UkXFh9T2wzMN4q5cTmxrUeS9dMkARcKb1ILwScRYIt88AgaiXhUlDhrhdthI9Bch9y1HR4J09QxnL14C9aneNI6Fc9Wo6a9S-Yl7QzoOXkFdbZCvm1CwqjrcP_B7rU6m9RZstsWV9_iGkFDDRp-ZSKmdkAjbnkUjDXswrefPfv1--cbqEad7eEhiBEBCS8e2JerGI9Ow2TC-3BbzKcT_vH1kPAA-RinJ_C9Rb5JBssVVBzHyKbQbWpNY7tyjq4Ae989nII4HXB9Fd9jEv4z5manO-TxKRs9GXJr179Dbq0fUh57Hlk4FEWAT-a7L48AX7PRfbSF1HyPN7H31SB5ge8xbv1fzCdu_Dr3O6YYejI6WecsmzVtUdtigF2zL6E2mVNAujk3PDnAUqyluMdcrUJKMZ-Uj9GQHUUxdab3yac6c82rR3sYtnXk27GRmctrV0p_oDT_vq195u6hcSPFwo6HenCjDmeVqUjqlgyFZq6TLuVsFuYesQPmZorFhYKTzWSK6Wwpn8s4ZvUJc-cLhYVizsmWSvlC2kk72exxih3awpmFfM4pFLJ5s54pFfMpZljTUlXie91e78d_AUVrgqU?type=png)](https://mermaid.live/edit#pako:eNqtld9qE0EUxl_lOFBoIW2TzV8WrU2tFKVJa9uAltycZE_TwexMnJ2NtaXghQqiIPXCC1FELIgXeq3XeZO-gD6Cs7NJtmmTBsG9CDsz5zvn7De_yRyxpvSIuSygRyGJJq1ybCn06wLMg6GWIvQbpOJxB5XmTd5BoaHs-VwABvDn08mPeHQ5aEXqOOT0HezgQwr2eTR3ObAWkOonO4Wq7EqokN9Qst5PWpWaQHZNkK2UiuJdE_3-KdyrlaurG1BeX6v1XlbgdnVnqwwbNdgu3wEzv7ZV29wYpJmZgRvD54IkWYhjFTU1qFZj1smmU-Dkop98fi5enNzT2YfnUG63wt43H0hohSAktFTYkYkyebPK-aUlY4prBsYOKRCW78reFwl4SWjCBsGrpE2DCGbbAM_Vk-G4OueEKxKD-S4XnrGbAt37DKh5Fz28eb2hFpdmm9JH4UkXFh9T2wzMN4q5cTmxrUeS9dMkARcKb1ILwScRYIt88AgaiXhUlDhrhdthI9Bch9y1HR4J09QxnL14C9aneNI6Fc9Wo6a9S-Yl7QzoOXkFdbZCvm1CwqjrcP_B7rU6m9RZstsWV9_iGkFDDRp-ZSKmdkAjbnkUjDXswrefPfv1--cbqEad7eEhiBEBCS8e2JerGI9Ow2TC-3BbzKcT_vH1kPAA-RinJ_C9Rb5JBssVVBzHyKbQbWpNY7tyjq4Ae989nII4HXB9Fd9jEv4z5manO-TxKRs9GXJr179Dbq0fUh57Hlk4FEWAT-a7L48AX7PRfbSF1HyPN7H31SB5ge8xbv1fzCdu_Dr3O6YYejI6WecsmzVtUdtigF2zL6E2mVNAujk3PDnAUqyluMdcrUJKMZ-Uj9GQHUUxdab3yac6c82rR3sYtnXk27GRmctrV0p_oDT_vq195u6hcSPFwo6HenCjDmeVqUjqlgyFZq6TLuVsFuYesQPmZorFhYKTzWSK6Wwpn8s4ZvUJc-cLhYVizsmWSvlC2kk72exxih3awpmFfM4pFLJ5s54pFfMpZljTUlXie91e78d_AUVrgqU)
 
@@ -851,6 +876,7 @@ Todos los archivos de ejemplo son almacenados en `assets/samples/`:
 
 ## Estructura de carpetas
 
+- 📁 .agents ➔ _habilidades locales usadas por agentes de IA_
 - 📁 .github ➔ _workflows de CI/CD y archivo para el agente copilot_
 - 📁 assets ➔ _archivos de medios_
   - 📁 auth ➔ _archivos de la conexión del bot_
@@ -874,7 +900,7 @@ Todos los archivos de ejemplo son almacenados en `assets/samples/`:
     - 📁 owner ➔ _carpeta donde están los comandos de dueño (grupo y bot)_
     - 📝🤖-cómo-crear-comandos.js ➔ _archivo de ejemplo de cómo crear un comando_
   - 📁 errors ➔ _clases de errores usadas en los comandos_
-  - 📁 middlewares ➔ _interceptadores de solicitudes_
+  - 📁 middlewares ➔ _interceptores de solicitudes_
   - 📁 services ➔ _servicios diversos_
   - 📁 utils ➔ _utilitarios_
   - 📝 config.js ➔ _archivo de configuraciones del bot_
@@ -884,8 +910,12 @@ Todos los archivos de ejemplo son almacenados en `assets/samples/`:
   - 📝 menu.js ➔ _menu del bot_
   - 📝 messages.js ➔ _archivos de mensajes de bienvenidas y salida_
   - 📁 test/ ➔ _suite de pruebas automatizadas_
+  - 📝 test.js ➔ _script auxiliar de pruebas_
 - 📝 .gitignore ➔ _archivo para no subir ciertas carpetas en GitHub_
 - 📝 ⚡-cases-estan-aqui.js ➔ _easter egg_
+- 📝 AGENTS.md ➔ _arquitectura y reglas para agentes de IA_
+- 📝 CLAUDE.md ➔ _instrucciones para Claude_
+- 📝 GEMINI.md ➔ _instrucciones para Gemini_
 - 📝 CONTRIBUTING.md ➔ _guía de contribución_
 - 📝 LICENSE ➔ _archivo de licencia_
 - 📝 package-lock.json ➔ _archivo de cache de las dependencias del bot_
@@ -922,6 +952,21 @@ bash reset-qr-auth.sh
 
 Después, remueve el dispositivo del WhatsApp yendo en las configuraciones del WhatsApp en "dispositivos conectados" y repite
 el procedimiento de iniciar el bot con `npm start`.
+
+### ⏱️ Error `rate-overlimit` después de mucho tiempo sin conexión
+
+Cuando el bot permanece apagado durante mucho tiempo, al volver a conectarse puede intentar procesar demasiados mensajes acumulados de una sola vez.
+Esto puede provocar el error `rate-overlimit` durante la sincronización.
+
+![error común 3](./assets/images/erro-comum-3.png)
+
+Para corregirlo, reinicia la autenticación de Baileys:
+
+```sh
+bash reset-qr-auth.sh
+```
+
+Después, vuelve a vincular el número desde "dispositivos conectados" en WhatsApp.
 
 ### 🔐 Permission denied (permiso denegado) al acceder `cd /sdcard`
 
