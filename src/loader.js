@@ -6,7 +6,7 @@
  *
  * @author Dev Gui
  */
-import { TIMEOUT_IN_MILLISECONDS_BY_EVENT } from "./config.js";
+import { onCall } from "./middlewares/onCall.js";
 import { onMessagesUpsert } from "./middlewares/onMesssagesUpsert.js";
 import { badMacHandler } from "./utils/badMacHandler.js";
 import { errorLog } from "./utils/logger.js";
@@ -28,18 +28,26 @@ export function load(socket) {
 
   socket.ev.on("messages.upsert", async (data) => {
     const startProcess = Date.now();
-    setTimeout(() => {
+    safeEventHandler(
+      () =>
+        onMessagesUpsert({
+          socket,
+          messages: data.messages,
+          startProcess,
+        }),
+      data,
+      "messages.upsert",
+    );
+  });
+
+  socket.ev.process((events) => {
+    if (events?.call?.length) {
       safeEventHandler(
-        () =>
-          onMessagesUpsert({
-            socket,
-            messages: data.messages,
-            startProcess,
-          }),
-        data,
-        "messages.upsert"
+        () => onCall({ socket, calls: events.call }),
+        events.call,
+        "call",
       );
-    }, TIMEOUT_IN_MILLISECONDS_BY_EVENT);
+    }
   });
 
   process.on("uncaughtException", (error) => {

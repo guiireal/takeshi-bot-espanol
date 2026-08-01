@@ -13,7 +13,7 @@
  *
  * @author Dev Gui
  */
-import { PREFIX } from "../../config.js";
+import { PREFIX } from "../config.js";
 
 export default {
   name: "comando",

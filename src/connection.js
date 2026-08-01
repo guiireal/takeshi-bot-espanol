@@ -8,6 +8,7 @@
  * con WhatsApp.
  *
  * No se recomienda alterar
+ * este arquivo,
  * este archivo,
  * a menos que sepa
  * lo que está haciendo.
@@ -27,14 +28,14 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import pino from "pino";
-import { PREFIX, TEMP_DIR, WAWEB_VERSION } from "./config.js";
+import { PREFIX, TEMP_DIR } from "./config.js";
 import { load } from "./loader.js";
 import { badMacHandler } from "./utils/badMacHandler.js";
 import { onlyNumbers, question } from "./utils/index.js";
 import {
+  bannerLog,
   errorLog,
   infoLog,
-  sayLog,
   successLog,
   warningLog,
 } from "./utils/logger.js";
@@ -55,6 +56,17 @@ logger.level = "error";
 
 const msgRetryCounterCache = new NodeCache();
 
+function formatPairingCode(code) {
+  if (!code) return code;
+
+  return code?.match(/.{1,4}/g)?.join("-") || code;
+}
+
+function clearScreenWithBanner() {
+  console.clear();
+  bannerLog();
+}
+
 export async function connect() {
   const baileysFolder = path.resolve(
     __dirname,
@@ -65,6 +77,7 @@ export async function connect() {
   );
 
   const { state, saveCreds } = await useMultiFileAuthState(baileysFolder);
+
   const { version } = await fetchLatestBaileysVersion();
 
   const socket = makeWASocket({
@@ -86,19 +99,16 @@ export async function connect() {
   });
 
   if (!socket.authState.creds.registered) {
-    warningLog("¡Credenciales aún no configuradas!");
-
-    infoLog(
-      'Ingrese el número de teléfono del bot (ejemplo: "5511920202020"):',
+    clearScreenWithBanner();
+    console.log(
+      'Ingrese el número del bot (SP/RJ requieren el noveno dígito). \nEjemplo: "+5511912345678", demás estados: "+554112345678":',
     );
 
-    const phoneNumber = await question(
-      "Ingrese el número de teléfono del bot: ",
-    );
+    const phoneNumber = await question("Número: ");
 
     if (!phoneNumber) {
       errorLog(
-        '¡Número de teléfono inválido! Intente nuevamente con el comando "npm start".',
+        '¡Número de teléfono inválido! Inténtelo nuevamente con el comando "npm start".',
       );
 
       process.exit(1);
@@ -106,7 +116,7 @@ export async function connect() {
 
     const code = await socket.requestPairingCode(onlyNumbers(phoneNumber));
 
-    sayLog(`Código de vinculación: ${code}`);
+    console.log(`Código de vinculación: ${formatPairingCode(code)}`);
   }
 
   socket.ev.on("connection.update", async (update) => {
@@ -171,7 +181,7 @@ export async function connect() {
             warningLog("¡Conexión prohibida!");
             break;
           case DisconnectReason.restartRequired:
-            infoLog('¡Por favor, reiníciame! Escribe "npm start".');
+            infoLog('¡Por favor, reinícieme! Escriba "npm start".');
             break;
           case DisconnectReason.unavailableService:
             warningLog("¡Servicio no disponible!");
@@ -182,16 +192,20 @@ export async function connect() {
         load(newSocket);
       }
     } else if (connection === "open") {
+      clearScreenWithBanner();
+      successLog("✅ ¡Bot iniciado con éxito!");
       successLog("¡Me he conectado con éxito!");
-      infoLog("Versión de WhatsApp Web: " + WAWEB_VERSION.join("."));
+      infoLog("Versión de WhatsApp Web: " + version.join("."));
       successLog(
         `✅ ¡Estoy listo para usar! 
-Verifica el prefijo escribiendo la palabra "prefixo" en WhatsApp. 
-El prefijo por defecto definido en config.js es ${PREFIX}`,
+Verifique el prefijo escribiendo la palabra "prefixo" en WhatsApp.
+El prefijo predeterminado definido en config.js es ${PREFIX}`,
       );
       badMacHandler.resetErrorCount();
+    } else if (connection === "connecting") {
+      infoLog("Conectando...");
     } else {
-      infoLog("Actualizando conexión...");
+      infoLog("Atualizando conexão...");
     }
   });
 

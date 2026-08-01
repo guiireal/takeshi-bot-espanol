@@ -1,5 +1,7 @@
-/* @ts-ignore */
+// @ts-ignore
 import * as libsignal from 'libsignal';
+// @ts-ignore
+import { PreKeyWhisperMessage } from 'libsignal/src/protobufs.js';
 import { LRUCache } from 'lru-cache';
 import { generateSignalPubKey } from '../Utils/index.js';
 import { isHostedLidUser, isHostedPnUser, isLidUser, isPnUser, jidDecode, transferDevice, WAJIDDomains } from '../WABinary/index.js';
@@ -7,6 +9,28 @@ import { SenderKeyName } from './Group/sender-key-name.js';
 import { SenderKeyRecord } from './Group/sender-key-record.js';
 import { GroupCipher, GroupSessionBuilder, SenderKeyDistributionMessage } from './Group/index.js';
 import { LIDMappingStore } from './lid-mapping.js';
+/** Extract identity key from PreKeyWhisperMessage for identity change detection */
+function extractIdentityFromPkmsg(ciphertext) {
+    try {
+        if (!ciphertext || ciphertext.length < 2) {
+            return undefined;
+        }
+        // Version byte check (version 3)
+        const version = ciphertext[0];
+        if ((version & 0xf) !== 3) {
+            return undefined;
+        }
+        // Parse protobuf (skip version byte)
+        const preKeyProto = PreKeyWhisperMessage.decode(ciphertext.slice(1));
+        if (preKeyProto.identityKey?.length === 33) {
+            return new Uint8Array(preKeyProto.identityKey);
+        }
+        return undefined;
+    }
+    catch {
+        return undefined;
+    }
+}
 export function makeLibSignalRepository(auth, logger, pnToLIDFunc) {
     const lidMapping = new LIDMappingStore(auth.keys, logger, pnToLIDFunc);
     const storage = signalStorage(auth, lidMapping);
@@ -16,6 +40,16 @@ export function makeLibSignalRepository(auth, logger, pnToLIDFunc) {
         ttlAutopurge: true,
         updateAgeOnGet: true
     });
+    const ensureSenderKeyAndCreateSkdm = async (group, meId) => {
+        const senderName = jidToSignalSenderKeyName(group, meId);
+        const senderNameStr = senderName.toString();
+        const { [senderNameStr]: senderKey } = await auth.keys.get('sender-key', [senderNameStr]);
+        if (!senderKey) {
+            await storage.storeSenderKey(senderName, new SenderKeyRecord());
+        }
+        const skdm = await new GroupSessionBuilder(storage).create(senderName);
+        return { senderName, skdm };
+    };
     const repository = {
         decryptGroupMessage({ group, authorJid, msg }) {
             const senderName = jidToSignalSenderKeyName(group, authorJid);
@@ -48,6 +82,17 @@ export function makeLibSignalRepository(auth, logger, pnToLIDFunc) {
         async decryptMessage({ jid, type, ciphertext }) {
             const addr = jidToSignalProtocolAddress(jid);
             const session = new libsignal.SessionCipher(storage, addr);
+            // Extract and save sender's identity key before decryption for identity change detection
+            if (type === 'pkmsg') {
+                const identityKey = extractIdentityFromPkmsg(ciphertext);
+                if (identityKey) {
+                    const addrStr = addr.toString();
+                    const identityChanged = await storage.saveIdentity(addrStr, identityKey);
+                    if (identityChanged) {
+                        logger.info({ jid, addr: addrStr }, 'identity key changed or new contact, session will be re-established');
+                    }
+                }
+            }
             async function doDecrypt() {
                 let result;
                 switch (type) {
@@ -77,27 +122,43 @@ export function makeLibSignalRepository(auth, logger, pnToLIDFunc) {
             }, jid);
         },
         async encryptGroupMessage({ group, meId, data }) {
-            const senderName = jidToSignalSenderKeyName(group, meId);
-            const builder = new GroupSessionBuilder(storage);
-            const senderNameStr = senderName.toString();
             return parsedKeys.transaction(async () => {
-                const { [senderNameStr]: senderKey } = await auth.keys.get('sender-key', [senderNameStr]);
-                if (!senderKey) {
-                    await storage.storeSenderKey(senderName, new SenderKeyRecord());
-                }
-                const senderKeyDistributionMessage = await builder.create(senderName);
-                const session = new GroupCipher(storage, senderName);
-                const ciphertext = await session.encrypt(data);
-                return {
-                    ciphertext,
-                    senderKeyDistributionMessage: senderKeyDistributionMessage.serialize()
-                };
+                const { senderName, skdm } = await ensureSenderKeyAndCreateSkdm(group, meId);
+                const ciphertext = await new GroupCipher(storage, senderName).encrypt(data);
+                return { ciphertext, senderKeyDistributionMessage: skdm.serialize() };
             }, group);
+        },
+        async getSenderKeyDistributionMessage({ group, meId }) {
+            return parsedKeys.transaction(async () => {
+                const { skdm } = await ensureSenderKeyAndCreateSkdm(group, meId);
+                return skdm.serialize();
+            }, group);
+        },
+        async hasSenderKey({ group, meId }) {
+            const senderName = jidToSignalSenderKeyName(group, meId).toString();
+            const { [senderName]: key } = await auth.keys.get('sender-key', [senderName]);
+            return !!key;
+        },
+        async getSessionInfo(jid) {
+            const addr = jidToSignalProtocolAddress(jid).toString();
+            const session = (await storage.loadSession(addr));
+            if (!session) {
+                return null;
+            }
+            const open = session.getOpenSession?.();
+            const baseKey = open?.indexInfo?.baseKey;
+            const registrationId = open?.registrationId;
+            if (!baseKey || typeof registrationId !== 'number') {
+                return null;
+            }
+            return { baseKey: new Uint8Array(baseKey), registrationId };
         },
         async injectE2ESession({ jid, session }) {
             logger.trace({ jid }, 'injecting E2EE session');
             const cipher = new libsignal.SessionBuilder(storage, jidToSignalProtocolAddress(jid));
             return parsedKeys.transaction(async () => {
+                // libsignal runtime accepts an absent prekey (initOutgoing checks `device.preKey && ...`)
+                // but the bundled .d.ts marks it required.
                 await cipher.initOutgoing(session);
             }, jid);
         },
@@ -135,6 +196,10 @@ export function makeLibSignalRepository(auth, logger, pnToLIDFunc) {
             return parsedKeys.transaction(async () => {
                 await auth.keys.set({ session: sessionUpdates });
             }, `delete-${jids.length}-sessions`);
+        },
+        close() {
+            migratedSessionCache.clear();
+            lidMapping.close();
         },
         async migrateSession(fromJid, toJid) {
             // TODO: use usync to handle this entire mess
@@ -296,7 +361,31 @@ function signalStorage({ creds, keys }, lidMapping) {
             await keys.set({ session: { [wireJid]: session.serialize() } });
         },
         isTrustedIdentity: () => {
-            return true; // todo: implement
+            return true; // TOFU - Trust on First Use (same as WhatsApp Web)
+        },
+        loadIdentityKey: async (id) => {
+            const wireJid = await resolveLIDSignalAddress(id);
+            const { [wireJid]: key } = await keys.get('identity-key', [wireJid]);
+            return key || undefined;
+        },
+        saveIdentity: async (id, identityKey) => {
+            const wireJid = await resolveLIDSignalAddress(id);
+            const { [wireJid]: existingKey } = await keys.get('identity-key', [wireJid]);
+            const keysMatch = existingKey?.length === identityKey.length && existingKey.every((byte, i) => byte === identityKey[i]);
+            if (existingKey && !keysMatch) {
+                // Identity changed - clear session and update key
+                await keys.set({
+                    session: { [wireJid]: null },
+                    'identity-key': { [wireJid]: identityKey }
+                });
+                return true;
+            }
+            if (!existingKey) {
+                // New contact - Trust on First Use (TOFU)
+                await keys.set({ 'identity-key': { [wireJid]: identityKey } });
+                return true;
+            }
+            return false;
         },
         loadPreKey: async (id) => {
             const keyId = id.toString();

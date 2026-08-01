@@ -27,13 +27,16 @@ const storeMappingFromEnvelope = async (stanza, sender, repository, decryptionJi
 };
 export const NO_MESSAGE_FOUND_ERROR_TEXT = 'Message absent from node';
 export const MISSING_KEYS_ERROR_TEXT = 'Key used already or never filled';
+export const ACCOUNT_RESTRICTED_TEXT = 'Your account has been restricted';
 // Retry configuration for failed decryption
 export const DECRYPTION_RETRY_CONFIG = {
     maxRetries: 3,
     baseDelayMs: 100,
     sessionRecordErrors: ['No session record', 'SessionError: No session record']
 };
+/** NACK reason codes we send to the server (client → server) */
 export const NACK_REASONS = {
+    SenderReachoutTimelocked: 463,
     ParsingError: 487,
     UnrecognizedStanza: 488,
     UnrecognizedStanzaClass: 489,
@@ -47,6 +50,21 @@ export const NACK_REASONS = {
     UnsupportedAdminRevoke: 550,
     UnsupportedLIDGroup: 551,
     DBOperationFailed: 552
+};
+/**
+ * Server-side error codes returned in ack stanzas (server → client) that we
+ * currently have dedicated handlers for. Extend as more handlers are added.
+ * Distinct from the client-side NackReason enum (WAWebCreateNackFromStanza).
+ */
+export const SERVER_ERROR_CODES = {
+    /**
+     * 1:1 message missing privacy token (tctoken). Usually means the account is
+     * restricted: WhatsApp blocks starting new chats but preserves existing ones,
+     * since established chats already carry a tctoken.
+     */
+    MessageAccountRestriction: '463',
+    /** Stanza validation failure (SMAX_INVALID) — likely stale device session */
+    SmaxInvalid: '479'
 };
 export const extractAddressingContext = (stanza) => {
     let senderAlt;
@@ -88,6 +106,12 @@ export function decodeMessageNode(stanza, meId, meLid) {
     const from = stanza.attrs.from;
     const participant = stanza.attrs.participant;
     const recipient = stanza.attrs.recipient;
+    if (!msgId) {
+        throw new Boom('Invalid message stanza: missing id attribute', { data: stanza });
+    }
+    if (!from) {
+        throw new Boom('Invalid message stanza: missing from attribute', { data: stanza });
+    }
     const addressingContext = extractAddressingContext(stanza);
     const isMe = (jid) => areJidsSameUser(jid, meId);
     const isMeLid = (jid) => areJidsSameUser(jid, meLid);
@@ -102,6 +126,12 @@ export function decodeMessageNode(stanza, meId, meLid) {
             chatId = recipient;
         }
         else {
+            // Peer-routed self stanzas (history sync, app-state sync, etc.) arrive
+            // with `from` set to our own device but no `recipient` attribute —
+            // still mark as fromMe so self-only protocolMessage handlers run.
+            if (isMe(from) || isMeLid(from)) {
+                fromMe = true;
+            }
             chatId = from;
         }
         msgType = 'chat';
@@ -148,10 +178,14 @@ export function decodeMessageNode(stanza, meId, meLid) {
     const key = {
         remoteJid: chatId,
         remoteJidAlt: !isJidGroup(chatId) ? addressingContext.senderAlt : undefined,
+        remoteJidUsername: !isJidGroup(chatId)
+            ? stanza.attrs.peer_recipient_username || stanza.attrs.recipient_username
+            : undefined,
         fromMe,
         id: msgId,
         participant,
         participantAlt: isJidGroup(chatId) ? addressingContext.senderAlt : undefined,
+        participantUsername: stanza.attrs.participant ? stanza.attrs.participant_username : undefined,
         addressingMode: addressingContext.addressingMode,
         ...(msgType === 'newsletter' && stanza.attrs.server_id ? { server_id: stanza.attrs.server_id } : {})
     };

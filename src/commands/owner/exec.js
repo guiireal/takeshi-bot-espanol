@@ -5,10 +5,10 @@
  *
  * @author Dev Gui
  */
-const { exec } = require("child_process");
-const { isBotOwner } = require(`${BASE_DIR}/middlewares`);
-const { PREFIX } = require(`${BASE_DIR}/config`);
-const { DangerError } = require(`${BASE_DIR}/errors`);
+import { exec } from "node:child_process";
+import { PREFIX } from "../../config.js";
+import { DangerError } from "../../errors/index.js";
+import { isBotOwner } from "../../middlewares/index.js";
 
 const DANGEROUS_COMMANDS = [
   ":()",
@@ -206,7 +206,7 @@ function isSafeCommand(command) {
   return { safe: true };
 }
 
-module.exports = {
+export default {
   name: "exec",
   description:
     "Ejecuta comandos seguros de la terminal directamente desde el bot.",
@@ -220,8 +220,8 @@ Ejemplos: ls, pwd, ps, df, git status, npm list`,
    * @param {CommandHandleProps} props
    * @returns {Promise<void>}
    */
-  handle: async ({ fullArgs, sendSuccessReply, sendErrorReply, userJid }) => {
-    if (!isBotOwner({ userJid })) {
+  handle: async ({ fullArgs, sendSuccessReply, sendErrorReply, userLid }) => {
+    if (!isBotOwner({ userLid })) {
       throw new DangerError("¡Solo el dueño del bot puede usar este comando!");
     }
 
@@ -244,7 +244,7 @@ Comandos seguros incluyen: ls, pwd, cat, ps, df, git status, etc.`
       );
     }
 
-    console.log(`[EXEC_AUDIT] ${userJid} ejecutó comando seguro: ${fullArgs}`);
+    console.log(`[EXEC_AUDIT] ${userLid} ejecutó comando seguro: ${fullArgs}`);
 
     const timeoutMs = 15000;
     const maxBuffer = 1024 * 1024;

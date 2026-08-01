@@ -1,7 +1,7 @@
 import { getBinaryNodeChild } from '../WABinary/index.js';
 import { USyncBotProfileProtocol } from './Protocols/UsyncBotProfileProtocol.js';
 import { USyncLIDProtocol } from './Protocols/UsyncLIDProtocol.js';
-import { USyncContactProtocol, USyncDeviceProtocol, USyncDisappearingModeProtocol, USyncStatusProtocol } from './Protocols/index.js';
+import { USyncContactProtocol, USyncDeviceProtocol, USyncDisappearingModeProtocol, USyncStatusProtocol, USyncUsernameProtocol } from './Protocols/index.js';
 import { USyncUser } from './USyncUser.js';
 export class USyncQuery {
     constructor() {
@@ -23,7 +23,7 @@ export class USyncQuery {
         return this;
     }
     parseUSyncQueryResult(result) {
-        if (!result || result.attrs.type !== 'result') {
+        if (result?.attrs.type !== 'result') {
             return;
         }
         const protocolMap = Object.fromEntries(this.protocols.map(protocol => {
@@ -88,6 +88,10 @@ export class USyncQuery {
     }
     withLIDProtocol() {
         this.protocols.push(new USyncLIDProtocol());
+        return this;
+    }
+    withUsernameProtocol() {
+        this.protocols.push(new USyncUsernameProtocol());
         return this;
     }
 }

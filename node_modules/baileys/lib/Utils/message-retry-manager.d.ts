@@ -23,12 +23,31 @@ export interface RetryStatistics {
     sessionRecreations: number;
     phoneRequests: number;
 }
+export declare enum RetryReason {
+    UnknownError = 0,
+    SignalErrorNoSession = 1,
+    SignalErrorInvalidKey = 2,
+    SignalErrorInvalidKeyId = 3,
+    /** MAC verification failed - most common cause of decryption failures */
+    SignalErrorInvalidMessage = 4,
+    SignalErrorInvalidSignature = 5,
+    SignalErrorFutureMessage = 6,
+    /** Explicit MAC failure - session is definitely out of sync */
+    SignalErrorBadMac = 7,
+    SignalErrorInvalidSession = 8,
+    SignalErrorInvalidMsgKey = 9,
+    BadBroadcastEphemeralSetting = 10,
+    UnknownCompanionNoPrekey = 11,
+    AdvFailure = 12,
+    StatusRevokeDelay = 13
+}
 export declare class MessageRetryManager {
     private logger;
     private recentMessagesMap;
     private messageKeyIndex;
     private sessionRecreateHistory;
     private retryCounters;
+    private baseKeys;
     private pendingPhoneRequests;
     private readonly maxMsgRetryCount;
     private statistics;
@@ -42,12 +61,22 @@ export declare class MessageRetryManager {
      */
     getRecentMessage(to: string, id: string): RecentMessage | undefined;
     /**
-     * Check if a session should be recreated based on retry count and history
+     * Check if a session should be recreated based on retry count, history, and error code.
+     * MAC errors (codes 4 and 7) trigger immediate session recreation regardless of timeout.
      */
-    shouldRecreateSession(jid: string, retryCount: number, hasSession: boolean): {
+    shouldRecreateSession(jid: string, hasSession: boolean, errorCode?: RetryReason): {
         reason: string;
         recreate: boolean;
     };
+    /**
+     * Parse error code from retry receipt's retry node.
+     * Returns undefined if no error code is present.
+     */
+    parseRetryErrorCode(errorAttr: string | undefined): RetryReason | undefined;
+    /**
+     * Check if an error code indicates a MAC failure
+     */
+    isMacError(errorCode: RetryReason | undefined): boolean;
     /**
      * Increment retry counter for a message
      */
@@ -76,6 +105,10 @@ export declare class MessageRetryManager {
      * Cancel pending phone request
      */
     cancelPendingPhoneRequest(messageId: string): void;
+    clear(): void;
+    saveBaseKey(addr: string, msgId: string, baseKey: Uint8Array): void;
+    hasSameBaseKey(addr: string, msgId: string, baseKey: Uint8Array): boolean;
+    deleteBaseKey(addr: string, msgId: string): void;
     private keyToString;
     private removeRecentMessage;
 }
