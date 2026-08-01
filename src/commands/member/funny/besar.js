@@ -6,8 +6,8 @@ import { onlyNumbers } from "../../../utils/index.js";
 export default {
   name: "besar",
   description: "Besa a un usuario que amas.",
-  commands: ["beijar", "beija", "beijo", "kiss"],
-  usage: `${PREFIX}beijar @usuario`,
+  commands: ["besar", "beijar", "beija", "beijo", "kiss"],
+  usage: `${PREFIX}besar @usuario`,
   /**
    * @param {CommandHandleProps} props
    */

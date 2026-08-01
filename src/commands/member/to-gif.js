@@ -7,8 +7,8 @@ import { getRandomName } from "../../utils/index.js";
 export default {
   name: "togif",
   description: "Transformo figurinhas animadas em GIF",
-  commands: ["togif", "gif"],
-  usage: `${PREFIX}togif (marca la figurita)`,
+  commands: ["to-gif", "togif", "gif"],
+  usage: `${PREFIX}to-gif (marca el sticker)`,
   /**
    * @param {CommandHandleProps} props
    */

@@ -6,8 +6,8 @@ import { onlyNumbers } from "../../../utils/index.js";
 export default {
   name: "bofetada",
   description: "Le da una bofetada a alguien.",
-  commands: ["tapa"],
-  usage: `${PREFIX}tapa @usuario`,
+  commands: ["bofetada", "tapa"],
+  usage: `${PREFIX}bofetada @usuario`,
   /**
    * @param {CommandHandleProps} props
    */

@@ -428,95 +428,127 @@ Obtén tu API Key en: [https://linker.devgui.dev](https://linker.devgui.dev)
 
 ## Funcionalidades generales
 
-| Función | Contexto | ¿Requiere Spider X API? |
-| ------------ | --- | --- |
-| Cambiar imagen del bot | Dueño | ❌ |
-| Desactivar el bot en el grupo | Dueño | ❌ |
-| Ejecutar comandos de infraestructura | Dueño | ❌ |
-| Activar el bot en el grupo | Dueño | ❌ |
-| Modificar el prefijo por grupo | Dueño | ❌ |
-| Obtener el ID del grupo | Dueño | ❌ |
-| Abrir grupo | Admin | ❌ |
-| Advertir | Admin | ❌ |
-| Programar mensaje | Admin | ❌ |
-| Anti audio | Admin | ❌ |
-| Anti documento | Admin | ❌ |
-| Anti evento | Admin | ❌ |
-| Anti llamada | Admin | ❌ |
-| Anti imagen | Admin | ❌ |
-| Anti link | Admin | ❌ |
-| Anti sticker Lottie | Admin | ❌ |
-| Anti pago | Admin | ❌ |
-| Anti producto | Admin | ❌ |
-| Anti estado de grupo | Admin | ❌ |
-| Anti sticker | Admin | ❌ |
-| Anti video | Admin | ❌ |
-| Banear miembros | Admin | ❌ |
-| Bloquear número en WhatsApp | Admin | ❌ |
-| Eliminar mensajes | Admin | ❌ |
-| Cerrar grupo | Admin | ❌ |
-| Gestión de mensajes del auto-responder | Admin | ❌ |
-| Activar/desactivar auto responder | Admin | ❌ |
-| Activar/desactivar bienvenidas | Admin | ❌ |
-| Activar/desactivar salida de grupo | Admin | ❌ |
-| Limpiar chat | Admin | ❌ |
-| Marcar ausencia (AFK) | Admin | ❌ |
-| Marcar todos | Admin | ❌ |
-| Cambiar nombre del grupo | Admin | ❌ |
-| Mute/unmute | Admin | ❌ |
-| Obtener el link del grupo | Admin | ❌ |
-| Reactivar advertencia | Admin | ❌ |
-| Quitar advertencia | Admin | ❌ |
-| Revelar | Admin | ❌ |
-| Solo admins | Admin | ❌ |
-| Ver saldo de Spider X API | Admin | ❌ |
-| Borrar imagen | Miembro | ❌ |
-| Brat (imagen con texto) | Miembro | ✅ |
-| Bratvid (sticker animado estilo Brat) | Miembro | ✅ |
-| Buscar CEP | Miembro | ❌ |
-| Enviar botones | Miembro | ✅ |
-| Enviar lista | Miembro | ✅ |
-| Enviar carrusel | Miembro | ✅ |
-| Canvas Bolsonaro | Miembro | ✅ |
-| Canvas cadena | Miembro | ✅ |
-| Canvas invertir | Miembro | ✅ |
-| Canvas RIP | Miembro | ✅ |
-| Comandos de diversión/juegos | Miembro |❌ |
-| Deepseek V4 Flash | Miembro | ✅ |
-| Espejar imagen | Miembro | ❌ |
-| Descarga de Facebook | Miembro | ✅ |
-| Fake chat | Miembro | ❌ |
-| Sticker animado para GIF | Miembro | ✅ |
-| Sticker de texto animado | Miembro | ✅ |
-| Generación de imágenes con IA | Miembro | ✅ |
-| Generar link | Miembro | ❌ |
-| Google Gemini | Miembro | ✅ |
-| Búsqueda Google | Miembro | ✅ |
-| GPT-5 Mini | Miembro | ✅ |
-| Imagen con contraste | Miembro | ❌ |
-| Imagen IA Flux | Miembro | ✅ |
-| Imagen pixelada | Miembro | ❌ |
-| Imagen blanco/negro | Miembro | ❌ |
-| Información de un comando | Miembro | ❌ |
-| Descarga Instagram | Miembro | ✅ |
-| Ping | Miembro | ❌ |
-| Descarga de Pinterest (carrusel) | Miembro | ✅ |
-| Reproducir audio | Miembro | ✅ |
-| Reproducir vídeo | Miembro | ✅ |
-| Renombrar sticker | Miembro | ❌ |
-| Eliminar fondo de imagen | Miembro | ✅ |
-| Sticker | Miembro | ❌ |
-| Sticker IA  | Miembro | ✅ |
-| Sticker a imagen | Miembro | ❌ |
-| Descarga de audio de TikTok | Miembro | ✅ |
-| Descarga vídeo TikTok | Miembro | ✅ |
-| Transcribir audio | Miembro | ✅ |
-| TTS (texto a audio) | Miembro | ✅ |
-| Descarga de X/Twitter | Miembro | ✅ |
-| YT MP3 | Miembro | ✅ |
-| YT MP4 | Miembro | ✅ |
-| Búsqueda YT | Miembro | ✅ |
+Esta tabla refleja los comandos que existen actualmente en `src/commands/`. Los comandos de `samples/` se documentan por separado. Sustituye `/` por el prefijo configurado en tu grupo.
 
+La columna **API necesaria** indica si el comando requiere configurar Spider X o Linker. Las funciones marcadas como **Ninguna** pueden usar servicios locales o públicos, pero no necesitan un token adicional del proyecto.
+
+### Comandos del dueño
+
+| Función | Comando principal | API necesaria |
+| --- | --- | --- |
+| Ejecutar comandos de terminal | `/exec` | Ninguna |
+| Obtener el ID completo del grupo | `/get-group-id` | Ninguna |
+| Desactivar el bot en el grupo | `/off` | Ninguna |
+| Activar el bot en el grupo | `/on` | Ninguna |
+| Cambiar la imagen del menú | `/set-menu-image` | Ninguna |
+| Cambiar el prefijo del grupo | `/set-prefix` | Ninguna |
+| Configurar el token de Spider X | `/set-spider-api-token` | Ninguna |
+| Ejecutar una comprobación interna | `/testing` | Ninguna |
+
+### Comandos de administración
+
+| Función | Comando principal | API necesaria |
+| --- | --- | --- |
+| Agregar una respuesta automática | `/add-auto-responder` | Ninguna |
+| Marcar ausencia y registrar el motivo | `/afk` | Ninguna |
+| Bloquear mensajes de audio | `/anti-audio` | Ninguna |
+| Retirar a quien inicia llamadas | `/anti-call` | Ninguna |
+| Bloquear documentos | `/anti-document` | Ninguna |
+| Bloquear eventos | `/anti-event` | Ninguna |
+| Bloquear imágenes | `/anti-image` | Ninguna |
+| Bloquear enlaces | `/anti-link` | Ninguna |
+| Bloquear stickers Lottie | `/anti-lottie-sticker` | Ninguna |
+| Bloquear pagos, cerrar el grupo y retirar al autor | `/anti-payment` | Ninguna |
+| Bloquear productos | `/anti-product` | Ninguna |
+| Retirar a quien menciona estados en el grupo | `/anti-status-grupo` | Ninguna |
+| Bloquear stickers | `/anti-sticker` | Ninguna |
+| Bloquear vídeos | `/anti-video` | Ninguna |
+| Activar o desactivar el auto-responder | `/auto-responder` | Ninguna |
+| Activar o desactivar los stickers automáticos | `/auto-sticker` | Ninguna |
+| Consultar el saldo de Spider X | `/balance` | Spider X |
+| Retirar a un miembro | `/ban` | Ninguna |
+| Bloquear un número en el WhatsApp del bot | `/block-wpp` | Ninguna |
+| Limpiar el historial del chat | `/clear` | Ninguna |
+| Cerrar el grupo | `/close` | Ninguna |
+| Eliminar un mensaje | `/delete` | Ninguna |
+| Eliminar una respuesta automática | `/delete-auto-responder` | Ninguna |
+| Quitar el cargo de administrador | `/demote` | Ninguna |
+| Activar o desactivar el mensaje de salida | `/exit` | Ninguna |
+| Mencionar a todos sin mostrar la lista | `/hide-tag` | Ninguna |
+| Obtener el enlace del grupo | `/link-group` | Ninguna |
+| Listar respuestas automáticas | `/list-auto-responder` | Ninguna |
+| Silenciar a un miembro | `/mute` | Ninguna |
+| Restringir los comandos a administradores | `/only-admin` | Ninguna |
+| Abrir el grupo | `/open` | Ninguna |
+| Promover a un miembro a administrador | `/promote` | Ninguna |
+| Revelar contenido de visualización única | `/reveal` | Ninguna |
+| Programar el envío de un mensaje | `/schedule-message` | Ninguna |
+| Cambiar el nombre del grupo | `/set-name` | Ninguna |
+| Cambiar el proxy usado por Spider X | `/set-proxy` | Spider X |
+| Quitar el silencio de un miembro | `/unmute` | Ninguna |
+| Activar o desactivar la bienvenida | `/welcome` | Ninguna |
+| Advertir a un miembro | `/warn` | Ninguna |
+| Quitar o listar advertencias | `/unwarn` | Ninguna |
+| Reactivar una advertencia | `/warn-reactivate` | Ninguna |
+
+### Comandos para miembros
+
+| Función | Comando principal | API necesaria |
+| --- | --- | --- |
+| Crear un sticker de texto animado | `/attp` | Spider X |
+| Crear una imagen de texto estilo Brat | `/brat` | Spider X |
+| Crear un sticker animado estilo Brat | `/bratvid` | Spider X |
+| Consultar un código postal brasileño | `/cep` | Ninguna |
+| Crear una cita falsa | `/fake-chat` | Ninguna |
+| Subir una imagen y generar un enlace | `/generate-link` | Linker |
+| Mostrar información de un comando | `/info` | Ninguna |
+| Mostrar el menú | `/menu` | Ninguna |
+| Mostrar el LID del usuario | `/my-lid` | Ninguna |
+| Comprobar estado, latencia y tiempo activo | `/ping` | Ninguna |
+| Mostrar el perfil de un usuario | `/profile` | Ninguna |
+| Eliminar el fondo de una imagen | `/removebg` | Spider X |
+| Cambiar los metadatos de un sticker | `/rename` | Ninguna |
+| Crear un sticker desde una imagen, GIF o vídeo | `/sticker` | Ninguna |
+| Obtener soporte inteligente del bot | `/suporte` | Spider X |
+| Convertir un sticker animado en GIF | `/to-gif` | Spider X |
+| Convertir un sticker estático en imagen | `/to-image` | Ninguna |
+| Convertir un vídeo en audio MP3 | `/to-mp3` | Ninguna |
+| Transcribir audio con Whisper | `/transcrever` | Spider X |
+| Crear un sticker de texto estático | `/ttp` | Spider X |
+| Buscar vídeos en YouTube | `/yt-search` | Spider X |
+| Generar voz desde texto | `/tts` | Spider X |
+| Crear un sticker con inteligencia artificial | `/ia-sticker` | Spider X |
+| Consultar GPT-5 Mini | `/gpt-5-mini` | Spider X |
+| Consultar Google Gemini | `/gemini` | Spider X |
+| Generar una imagen con Flux | `/flux` | Spider X |
+| Consultar DeepSeek V4 Flash | `/deepseek` | Spider X |
+| Descargar vídeo de YouTube | `/yt-mp4` | Spider X |
+| Descargar audio de YouTube | `/yt-mp3` | Spider X |
+| Descargar vídeos o imágenes de X/Twitter | `/x-twitter` | Spider X |
+| Descargar vídeo de TikTok | `/tik-tok` | Spider X |
+| Descargar audio de TikTok | `/tik-tok-audio` | Spider X |
+| Buscar y descargar un vídeo | `/play-video` | Spider X |
+| Buscar y descargar una canción | `/play-audio` | Spider X |
+| Descargar imágenes de Pinterest | `/pinterest` | Spider X |
+| Descargar vídeos o reels de Instagram | `/instagram` | Spider X |
+| Descargar vídeos de Facebook | `/facebook` | Spider X |
+| Abrazar a un usuario | `/abrazar` | Ninguna |
+| Besar a un usuario | `/besar` | Ninguna |
+| Dar una bofetada a un usuario | `/bofetada` | Ninguna |
+| Invitar a un usuario a cenar | `/cenar` | Ninguna |
+| Lanzar un dado | `/dado` | Ninguna |
+| Golpear a un usuario | `/golpear` | Ninguna |
+| Luchar contra un usuario | `/luchar` | Ninguna |
+| Matar a un usuario en modo de broma | `/matar` | Ninguna |
+| Desenfocar una imagen | `/blur` | Ninguna |
+| Crear un montaje de Bolsonaro | `/bolsonaro` | Spider X + Linker |
+| Ajustar el contraste de una imagen | `/contraste` | Ninguna |
+| Convertir una imagen a blanco y negro | `/gray` | Ninguna |
+| Invertir los colores de una imagen | `/invert` | Spider X + Linker |
+| Crear un montaje de cárcel | `/jail` | Spider X + Linker |
+| Reflejar una imagen | `/mirror` | Ninguna |
+| Convertir una imagen en pixel art | `/pixel` | Ninguna |
+| Crear un montaje de lápida | `/rip` | Spider X + Linker |
 ## Funcionalidades de envío (Ejemplos)
 
 ### 🔘 Ejemplos de botones

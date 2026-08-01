@@ -8,8 +8,8 @@ import { errorLog } from "../../utils/logger.js";
 export default {
   name: "toimage",
   description: "Transformo figurinhas estáticas em imagem",
-  commands: ["toimage", "toimg"],
-  usage: `${PREFIX}toimage (marca la figurita) o .* (responde a la figurita)`,
+  commands: ["to-image", "toimage", "toimg"],
+  usage: `${PREFIX}to-image (marca el sticker) o .* (responde al sticker)`,
   /**
    * @param {CommandHandleProps} props
    */
