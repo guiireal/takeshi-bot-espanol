@@ -856,11 +856,15 @@ Todos los archivos de ejemplo son almacenados en `assets/samples/`:
   - 📁 auth ➔ _archivos de la conexión del bot_
   - 📁 images ➔ _archivos de imagen_
     - 📁 funny ➔ _gifs de comandos de diversión_
-  - 📁 samples ➔ _archivos de ejemplo para pruebas_
+  - 📁 samples ➔ _archivos multimedia usados por los comandos de ejemplo_
+  - 📁 stickers ➔ _archivos auxiliares para stickers_
   - 📁 temp ➔ _archivos temporales_
+  - 📁 videos ➔ _videos usados en la documentación_
 - 📁 database ➔ _archivos de datos_
 - 📁 diagrams ➔ _diagramas de flujos de datos y ejecución del Bot_
+- 📁 eggs ➔ _archivos de configuración para paneles de hosting_
 - 📁 node_modules ➔ _módulos del Node.js_
+- 📁 scripts ➔ _scripts auxiliares, incluido el parche de botones, listas y carruseles de Baileys_
 - 📁 src ➔ _código fuente del bot (generalmente trabajarás más aquí)_
   - 📁 @types ➔ _carpeta donde están las definiciones de tipos_
   - 📁 commands ➔ _carpeta donde están los comandos_
@@ -868,7 +872,7 @@ Todos los archivos de ejemplo son almacenados en `assets/samples/`:
     - 📁 member ➔ _carpeta donde están los comandos generales (todos podrán utilizar)_
       - 📁 samples ➔ _carpeta con los comandos de ejemplo_
     - 📁 owner ➔ _carpeta donde están los comandos de dueño (grupo y bot)_
-    - 📝🤖-como-criar-comandos.js ➔ _archivo de ejemplo de cómo crear un comando_
+    - 📝🤖-cómo-crear-comandos.js ➔ _archivo de ejemplo de cómo crear un comando_
   - 📁 errors ➔ _clases de errores usadas en los comandos_
   - 📁 middlewares ➔ _interceptadores de solicitudes_
   - 📁 services ➔ _servicios diversos_
@@ -881,7 +885,7 @@ Todos los archivos de ejemplo son almacenados en `assets/samples/`:
   - 📝 messages.js ➔ _archivos de mensajes de bienvenidas y salida_
   - 📁 test/ ➔ _suite de pruebas automatizadas_
 - 📝 .gitignore ➔ _archivo para no subir ciertas carpetas en GitHub_
-- 📝 ⚡-cases-estao-aqui.js ➔ _easter egg_
+- 📝 ⚡-cases-estan-aqui.js ➔ _easter egg_
 - 📝 CONTRIBUTING.md ➔ _guía de contribución_
 - 📝 LICENSE ➔ _archivo de licencia_
 - 📝 package-lock.json ➔ _archivo de cache de las dependencias del bot_
