@@ -27,7 +27,4 @@ jobs:
         run: npm ci
 
       - name: Run tests
-        run: npm run test:all
-
-      - name: Run custom tests
         run: npm run test

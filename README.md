@@ -878,7 +878,7 @@ Todos los archivos de ejemplo son almacenados en `assets/samples/`:
   - 📝 loader.js ➔ _script de carga de funciones_
   - 📝 menu.js ➔ _menu del bot_
   - 📝 messages.js ➔ _archivos de mensajes de bienvenidas y salida_
-  - 📝 test.js ➔ _script de pruebas_
+  - 📁 test/ ➔ _suite de pruebas automatizadas_
 - 📝 .gitignore ➔ _archivo para no subir ciertas carpetas en GitHub_
 - 📝 ⚡-cases-estao-aqui.js ➔ _easter egg_
 - 📝 CONTRIBUTING.md ➔ _guía de contribución_
@@ -895,7 +895,7 @@ Ejecuta `bash update.sh`
 
 ## Pruebas
 
-Ejecuta `npm run test:all`
+Ejecuta `npm test`
 
 ## Errores comunes
 
