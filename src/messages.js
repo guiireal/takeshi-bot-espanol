@@ -9,3 +9,7 @@
  */
 export const welcomeMessage = "¡Bienvenido/a a nuestro grupo, @member!";
 export const exitMessage = "Vaya, @member salió del grupo... ¡Te extrañaremos!";
+
+export function clearChat() {
+  return `🗑️${"\n".repeat(1891)}🗑️`;
+}

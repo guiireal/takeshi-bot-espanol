@@ -74,19 +74,24 @@ export declare const makeCommunitiesSocket: (config: SocketConfig) => {
     updateBussinesProfile: (args: import("../Types/Bussines.js").UpdateBussinesProfileProps) => Promise<any>;
     updateCoverPhoto: (photo: import("../Types/index.js").WAMediaUpload) => Promise<number>;
     removeCoverPhoto: (id: string) => Promise<any>;
-    sendMessageAck: ({ tag, attrs, content }: BinaryNode, errorCode?: number) => Promise<void>;
+    sendMessageAck: (node: BinaryNode, errorCode?: number) => Promise<void>;
     sendRetryRequest: (node: BinaryNode, forceIncludeKeys?: boolean) => Promise<void>;
     rejectCall: (callId: string, callFrom: string) => Promise<void>;
-    fetchMessageHistory: (count: number, oldestMsgKey: WAMessageKey, oldestMsgTimestamp: number | Long) => Promise<string>;
-    requestPlaceholderResend: (messageKey: WAMessageKey) => Promise<string | undefined>;
+    fetchMessageHistory: (count: number, oldestMsgKey: WAMessageKey, oldestMsgTimestamp: number | import("long").default) => Promise<string>;
+    requestPlaceholderResend: (messageKey: WAMessageKey, msgData?: Partial<import("../Types/index.js").WAMessage>) => Promise<string | undefined>;
     messageRetryManager: import("../Utils/index.js").MessageRetryManager | null;
-    getPrivacyTokens: (jids: string[]) => Promise<any>;
+    userDevicesCache: import("../Types/index.js").PossiblyExtendedCacheStore | import("@cacheable/node-cache").NodeCache<import("../WABinary/index.js").JidWithDevice[]>;
+    devicesMutex: {
+        mutex<T>(code: () => Promise<T> | T): Promise<T>;
+    };
+    issuePrivacyTokens: (jids: string[], timestamp?: number) => Promise<any>;
     assertSessions: (jids: string[], force?: boolean) => Promise<boolean>;
     relayMessage: (jid: string, message: proto.IMessage, { messageId: msgId, participant, additionalAttributes, additionalNodes, useUserDevicesCache, useCachedGroupMetadata, statusJidList }: import("../Types/index.js").MessageRelayOptions) => Promise<string>;
     sendReceipt: (jid: string, participant: string | undefined, messageIds: string[], type: import("../Types/index.js").MessageReceiptType) => Promise<void>;
     sendReceipts: (keys: WAMessageKey[], type: import("../Types/index.js").MessageReceiptType) => Promise<void>;
     readMessages: (keys: WAMessageKey[]) => Promise<void>;
     refreshMediaConn: (forceGet?: boolean) => Promise<import("../Types/index.js").MediaConnInfo>;
+    getMediaHost: () => string;
     waUploadToServer: import("../Types/index.js").WAMediaUploadFunction;
     fetchPrivacySettings: (force?: boolean) => Promise<{
         [_: string]: string;
@@ -99,6 +104,7 @@ export declare const makeCommunitiesSocket: (config: SocketConfig) => {
     getUSyncDevices: (jids: string[], useCache: boolean, ignoreZeroDevices: boolean) => Promise<(import("../WABinary/index.js").JidWithDevice & {
         jid: string;
     })[]>;
+    updateMemberLabel: (jid: string, memberLabel: string) => Promise<string>;
     updateMediaMessage: (message: import("../Types/index.js").WAMessage) => Promise<import("../Types/index.js").WAMessage>;
     sendMessage: (jid: string, content: import("../Types/index.js").AnyMessageContent, options?: import("../Types/index.js").MiscMessageGenerationOptions) => Promise<import("../Types/index.js").WAMessage | undefined>;
     newsletterCreate: (name: string, description?: string) => Promise<import("../Types/index.js").NewsletterMetadata>;
@@ -154,17 +160,31 @@ export declare const makeCommunitiesSocket: (config: SocketConfig) => {
     groupFetchAllParticipating: () => Promise<{
         [_: string]: GroupMetadata;
     }>;
+    serverProps: {
+        privacyTokenOn1to1: boolean;
+        profilePicPrivacyToken: boolean;
+        lidTrustedTokenIssueToLid: boolean;
+    };
     createCallLink: (type: "audio" | "video", event?: {
         startTime: number;
     }, timeoutMs?: number) => Promise<string | undefined>;
     getBotListV2: () => Promise<import("../Types/index.js").BotListInfo[]>;
-    processingMutex: {
+    messageMutex: {
+        mutex<T>(code: () => Promise<T> | T): Promise<T>;
+    };
+    receiptMutex: {
+        mutex<T>(code: () => Promise<T> | T): Promise<T>;
+    };
+    appStatePatchMutex: {
+        mutex<T>(code: () => Promise<T> | T): Promise<T>;
+    };
+    notificationMutex: {
         mutex<T>(code: () => Promise<T> | T): Promise<T>;
     };
     upsertMessage: (msg: import("../Types/index.js").WAMessage, type: import("../Types/index.js").MessageUpsertType) => Promise<void>;
     appPatch: (patchCreate: import("../Types/index.js").WAPatchCreate) => Promise<void>;
     sendPresenceUpdate: (type: import("../Types/index.js").WAPresence, toJid?: string) => Promise<void>;
-    presenceSubscribe: (toJid: string, tcToken?: Buffer) => Promise<void>;
+    presenceSubscribe: (toJid: string) => Promise<void>;
     profilePictureUrl: (jid: string, type?: "preview" | "image", timeoutMs?: number) => Promise<string | undefined>;
     fetchBlocklist: () => Promise<(string | undefined)[]>;
     fetchStatus: (...jids: string[]) => Promise<import("../index.js").USyncQueryResultList[] | undefined>;
@@ -193,6 +213,7 @@ export declare const makeCommunitiesSocket: (config: SocketConfig) => {
     cleanDirtyBits: (type: "account_sync" | "groups", fromTimestamp?: number | string) => Promise<void>;
     addOrEditContact: (jid: string, contact: proto.SyncActionValue.IContactAction) => Promise<void>;
     removeContact: (jid: string) => Promise<void>;
+    placeholderResendCache: import("../Types/index.js").CacheStore;
     addLabel: (jid: string, labels: import("../Types/Label.js").LabelActionBody) => Promise<void>;
     addChatLabel: (jid: string, labelId: string) => Promise<void>;
     removeChatLabel: (jid: string, labelId: string) => Promise<void>;
@@ -212,6 +233,7 @@ export declare const makeCommunitiesSocket: (config: SocketConfig) => {
         createBufferedFunction<A extends any[], T>(work: (...args: A) => Promise<T>): (...args: A) => Promise<T>;
         flush(): boolean;
         isBuffering(): boolean;
+        destroy(): void;
     };
     authState: {
         creds: import("../Types/index.js").AuthenticationCreds;
@@ -226,13 +248,16 @@ export declare const makeCommunitiesSocket: (config: SocketConfig) => {
     sendRawMessage: (data: Uint8Array | Buffer) => Promise<void>;
     sendNode: (frame: BinaryNode) => Promise<void>;
     logout: (msg?: string) => Promise<void>;
-    end: (error: Error | undefined) => void;
+    end: (error: Error | undefined) => Promise<void>;
+    registerSocketEndHandler: (handler: (error: Error | undefined) => void | Promise<void>) => void;
     onUnexpectedError: (err: Error | import("@hapi/boom").Boom, msg: string) => void;
-    uploadPreKeys: (count?: number, retryCount?: number) => Promise<void>;
+    uploadPreKeys: (count?: number) => Promise<void>;
     uploadPreKeysToServerIfRequired: () => Promise<void>;
     digestKeyBundle: () => Promise<void>;
     rotateSignedPreKey: () => Promise<void>;
     requestPairingCode: (phoneNumber: string, customPairingCode?: string) => Promise<string>;
+    updateServerTimeOffset: ({ attrs }: BinaryNode) => void;
+    sendUnifiedSession: () => Promise<void>;
     wamBuffer: import("../index.js").BinaryInfo;
     waitForConnectionUpdate: (check: (u: Partial<import("../Types/index.js").ConnectionState>) => Promise<boolean | undefined>, timeoutMs?: number) => Promise<void>;
     sendWAMBuffer: (wamBuffer: Buffer) => Promise<any>;
@@ -241,6 +266,8 @@ export declare const makeCommunitiesSocket: (config: SocketConfig) => {
         jid: string;
         exists: boolean;
     }[] | undefined>;
+    fetchAccountReachoutTimelock: () => Promise<import("../Types/index.js").ReachoutTimelockState>;
+    fetchNewChatMessageCap: () => Promise<import("../Types/index.js").NewChatMessageCapInfo>;
 };
 export declare const extractCommunityMetadata: (result: BinaryNode) => GroupMetadata;
 //# sourceMappingURL=communities.d.ts.map

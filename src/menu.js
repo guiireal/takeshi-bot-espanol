@@ -38,11 +38,15 @@ export function menuMessage(groupJid) {
 ╭━━⪩ ADMINS ⪨━━
 ▢
 ▢ • ${prefix}add-auto-responder
+▢ • ${prefix}afk
 ▢ • ${prefix}anti-audio (1/0)
+▢ • ${prefix}anti-call (1/0)
 ▢ • ${prefix}anti-document (1/0)
 ▢ • ${prefix}anti-event (1/0)
 ▢ • ${prefix}anti-image (1/0)
 ▢ • ${prefix}anti-link (1/0)
+▢ • ${prefix}anti-lottie-sticker (1/0)
+▢ • ${prefix}anti-payment (1/0)
 ▢ • ${prefix}anti-product (1/0)
 ▢ • ${prefix}anti-sticker (1/0)
 ▢ • ${prefix}anti-video (1/0)
@@ -69,12 +73,19 @@ export function menuMessage(groupJid) {
 ▢ • ${prefix}set-proxy
 ▢ • ${prefix}unmute
 ▢ • ${prefix}welcome (1/0)
+▢ • ${prefix}anti-status-grupo (1/0)
+▢ • ${prefix}warn
+▢ • ${prefix}unwarn
+▢ • ${prefix}warn-reactivate
 ▢
 ╰━━─「⭐」─━━
 
 ╭━━⪩ PRINCIPAL ⪨━━
 ▢
 ▢ • ${prefix}attp
+▢ • ${prefix}cep
+▢ • ${prefix}brat
+▢ • ${prefix}bratvid
 ▢ • ${prefix}fake-chat
 ▢ • ${prefix}generate-link
 ▢ • ${prefix}my-lid
@@ -88,6 +99,9 @@ export function menuMessage(groupJid) {
 ▢ • ${prefix}to-image
 ▢ • ${prefix}to-mp3
 ▢ • ${prefix}ttp
+▢ • ${prefix}removebg
+▢ • ${prefix}suporte
+▢ • ${prefix}transcrever
 ▢ • ${prefix}yt-search
 ▢
 ╰━━─「🚀」─━━
@@ -95,9 +109,13 @@ export function menuMessage(groupJid) {
 ╭━━⪩ DESCARGAS ⪨━━
 ▢
 ▢ • ${prefix}instagram
+▢ • ${prefix}facebook
+▢ • ${prefix}pinterest
 ▢ • ${prefix}play-audio
 ▢ • ${prefix}play-video
 ▢ • ${prefix}tik-tok
+▢ • ${prefix}tik-tok-audio
+▢ • ${prefix}x-twitter
 ▢ • ${prefix}yt-mp3
 ▢ • ${prefix}yt-mp4
 ▢
@@ -121,7 +139,9 @@ export function menuMessage(groupJid) {
 ▢ • ${prefix}flux
 ▢ • ${prefix}gemini
 ▢ • ${prefix}gpt-5-mini
+▢ • ${prefix}deepseek
 ▢ • ${prefix}ia-sticker
+▢ • ${prefix}tts
 ▢
 ╰━━─「🚀」─━━
 

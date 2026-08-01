@@ -1,3 +1,4 @@
+import { Boom } from '@hapi/boom';
 import { proto } from '../../WAProto/index.js';
 import { WAMessageStubType } from '../Types/index.js';
 import { getContentType, normalizeMessageContent } from '../Utils/messages.js';
@@ -5,6 +6,7 @@ import { areJidsSameUser, isHostedLidUser, isHostedPnUser, isJidBroadcast, isJid
 import { aesDecryptGCM, hmacSign } from './crypto.js';
 import { getKeyAuthor, toNumber } from './generics.js';
 import { downloadAndProcessHistorySyncNotification } from './history.js';
+import { buildMergedTcTokenIndexWrite, resolveTcTokenJid } from './tc-token-utils.js';
 const REAL_MSG_STUB_TYPES = new Set([
     WAMessageStubType.CALL_MISSED_GROUP_VIDEO,
     WAMessageStubType.CALL_MISSED_GROUP_VOICE,
@@ -12,6 +14,53 @@ const REAL_MSG_STUB_TYPES = new Set([
     WAMessageStubType.CALL_MISSED_VOICE
 ]);
 const REAL_MSG_REQ_ME_STUB_TYPES = new Set([WAMessageStubType.GROUP_PARTICIPANT_ADD]);
+async function storeTcTokensFromHistorySync(chats, signalRepository, keyStore, logger) {
+    const getLIDForPN = signalRepository.lidMapping.getLIDForPN.bind(signalRepository.lidMapping);
+    const candidates = [];
+    for (const chat of chats) {
+        const ts = chat.tcTokenTimestamp ? toNumber(chat.tcTokenTimestamp) : 0;
+        if (chat.tcToken?.length && ts > 0) {
+            const jid = jidNormalizedUser(chat.id);
+            const storageJid = await resolveTcTokenJid(jid, getLIDForPN);
+            candidates.push({
+                storageJid,
+                token: Buffer.from(chat.tcToken),
+                ts,
+                senderTs: chat.tcTokenSenderTimestamp ? toNumber(chat.tcTokenSenderTimestamp) : undefined
+            });
+        }
+    }
+    if (!candidates.length) {
+        return;
+    }
+    const jids = candidates.map(c => c.storageJid);
+    const existing = await keyStore.get('tctoken', jids);
+    const entries = {};
+    for (const c of candidates) {
+        const existingEntry = existing[c.storageJid];
+        const existingTs = existingEntry?.timestamp ? Number(existingEntry.timestamp) : 0;
+        if (existingTs > 0 && existingTs >= c.ts) {
+            continue;
+        }
+        entries[c.storageJid] = {
+            ...existingEntry,
+            token: c.token,
+            timestamp: String(c.ts),
+            ...(c.senderTs !== undefined ? { senderTimestamp: c.senderTs } : {})
+        };
+    }
+    if (Object.keys(entries).length) {
+        logger?.debug({ count: Object.keys(entries).length }, 'storing tctokens from history sync');
+        try {
+            // Include updated __index so cross-session pruning picks these JIDs up.
+            const indexWrite = await buildMergedTcTokenIndexWrite(keyStore, Object.keys(entries));
+            await keyStore.set({ tctoken: { ...entries, ...indexWrite } });
+        }
+        catch (err) {
+            logger?.warn({ err }, 'failed to store tctokens from history sync');
+        }
+    }
+}
 /** Cleans a received message to further processing */
 export const cleanMessage = (message, meId, meLid) => {
     // ensure remoteJid and participant doesn't have device or agent in it
@@ -73,7 +122,17 @@ export const shouldIncrementChatUnread = (message) => !message.key.fromMe && !me
  * Typically -- that'll be the remoteJid, but for broadcasts, it'll be the participant
  */
 export const getChatId = ({ remoteJid, participant, fromMe }) => {
+    if (!remoteJid) {
+        throw new Boom('Cannot derive chat id: message key is missing remoteJid', {
+            data: { remoteJid, participant, fromMe }
+        });
+    }
     if (isJidBroadcast(remoteJid) && !isJidStatusBroadcast(remoteJid) && !fromMe) {
+        if (!participant) {
+            throw new Boom('Cannot derive chat id: broadcast message key is missing participant', {
+                data: { remoteJid, fromMe }
+            });
+        }
         return participant;
     }
     return remoteJid;
@@ -146,6 +205,39 @@ const processMessage = async (message, { shouldProcessHistoryMsg, placeholderRes
     }
     const protocolMsg = content?.protocolMessage;
     if (protocolMsg) {
+        // Mirror whatsmeow's `handleProtocolMessage` guard, but applied only to
+        // the protocol message types that originate from our own device — an
+        // attacker could otherwise spoof any of these to manipulate local state.
+        //
+        // Self-only types (drop if `!fromMe`):
+        //   - HISTORY_SYNC_NOTIFICATION                 (our phone driving history sync)
+        //   - APP_STATE_SYNC_KEY_SHARE                  (key share between our devices)
+        //   - LID_MIGRATION_MAPPING_SYNC                (server-initiated via our phone)
+        //   - PEER_DATA_OPERATION_REQUEST_RESPONSE_MESSAGE (response from our phone to our PDO request)
+        //
+        // Cross-user types (must NOT be dropped — legitimately arrive from others):
+        //   - REVOKE
+        //   - MESSAGE_EDIT
+        //   - EPHEMERAL_SETTING
+        //   - GROUP_MEMBER_LABEL_CHANGE
+        //
+        // See https://github.com/tulir/whatsmeow/blob/8d3700152a/message.go#L842-L845
+        // for the reference architecture — whatsmeow's `handleProtocolMessage`
+        // only contains self-only types because edits are unwrapped from
+        // `EditedMessage` BEFORE this dispatch and revokes aren't routed here.
+        const SELF_ONLY_TYPES = new Set([
+            proto.Message.ProtocolMessage.Type.HISTORY_SYNC_NOTIFICATION,
+            proto.Message.ProtocolMessage.Type.APP_STATE_SYNC_KEY_SHARE,
+            proto.Message.ProtocolMessage.Type.LID_MIGRATION_MAPPING_SYNC,
+            proto.Message.ProtocolMessage.Type.PEER_DATA_OPERATION_REQUEST_RESPONSE_MESSAGE
+        ]);
+        if (protocolMsg.type !== null &&
+            protocolMsg.type !== undefined &&
+            SELF_ONLY_TYPES.has(protocolMsg.type) &&
+            !message.key.fromMe) {
+            logger?.warn({ msgId: message.key.id, type: protocolMsg.type, from: message.key.participant || message.key.remoteJid }, 'dropping spoofed self-only protocolMessage from non-self origin');
+            return;
+        }
         switch (protocolMsg.type) {
             case proto.Message.ProtocolMessage.Type.HISTORY_SYNC_NOTIFICATION:
                 const histNotification = protocolMsg.historySyncNotification;
@@ -167,10 +259,18 @@ const processMessage = async (message, { shouldProcessHistoryMsg, placeholderRes
                             ]
                         });
                     }
-                    const data = await downloadAndProcessHistorySyncNotification(histNotification, options);
+                    const data = await downloadAndProcessHistorySyncNotification(histNotification, options, logger);
+                    if (data.lidPnMappings?.length) {
+                        logger?.debug({ count: data.lidPnMappings.length }, 'processing LID-PN mappings from history sync');
+                        await signalRepository.lidMapping
+                            .storeLIDPNMappings(data.lidPnMappings)
+                            .catch(err => logger?.warn({ err }, 'failed to store LID-PN mappings from history sync'));
+                    }
+                    await storeTcTokensFromHistorySync(data.chats, signalRepository, keyStore, logger);
                     ev.emit('messaging-history.set', {
                         ...data,
                         isLatest: histNotification.syncType !== proto.HistorySync.HistorySyncType.ON_DEMAND ? isLatest : undefined,
+                        chunkOrder: histNotification.chunkOrder,
                         peerDataRequestSessionId: histNotification.peerDataRequestSessionId
                     });
                 }
@@ -215,23 +315,48 @@ const processMessage = async (message, { shouldProcessHistoryMsg, placeholderRes
             case proto.Message.ProtocolMessage.Type.PEER_DATA_OPERATION_REQUEST_RESPONSE_MESSAGE:
                 const response = protocolMsg.peerDataOperationRequestResponseMessage;
                 if (response) {
-                    await placeholderResendCache?.del(response.stanzaId);
                     // TODO: IMPLEMENT HISTORY SYNC ETC (sticker uploads etc.).
-                    const { peerDataOperationResult } = response;
+                    const peerDataOperationResult = response.peerDataOperationResult || [];
                     for (const result of peerDataOperationResult) {
-                        const { placeholderMessageResendResponse: retryResponse } = result;
+                        const retryResponse = result?.placeholderMessageResendResponse;
                         //eslint-disable-next-line max-depth
-                        if (retryResponse) {
+                        if (!retryResponse?.webMessageInfoBytes) {
+                            continue;
+                        }
+                        //eslint-disable-next-line max-depth
+                        try {
                             const webMessageInfo = proto.WebMessageInfo.decode(retryResponse.webMessageInfoBytes);
-                            // wait till another upsert event is available, don't want it to be part of the PDO response message
-                            // TODO: parse through proper message handling utilities (to add relevant key fields)
-                            setTimeout(() => {
-                                ev.emit('messages.upsert', {
-                                    messages: [webMessageInfo],
-                                    type: 'notify',
-                                    requestId: response.stanzaId
-                                });
-                            }, 500);
+                            const msgId = webMessageInfo.key?.id;
+                            // Retrieve cached original message data (preserves LID details,
+                            // timestamps, etc. that the phone may omit in its PDO response)
+                            const cachedData = msgId ? await placeholderResendCache?.get(msgId) : undefined;
+                            //eslint-disable-next-line max-depth
+                            if (msgId) {
+                                await placeholderResendCache?.del(msgId);
+                            }
+                            let finalMsg;
+                            //eslint-disable-next-line max-depth
+                            if (cachedData && typeof cachedData === 'object') {
+                                // Apply decoded message content onto cached metadata (preserves LID etc.)
+                                cachedData.message = webMessageInfo.message;
+                                //eslint-disable-next-line max-depth
+                                if (webMessageInfo.messageTimestamp) {
+                                    cachedData.messageTimestamp = webMessageInfo.messageTimestamp;
+                                }
+                                finalMsg = cachedData;
+                            }
+                            else {
+                                finalMsg = webMessageInfo;
+                            }
+                            logger?.debug({ msgId, requestId: response.stanzaId }, 'received placeholder resend');
+                            ev.emit('messages.upsert', {
+                                messages: [finalMsg],
+                                type: 'notify',
+                                requestId: response.stanzaId
+                            });
+                        }
+                        catch (err) {
+                            logger?.warn({ err, stanzaId: response.stanzaId }, 'failed to decode placeholder resend response');
                         }
                     }
                 }
@@ -253,6 +378,18 @@ const processMessage = async (message, { shouldProcessHistoryMsg, placeholderRes
                         }
                     }
                 ]);
+                break;
+            case proto.Message.ProtocolMessage.Type.GROUP_MEMBER_LABEL_CHANGE:
+                const labelAssociationMsg = protocolMsg.memberLabel;
+                if (labelAssociationMsg?.label) {
+                    ev.emit('group.member-tag.update', {
+                        groupId: chat.id,
+                        label: labelAssociationMsg.label,
+                        participant: message.key.participant,
+                        participantAlt: message.key.participantAlt,
+                        messageTimestamp: Number(message.messageTimestamp)
+                    });
+                }
                 break;
             case proto.Message.ProtocolMessage.Type.LID_MIGRATION_MAPPING_SYNC:
                 const encodedPayload = protocolMsg.lidMigrationMappingSyncMessage?.encodedMappingPayload;
@@ -340,12 +477,19 @@ const processMessage = async (message, { shouldProcessHistoryMsg, placeholderRes
             id: jid,
             author: message.key.participant,
             authorPn: message.key.participantAlt,
+            authorUsername: message.key.participantUsername,
             participants,
             action
         });
         const emitGroupUpdate = (update) => {
             ev.emit('groups.update', [
-                { id: jid, ...update, author: message.key.participant ?? undefined, authorPn: message.key.participantAlt }
+                {
+                    id: jid,
+                    ...update,
+                    author: message.key.participant ?? undefined,
+                    authorPn: message.key.participantAlt,
+                    authorUsername: message.key.participantUsername
+                }
             ]);
         };
         const emitGroupRequestJoin = (participant, action, method) => {
@@ -353,6 +497,7 @@ const processMessage = async (message, { shouldProcessHistoryMsg, placeholderRes
                 id: jid,
                 author: message.key.participant,
                 authorPn: message.key.participantAlt,
+                authorUsername: message.key.participantUsername,
                 participant: participant.lid,
                 participantPn: participant.pn,
                 action,

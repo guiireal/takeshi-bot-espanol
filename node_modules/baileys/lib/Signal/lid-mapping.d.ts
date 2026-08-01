@@ -5,19 +5,19 @@ export declare class LIDMappingStore {
     private readonly keys;
     private readonly logger;
     private pnToLIDFunc?;
+    private readonly inflightLIDLookups;
+    private readonly inflightPNLookups;
     constructor(keys: SignalKeyStoreWithTransaction, logger: ILogger, pnToLIDFunc?: (jids: string[]) => Promise<LIDMapping[] | undefined>);
-    /**
-     * Store LID-PN mapping - USER LEVEL
-     */
     storeLIDPNMappings(pairs: LIDMapping[]): Promise<void>;
-    /**
-     * Get LID for PN - Returns device-specific LID based on user mapping
-     */
     getLIDForPN(pn: string): Promise<string | null>;
     getLIDsForPNs(pns: string[]): Promise<LIDMapping[] | null>;
-    /**
-     * Get PN for LID - USER LEVEL with device construction
-     */
+    private _getLIDsForPNsImpl;
     getPNForLID(lid: string): Promise<string | null>;
+    getPNsForLIDs(lids: string[]): Promise<LIDMapping[] | null>;
+    private _getPNsForLIDsImpl;
+    /**
+     * Close the cache and release resources
+     */
+    close(): void;
 }
 //# sourceMappingURL=lid-mapping.d.ts.map

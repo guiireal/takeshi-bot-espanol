@@ -1,0 +1,50 @@
+import { PREFIX } from "../../../config.js";
+import { InvalidParameterError, WarningError } from "../../../errors/index.js";
+import { facebook } from "../../../services/spider-x-api.js";
+import { errorLog } from "../../../utils/logger.js";
+
+export default {
+  name: "facebook",
+  description: "Descargo de videos do Facebook",
+  commands: ["facebook", "face", "fb"],
+  usage: `${PREFIX}facebook https://www.facebook.com/reel/123456789012345`,
+  /**
+   * @param {CommandHandleProps} props
+   */
+  handle: async ({
+    sendVideoFromURL,
+    fullArgs,
+    sendWaitReact,
+    sendSuccessReact,
+    sendErrorReply,
+  }) => {
+    if (!fullArgs.length) {
+      throw new InvalidParameterError(
+        "Debes enviar uma URL do Facebook!",
+      );
+    }
+
+    await sendWaitReact();
+
+    if (!fullArgs.includes("facebook.com") && !fullArgs.includes("fb.watch")) {
+      throw new WarningError("El enlace no es do Facebook!");
+    }
+
+    try {
+      const data = await facebook(fullArgs);
+
+      if (!data || !data.url) {
+        await sendErrorReply("¡No se encontraron resultados!");
+        return;
+      }
+
+      await sendSuccessReact();
+
+      await sendVideoFromURL(data.url);
+    } catch (error) {
+      errorLog(JSON.stringify(error, null, 2));
+      await sendErrorReply(error.message);
+    }
+  },
+};
+

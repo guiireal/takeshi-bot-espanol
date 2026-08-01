@@ -35,11 +35,15 @@ export class WebSocketClient extends AbstractSocketClient {
             this.socket?.on(event, (...args) => this.emit(event, ...args));
         }
     }
-    close() {
+    async close() {
         if (!this.socket) {
             return;
         }
+        const closePromise = new Promise(resolve => {
+            this.socket?.once('close', resolve);
+        });
         this.socket.close();
+        await closePromise;
         this.socket = null;
     }
     send(str, cb) {

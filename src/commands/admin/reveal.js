@@ -1,7 +1,7 @@
-import ffmpeg from "fluent-ffmpeg";
+import { exec } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
-import { DEFAULT_PREFIX, TEMP_DIR } from "../../config.js";
+import { PREFIX, TEMP_DIR } from "../../config.js";
 import { InvalidParameterError } from "../../errors/index.js";
 import { getRandomName } from "../../utils/index.js";
 
@@ -9,7 +9,7 @@ export default {
   name: "reveal",
   description: "Revela una imagen o video con vista única",
   commands: ["reveal", "rv"],
-  usage: `${DEFAULT_PREFIX}reveal (etiqueta la imagen/video) o ${DEFAULT_PREFIX}revelar (responde a la imagen/video).`,
+  usage: `${PREFIX}reveal (menciona una imagen/video) o ${PREFIX}revelar (responde a la imagen/video).`,
   /**
    * @param {CommandHandleProps} props
    * @returns {Promise<void>}
@@ -49,35 +49,31 @@ export default {
         inputPath = await downloadImage(webMessage, "input");
 
         await new Promise((resolve, reject) => {
-          ffmpeg(inputPath)
-            .outputOptions("-q:v 2")
-            .on("end", async () => {
-              await sendImageFromFile(outputPath, mediaCaption);
-              await sendSuccessReact();
-              resolve();
-            })
-            .on("error", (err) => {
-              console.error("Error FFmpeg:", err);
-              reject(err);
-            })
-            .save(outputPath);
+          exec(`ffmpeg -y -i "${inputPath}" -q:v 2 "${outputPath}"`, async (error) => {
+            if (error) {
+              console.error("Error FFmpeg:", error);
+              reject(error);
+              return;
+            }
+            await sendImageFromFile(outputPath, mediaCaption);
+            await sendSuccessReact();
+            resolve();
+          });
         });
       } else if (isVideo) {
         inputPath = await downloadVideo(webMessage, "input");
 
         await new Promise((resolve, reject) => {
-          ffmpeg(inputPath)
-            .outputOptions("-c copy")
-            .on("end", async () => {
-              await sendVideoFromFile(outputPath, mediaCaption);
-              await sendSuccessReact();
-              resolve();
-            })
-            .on("error", (err) => {
-              console.error("Error FFmpeg:", err);
-              reject(err);
-            })
-            .save(outputPath);
+          exec(`ffmpeg -y -i "${inputPath}" -c copy "${outputPath}"`, async (error) => {
+            if (error) {
+              console.error("Error FFmpeg:", error);
+              reject(error);
+              return;
+            }
+            await sendVideoFromFile(outputPath, mediaCaption);
+            await sendSuccessReact();
+            resolve();
+          });
         });
       }
     } catch (error) {

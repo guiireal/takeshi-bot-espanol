@@ -6,7 +6,37 @@ type FetchAppStateSyncKey = (keyId: string) => Promise<proto.Message.IAppStateSy
 export type ChatMutationMap = {
     [index: string]: ChatMutation;
 };
+type Mac = {
+    indexMac: Uint8Array;
+    valueMac: Uint8Array;
+    operation: proto.SyncdMutation.SyncdOperation;
+};
+export declare const makeLtHashGenerator: ({ indexValueMap, hash }: Pick<LTHashState, "hash" | "indexValueMap">) => {
+    mix: ({ indexMac, valueMac, operation }: Mac) => void;
+    finish: () => {
+        hash: Buffer<ArrayBuffer>;
+        indexValueMap: {
+            [indexMacBase64: string]: {
+                valueMac: Uint8Array | Buffer;
+            };
+        };
+    };
+};
 export declare const newLTHashState: () => LTHashState;
+export declare const ensureLTHashStateVersion: (state: LTHashState) => LTHashState;
+export declare const MAX_SYNC_ATTEMPTS = 2;
+/**
+ * Check if an error is a missing app state sync key.
+ * WA Web treats these as "Blocked" (waits for key arrival), not fatal.
+ * In Baileys we retry with a snapshot which may use a different key.
+ */
+export declare const isMissingKeyError: (error: any) => boolean;
+/**
+ * Determines if an app state sync error is unrecoverable.
+ * TypeError indicates a WASM crash; otherwise we give up after MAX_SYNC_ATTEMPTS.
+ * Missing keys are NOT checked here — they are handled separately as "Blocked".
+ */
+export declare const isAppStateSyncIrrecoverable: (error: any, attempts: number) => boolean;
 export declare const encodeSyncdPatch: ({ type, index, syncAction, apiVersion, operation }: WAPatchCreate, myAppStateKeyId: string, state: LTHashState, getAppStateSyncKey: FetchAppStateSyncKey) => Promise<{
     patch: proto.ISyncdPatch;
     state: LTHashState;
@@ -56,7 +86,7 @@ export declare const extractSyncdPatches: (result: BinaryNode, options: RequestI
 }>;
 export declare const downloadExternalBlob: (blob: proto.IExternalBlobReference, options: RequestInit) => Promise<Buffer<ArrayBuffer>>;
 export declare const downloadExternalPatch: (blob: proto.IExternalBlobReference, options: RequestInit) => Promise<proto.SyncdMutations>;
-export declare const decodeSyncdSnapshot: (name: WAPatchName, snapshot: proto.ISyncdSnapshot, getAppStateSyncKey: FetchAppStateSyncKey, minimumVersionNumber: number | undefined, validateMacs?: boolean) => Promise<{
+export declare const decodeSyncdSnapshot: (name: WAPatchName, snapshot: proto.ISyncdSnapshot, getAppStateSyncKey: FetchAppStateSyncKey, minimumVersionNumber: number | undefined, validateMacs?: boolean, logger?: ILogger) => Promise<{
     state: LTHashState;
     mutationMap: ChatMutationMap;
 }>;

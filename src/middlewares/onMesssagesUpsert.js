@@ -18,6 +18,9 @@ import { loadCommonFunctions } from "../utils/loadCommonFunctions.js";
 import { errorLog, infoLog } from "../utils/logger.js";
 import { customMiddleware } from "./customMiddleware.js";
 import { messageHandler } from "./messageHandler.js";
+import { recordMessageEnvelope } from "../utils/messageEnvelopeRegistry.js";
+import { hasPaymentMessage } from "../utils/paymentMessage.js";
+import { handleAfkReferences } from "./afkHandler.js";
 import { onGroupParticipantsUpdate } from "./onGroupParticipantsUpdate.js";
 
 export async function onMessagesUpsert({ socket, messages, startProcess }) {
@@ -31,13 +34,17 @@ export async function onMessagesUpsert({ socket, messages, startProcess }) {
         `\n\n⪨========== [ MENSAJE RECIBIDO ] ==========⪩ \n\n${JSON.stringify(
           messages,
           null,
-          2
-        )}`
+          2,
+        )}`,
       );
     }
 
     try {
       const timestamp = webMessage.messageTimestamp;
+
+      // Registra el sobre (id -> autor/estado) de TODO mensaje del grupo,
+      // para corroborar pagos y evitar falsificaciones.
+      recordMessageEnvelope(webMessage, hasPaymentMessage(webMessage));
 
       if (webMessage?.message) {
         messageHandler(socket, webMessage);
@@ -76,7 +83,7 @@ export async function onMessagesUpsert({ socket, messages, startProcess }) {
       if (
         checkIfMemberIsMuted(
           webMessage?.key?.remoteJid,
-          webMessage?.key?.participant?.replace(/:[0-9][0-9]|:[0-9]/g, "")
+          webMessage?.key?.participant?.replace(/:[0-9][0-9]|:[0-9]/g, ""),
         )
       ) {
         try {
@@ -92,7 +99,7 @@ export async function onMessagesUpsert({ socket, messages, startProcess }) {
           await socket.sendMessage(remoteJid, { delete: deleteKey });
         } catch (error) {
           errorLog(
-            `Erro ao deletar mensagem de membro silenciado, provavelmente eu não sou administrador do grupo! ${error.message}`
+            `Error al eliminar el mensaje de un miembro silenciado. ¡Probablemente no soy administrador del grupo! ${error.message}`,
           );
         }
 
@@ -112,6 +119,8 @@ export async function onMessagesUpsert({ socket, messages, startProcess }) {
         commonFunctions,
       });
 
+      await handleAfkReferences({ webMessage, commonFunctions });
+
       await dynamicCommand(commonFunctions, startProcess);
     } catch (error) {
       if (badMacHandler.handleError(error, "message-processing")) {
@@ -119,12 +128,12 @@ export async function onMessagesUpsert({ socket, messages, startProcess }) {
       }
 
       if (badMacHandler.isSessionError(error)) {
-        errorLog(`Erro de sessão ao processar mensagem: ${error.message}`);
+        errorLog(`Error de sesión al procesar el mensaje: ${error.message}`);
         continue;
       }
 
       errorLog(
-        `Erro ao processar mensagem: ${error.message} | Stack: ${error.stack}`
+        `Error al procesar el mensaje: ${error.message} | Stack: ${error.stack}`,
       );
 
       continue;
