@@ -12,7 +12,7 @@
     "postinstall": "node ./scripts/patch-baileys.mjs"
   },
   "engines": {
-    "node": ">=22.8.0"
+    "node": ">=24.0.0"
   },
   "keywords": [],
   "author": "",
