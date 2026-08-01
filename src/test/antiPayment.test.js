@@ -162,8 +162,8 @@ describe("anti-payment", () => {
       false,
     );
     assert.strictEqual(replies.length, 2);
-    assert.ok(replies[0].startsWith("Anti-payment ativado com sucesso!"));
-    assert.strictEqual(replies[1], "Anti-payment desativado com sucesso!");
+    assert.ok(replies[0].startsWith("Anti-payment activado correctamente!"));
+    assert.strictEqual(replies[1], "Anti-payment desactivado correctamente!");
   });
 
   it("should close group, ban sender, delete message and clean chat when direct payment message is detected", async () => {

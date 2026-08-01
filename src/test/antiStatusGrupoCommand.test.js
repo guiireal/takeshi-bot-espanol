@@ -43,8 +43,8 @@ describe("anti-status-grupo command", () => {
       false,
     );
     assert.deepStrictEqual(replies, [
-      "Anti-status-grupo ativado com sucesso!",
-      "Anti-status-grupo desativado com sucesso!",
+      "Anti-status-grupo activado correctamente!",
+      "Anti-status-grupo desactivado correctamente!",
     ]);
   });
 });

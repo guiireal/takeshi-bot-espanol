@@ -44,8 +44,8 @@ describe("anti-call", () => {
       false,
     );
     assert.deepStrictEqual(replies, [
-      "Anti-call ativado com sucesso!",
-      "Anti-call desativado com sucesso!",
+      "Anti-call activado correctamente!",
+      "Anti-call desactivado correctamente!",
     ]);
   });
 
@@ -83,7 +83,7 @@ describe("anti-call", () => {
       [
         "sendMessage",
         handlerGroupId,
-        { text: `${BOT_EMOJI} 📵 Ligações são proibidas neste grupo!` },
+        { text: `${BOT_EMOJI} 📵 ¡Las llamadas están prohibidas en este grupo!` },
       ],
     ]);
   });

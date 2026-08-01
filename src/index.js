@@ -78,9 +78,12 @@ import {
   bannerLog,
   errorLog,
   infoLog,
+  installConsoleNoiseFilter,
   successLog,
   warningLog,
 } from "./utils/logger.js";
+
+installConsoleNoiseFilter();
 
 process.on("uncaughtException", (error) => {
   if (badMacHandler.handleError(error, "uncaughtException")) {

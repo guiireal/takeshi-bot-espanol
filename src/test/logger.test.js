@@ -155,7 +155,7 @@ describe("Logger Functions", () => {
       const calls = consoleLogMock.mock.calls;
       const hasVersion = calls.some((call) => {
         const arg = call.arguments[0];
-        return typeof arg === "string" && arg.includes("Versão");
+        return typeof arg === "string" && arg.includes("Versión");
       });
 
       assert.ok(hasVersion, "Banner should include version information");
@@ -304,8 +304,8 @@ describe("Logger Functions", () => {
 
       const args = consoleLogMock.mock.calls[0].arguments;
       assert.strictEqual(args[0], "\x1b[33m[TAKESHI BOT | WARNING]\x1b[0m");
-      assert.ok(args[1].includes("sessão criptografada antiga"));
-      assert.ok(args[1].includes("não indica erro no bot"));
+      assert.ok(args[1].includes("sesión cifrada antigua"));
+      assert.ok(args[1].includes("no indica un error en el bot"));
     });
 
     it("should keep unrelated console info logs visible", () => {
