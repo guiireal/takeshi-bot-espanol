@@ -40,6 +40,10 @@ export async function onMessagesUpsert({ socket, messages, startProcess }) {
     }
 
     try {
+      if (!webMessage?.key?.remoteJid?.endsWith("@g.us")) {
+        continue;
+      }
+
       const timestamp = webMessage.messageTimestamp;
 
       // Registra el sobre (id -> autor/estado) de TODO mensaje del grupo,
